@@ -1,0 +1,18 @@
+.cpicwall{ position: relative; min-width: 700px;}
+.cpicwall .cpwview{font-size: 0; width: 100%; overflow: hidden; position: relative;}
+.cpicwall .scroller{height: 100%; position: relative;}
+.cpicwall .cele{font-size: 12px; margin: 0 36px; width: 210px; height: 360px; vertical-align: top;}
+.cpicwall .cele .mask{position: absolute; height: 100%; width: 100%; left: 0; top: 0; background-color: #000; opacity: 0.45; filter:alpha(opacity=45); transition-duration:600ms;}
+.cpicwall .scroller .cur .mask{opacity: 0;  filter:alpha(opacity=0); }
+
+.cpicwall .left,.cpicwall .right{background:none no-repeat 50% 50%; width: 66px; height: 112px; position: absolute; top: 60px; display: block; cursor: pointer;  transition-duration:330ms;}
+
+.cpicwall .left{left: 60px; background-image: url("img/l.png")}
+.cpicwall .right{right: 60px;background-image: url("img/r.png")}
+.cpicwall .left:hover,.cpicwall .right:hover{ background-color:#ED6C00; width: 86px;}
+
+.cpicwall .dots{bottom: 3px; width: 100%; left: 0; z-index: 10; text-size:0; text-align: center; position: relative; padding-top: 75px;}
+.cpicwall .dots a{display: inline-block; background: url("img/dot_small.png") no-repeat 50% 50%; margin: 0 4px; width: 20px; height: 20px; cursor: pointer; transition-duration:360ms;}
+.cpicwall .dots a.cur{background-image: url("img/dot_big.png");}
+.cpicwall .dots a:hover{background-color: #ED6C00;}
+.cpicwall .dots a.cur:hover{background-color: transparent; cursor: default;}

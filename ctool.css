@@ -1,0 +1,14 @@
+td.fitemWrapper input,.fitemWrapper textarea{border: none; outline: none; background-color: transparent; margin: 0; padding: 0; border: 0; height: 18px;}
+table.fitemWrapperTable{border-collapse: collapse; padding: 0; margin: 0; width: auto; height: auto;}
+td.fitemWrapper{padding: 0; margin: 0; width: auto; height: auto; vertical-align:middle;}
+td.fitemWrapper{border: 1px solid #3D3D3D; padding:2px 5px;}
+
+.inputsee{display: inline-block; border: 1px solid #333; padding: 0 4px; position: relative;}
+.inputsee input,.inputsee textarea{border: none; background: none; outline: none; position: relative; z-index: 2;}
+.inputsee .blank_label{position: absolute; z-index: 1; left: 0; top: 0; text-indent: 3px; color: #808080;}
+._ie7 .inputsee input,.inputsee_ie7 input{
+    margin-top:expression(this._marginTop ||(this._marginTop = 0.5*this.parentElement.clientHeight - 0.5*this.clientHeight));      /*ie垂直居中表达式*/
+}
+
+
+

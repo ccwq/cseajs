@@ -1,0 +1,28 @@
+/* Tiny Scrollbar */
+.tinybar .viewport {overflow: hidden; position: relative; }
+.tinybar .overview { list-style: none; position: absolute; left: 0; top: 0; padding: 0; margin: 0;  right: 9px;}
+.tinybar .scrollbar{ position: relative; background-position: 0 0; float: right;  margin-left: 6px; }
+.tinybar .track { background:#B7B7B7;  height: 100%;position: relative;}
+.tinybar .thumb {background-color: #838383; height: 20px; cursor: pointer; overflow: hidden; position: absolute; top: 0;}
+
+.tinybar .scrollbar,
+.tinybar .track,
+.tinybar .thumb
+    {width: 8px;  border-radius: 3px;}
+
+
+.tinybar .disable { display: none; }
+
+.noSelect{user-select: none; -o-user-select: none; -moz-user-select: none; -khtml-user-select: none; -webkit-user-select: none; }
+
+/*鼠标进入后*/
+.tinybar_hover{}
+.tinybar_hover .track{background-color: #9B9B9B;}
+.tinybar_hover .thumb{background-color: #525252;}
+
+/*自动隐藏功能*/
+.tbar_autohide .tinybar .scrollbar{display: none;}
+.tbar_autohide .tinybar_hover .scrollbar{display: block;}
+.tbar_autohide .tinybar .scrollbar.disable{display: none;}
+
+

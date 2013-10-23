@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>cablum</title>
+</head>
+<body>
+    <a href="javascript:void(0);" id="albtext">开关</a>
+    <div id="containerr" style="position: relative; width: 400px; height: 600px; border: 1px solid #f00;">
+        <div class="sq" style="position: absolute; background-color: #0ff;"></div>
+    </div>
+</body>
+</html>
+<script src="../../sea/csea.js"></script>
+<script>
+    //{"total":7,"rows":[{"id":"84028","picUrl":"/htmlpage/upload/theme/2923/slt/slt_7.jpg","isFlag":"0","picName":"slt_7.jpg","uploadDate":"2013-07-29 16:06:53.109"},{"id":"84027","picUrl":"/htmlpage/upload/theme/2923/slt/slt_6.jpg","isFlag":"0","picName":"slt_6.jpg","uploadDate":"2013-07-29 16:06:52.562"},{"id":"84026","picUrl":"/htmlpage/upload/theme/2923/slt/slt_5.jpg","isFlag":"0","picName":"slt_5.jpg","uploadDate":"2013-07-29 16:06:52.0"},{"id":"84025","picUrl":"/htmlpage/upload/theme/2923/slt/slt_4.jpg","isFlag":"0","picName":"slt_4.jpg","uploadDate":"2013-07-29 16:06:51.437"},{"id":"84024","picUrl":"/htmlpage/upload/theme/2923/slt/slt_3.jpg","isFlag":"0","picName":"slt_3.jpg","uploadDate":"2013-07-29 16:06:50.89"},{"id":"84023","picUrl":"/htmlpage/upload/theme/2923/slt/slt_1.jpg","isFlag":"0","picName":"slt_1.jpg","uploadDate":"2013-07-29 16:06:50.437"},{"id":"3645","picUrl":"/htmlpage/upload/theme/2923/slt/slt_博物馆.png","isFlag":"1","picName":"slt_博物馆.png","uploadDate":"2013-06-08 15:31:32.14"}]}
+    var list_data = '{"total":3,"rows":[' +
+            '{"id":"5595","picUrl":"http://localhost/tr/imgs/img4.png","isFlag":"1","picName":"slt_灌汤包3.jpg","uploadDate":"2013-06-24 15:49:41.932"},' +
+            '{"id":"5595","picUrl":"http://localhost/tr/imgs/img1.jpg","isFlag":"1","picName":"slt_灌汤包3.jpg","uploadDate":"2013-06-24 15:49:41.932"},' +
+            '{"id":"5594","picUrl":"http://localhost/tr/imgs/img2.jpg","isFlag":"0","picName":"slt_灌汤包2.jpg","uploadDate":"2013-06-24 15:49:41.761"},' +
+            '{"id":"5593","picUrl":"http://localhost/tr/imgs/img3.jpg","isFlag":"0","picName":"slt_灌汤包.jpg","uploadDate":"2013-06-24 15:49:41.542"}' +
+            ']}';
+    list_data = list_data.replace(/picUrl/g,"src").replace(/picName/g,"name");
+    list_data = eval("(" + list_data + ")");
+    seajs.config({
+        preload: ["../../seajs_text/seajs-text.js"]
+    });
+    seajs.use("jq",function($){
+        window.$=$;
+        $(domReady);
+    });
+
+    function domReady(){
+        var alb_ins;
+        seajs.use("calbum/c_album",function(alb){
+            alb_ins = alb.create({marginHori:120}).open().setData(list_data.rows);;
+            $("#albtext").click(function(){
+                alb_ins.open()
+            });
+        });
+
+        $(document).keydown(function(e){
+            if(e.keyCode == 13){
+                if(alb_ins){
+                    alb_ins.open().setDataByJson(list_data.rows);
+                    //alb_ins.showElementByUrl("http://localhost/tr/imgs/img1.jpg");
+                }
+            }
+        });
+    }
+</script>
+
+

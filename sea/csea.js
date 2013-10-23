@@ -28,13 +28,13 @@ c){P.push(c)});B.preload=P;f.config=function(b){for(var c in b){var a=b[c],d=h[c
     seajs.config({
         base:base,
         paths:{
-            _       :       par,                 //seajs父级目录
-            rt      :       root                 //网站根目录（相对于js）
+            _               :       par.replace(/\/$/,""),                 //seajs父级目录
+            rt              :       root.replace(/\/$/,"")                 //网站根目录（相对于js）
         },
         alias:{
-            jq:"seajq",
-            "seajs-debug":"seajs-debug/src/seajs-debug",
-            seajs_text:"seajs_text/seajs-text"
+            jq              :       "seajq",
+            "seajs-debug"   :       "seajs-debug/src/seajs-debug",
+            seajs_text      :       "seajs_text/seajs-text"
         }
     });
 
@@ -42,5 +42,24 @@ c){P.push(c)});B.preload=P;f.config=function(b){for(var c in b){var a=b[c],d=h[c
     if(location.href.indexOf("seajs-debug") + 1)  seajs.use("seajs-debug");
     ctool.root = root;          //相对于js的网站根目录
     window.ctool = ctool;
+
+    /*自动执行*/
+    (function(){
+        var scs = document.getElementsByTagName("script");
+        var dom_cseajs;
+        for(var i = 0; i<scs.length; i++){
+            dom_cseajs = scs[i];
+            if(/cseajs\.js$/.test(dom_cseajs.src))  break;
+        }
+
+        if(!dom_cseajs){
+            throw "未发现cseajs";
+            return;
+        }
+
+        var main = dom_cseajs.getAttribute("main");
+        if(main) seajs.use(main);
+    })();
+
 })();
 

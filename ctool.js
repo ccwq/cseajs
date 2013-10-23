@@ -203,7 +203,7 @@ define(function (require) {
 
 
         /*
-        * jQuery throttle / debounce - v1.1 - 3/7/2010
+        * throttle / debounce - v1.1 - 3/7/2010
         * http://benalman.com/projects/jquery-throttle-debounce-plugin/
         * Copyright (c) 2010 "Cowboy" Ben Alman
         * Dual licensed under the MIT and GPL licenses.
@@ -250,6 +250,19 @@ define(function (require) {
             };
         })(this);
 
+        /*
+        *css loader css加载器
+        * */
+        (function(){
+            function loadcss(url_segment,is_prepend_mode){
+                var link = document.createElement("link");
+                var head = document.getElementsByTagName("head")[0];
+                link.rel = "stylesheet";
+                link.href = window.ctool.root + url_segment;
+                head[is_prepend_mode?"prepend":"appendChild"](link);
+            }
+            ctool.loadcss = loadcss;
+        })();
         //bottom
     })();
 

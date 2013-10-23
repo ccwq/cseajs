@@ -15,22 +15,20 @@ a?e.use(c,function(){c.splice(0,a);e.preload(b)},h.cwd+"_preload_"+w++):b()};f.u
 c){P.push(c)});B.preload=P;f.config=function(b){for(var c in b){var a=b[c],d=h[c];if(d&&X(d))for(var e in a)d[e]=a[e];else A(d)?a=d.concat(a):"base"===c&&("/"===a.slice(-1)||(a+="/"),a=I(a)),h[c]=a}m("config",b);return f}}})(this);
 
 //2013年9月30日0:56:38 by cheweiqing
-var base = "seajs",user_dir="../custom/";
+var base = "ceajs",user_dir="../custom/";
 var dir = seajs.data.dir;
 if(dir){
     base = dir.replace(/sea\/$/,"");
-    use_dir = dir.replace(/seajs\/sea\/$/,"") + "custom/";
 }
-
 seajs.config({
-    base:"seajs",
-    path:{
-        cus:use_dir
+    base:base,
+    paths:{
+        _:base.replace(/c?seajs\/$/,"")                 //工作目录
     },
     alias:{
-        jq:"seajq.js",
-        seajs_debug:"seajs-debug/src/seajs-debug",
-        "seajs--debug":"seajs-debug/src/seajs-debug",
+        jq:"seajq",
+        //seajs_debug:"seajs-debug/src/seajs-debug",
+        //"seajs--debug":"seajs-debug/src/seajs-debug",
         seajs_text:"seajs_text/seajs-text"
     }
 });

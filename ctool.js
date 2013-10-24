@@ -263,7 +263,25 @@ define(function (require) {
             }
             ctool.loadcss = loadcss;
         })();
-        //bottom
+
+
+        /*
+        * 过滤html代码中body之外的部分
+        * */
+        function filter_html_in_body(data){
+            var bodyInner_start = data.search(/(<body[^>]*?>)/);
+            if(bodyInner_start==-1){
+                throw "未找到body开始标签!";
+            }
+            var body_str = RegExp["$1"];
+            var bodyInner_end = data.indexOf("</body>");
+            if(bodyInner_end == -1){
+                throw "未找到body结束标签!";
+            }
+            return data.substring(bodyInner_start + body_str.length,bodyInner_end);;
+        }
+        ctool.filter_html_in_body = filter_html_in_body;
+         //bottom
     })();
 
     return ctool;

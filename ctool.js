@@ -2,6 +2,11 @@
 define(function (require) {
     var ctool = {};
 
+    if(window.ctool){
+        ctool.ctl = window.ctool;
+        ctool.root = window.ctool.root;
+    }
+
     (function(){
         /*让ie支持indexOf*/
         if (!Array.prototype.indexOf) {
@@ -278,7 +283,7 @@ define(function (require) {
             if(bodyInner_end == -1){
                 throw "未找到body结束标签!";
             }
-            return data.substring(bodyInner_start + body_str.length,bodyInner_end);;
+            return data.substring(bodyInner_start + body_str.length,bodyInner_end);
         }
         ctool.filter_html_in_body = filter_html_in_body;
          //bottom

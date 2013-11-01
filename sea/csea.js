@@ -30,6 +30,7 @@ c){P.push(c)});B.preload=P;f.config=function(b){for(var c in b){var a=b[c],d=h[c
         paths:{
             _               :       par.replace(/\/$/,""),                 //seajs父级目录
             rt              :       root.replace(/\/$/,"")                 //网站根目录（相对于js）
+			"$"             :       base + "jqplug"
         },
         alias:{
             jq              :       "seajq",

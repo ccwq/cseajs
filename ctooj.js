@@ -192,6 +192,9 @@ define(function (require) {
                         if(me.parent().is(".inputsee")) return;
                         var span = $("<span class='inputsee'></span>").addClass("inputsee" + bro_str);
                         me.after(span).appendTo(span);
+                        if(me.is("textarea")){
+                            span.addClass("textarea");
+                        }
 
                         span.addClass(me.attr("inputsee_class")); //外套设置class
 

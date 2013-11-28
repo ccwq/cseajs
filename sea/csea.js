@@ -17,6 +17,7 @@ c){P.push(c)});B.preload=P;f.config=function(b){for(var c in b){var a=b[c],d=h[c
 //2013年9月30日0:56:38 by cheweiqing
 (function(){
     var ctool = window.ctool || {};
+    var cdata = seajs.cdata = {};                   //缓存一些可能用到的数据
     var base = "ceajs",user_dir="../custom/";
     var dir = seajs.data.dir;
     var par = "",root = "";
@@ -43,6 +44,12 @@ c){P.push(c)});B.preload=P;f.config=function(b){for(var c in b){var a=b[c],d=h[c
     if(location.href.indexOf("seajs-debug") + 1)  seajs.use("seajs-debug");
     ctool.root = root;          //相对于js的网站根目录
     window.ctool = ctool;
+
+    //增加id
+    var snode = doc.getElementById("seajsnode") || scripts[scripts.length - 1];
+    var idstr = snode.getAttribute("id");
+    if(!idstr)  snode.setAttribute("id","seajsnode");
+    cdata.seajsnode = snode;
 
     /*自动执行*/
     (function(){

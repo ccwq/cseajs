@@ -46,7 +46,7 @@ c){P.push(c)});B.preload=P;f.config=function(b){for(var c in b){var a=b[c],d=h[c
     window.ctool = ctool;
 
     //增加id
-    var snode = doc.getElementById("seajsnode") || scripts[scripts.length - 1];
+    var snode = document.getElementById("seajsnode") || scripts[scripts.length - 1];
     var idstr = snode.getAttribute("id");
     if(!idstr)  snode.setAttribute("id","seajsnode");
     cdata.seajsnode = snode;

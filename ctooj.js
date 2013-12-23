@@ -586,6 +586,74 @@ define(function (require) {
             };
         })();
         //textleng------------------------------------
+
+
+
+        /*
+         * 鼠标感应
+         * */
+        $.fn.msToggle = function(config){
+            var defaultConfig = {
+                cls:"msover",           //切换class
+                css:{},                  //切换css
+                animCss:{},
+                animDura:200,           //动画切换时间
+                attr:{},                 //切换属性        //src属性时候{dir}{fname}{ftype}分别表示目录路径，文件名称，文件类型名称
+                org_config:{},
+                host:null,              //host为空，鼠标感应自己切换自己，否则感应host 切换自己
+                plug:{},
+                disableStr : {mover:"disableMover",mout:"disableMout",all:"disableAll"},          //禁用字符串
+                isPreLoadImage:true
+            };
+            var c = $.extend(true,defaultConfig,config);
+            this.each(function (i) {
+                var me = $(this);
+                var d = me.data();
+                d.status = {};d.me=me;
+                var cc = d.cc = $.extend(true,{},c);    //深复制配置
+                var val_org = d.val_org = {css:{},attr:{},animCss:{}};
+                var has_css = d.status.has_css = !$.isEmptyObject(cc.css);
+                var has_attr = d.status.has_attr = !$.isEmptyObject(cc.attr);
+                var has_animCss = d.status.has_animCss = !$.isEmptyObject(cc.animCss);
+
+                if(has_css)  for (var k1 in cc.css) {val_org.css[k1] = me.css(k1);}
+                var reg_dir_fname_ftype = /(.*\/)([^\/]*)\.(\w{1,5})$/
+                if(has_attr) for (var k2 in cc.attr) {
+                    val_org.attr[k2] = me.attr(k2);
+                    if(k2 == "src"){
+                        reg_dir_fname_ftype.test(me.attr(k2));
+                        cc.attr[k2] = cc.attr[k2].replace("{dir}",RegExp["$1"]).replace("{fname}",RegExp["$2"]).replace("{ftype}",RegExp["$3"]);
+                        cc.isPreLoadImage && imgPreLoad(cc.attr[k2]);//预加载
+                    }
+                }
+                if(has_animCss) for (var k3 in cc.animCss) {val_org.animCss[k3] = me.css(k3);}
+
+                //自定义原始属性
+                if(!$.isEmptyObject(cc.org_config)){$.extend(true,val_org,cc.org_config);}
+                if(c.host)  c.host.data().me=me;
+                (c.host||me).mouseenter(function(e){
+                    if(d[c.disableStr.all] || d[c.disableStr.mover])    return;
+                    me.addClass(d.cc.cls);
+                    if(has_css) me.css(d.cc.css);
+                    if(has_attr) me.attr(d.cc.attr);
+                    if(has_animCss){
+                        me.stop(true);
+                        me.animate(cc.animCss,cc.animDura);
+                    }
+                });
+                (c.host||me).mouseleave(function(e){
+                    if(d[c.disableStr.all] || d[c.disableStr.mout])    return;
+                    me.removeClass(d.cc.cls);
+                    if(has_css) me.css(d.val_org.css);
+                    if(has_attr) me.attr(d.val_org.attr);
+                    if(has_animCss){
+                        me.stop(true);
+                        me.animate(d.val_org.animCss,d.cc.animDura);
+                    }
+                });
+            });
+            return this;
+        };
     })();
 
     return tool;

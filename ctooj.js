@@ -656,5 +656,51 @@ define(function (require) {
         };
     })();
 
+
+    /*
+     *当浏览器滚动到某个位置，根据回调的对象的参数，触发回调方法。仅触发一次.
+     * */
+    (function(){
+        var CVScrollTo = {
+            callbackList:[],
+            init:function(){
+                var me = this;
+                $(window).scroll(function(){ me.update(); });
+                return me;
+            },
+            update:function(){
+                var me=this;
+                var scrollTop = document.documentElement.scrollTop + document.body.scrollTop;
+                for(var i=0;i<me.callbackList.length;i++){
+                    var callbackobjce = me.callbackList[i];
+                    if(!callbackobjce.fired && callbackobjce.scrollTop<=scrollTop){
+                        callbackobjce.fired = true;
+                        callbackobjce.callback(scrollTop);
+                    }
+                };
+                return me;
+            },
+
+            /*
+            * callbackObject: { scrollTop:500, callback:gowhere.init}
+            * */
+            add:function(callbackObject){
+                var me=this;
+                if(callbackObject.scrollTop === undefined){
+                    throw "请传入滚动到位置的值";
+                }
+                if(!callbackObject.callback){
+                    throw "回调函数是必须指定";
+                }
+                me.callbackList.push(callbackObject);
+                me.update();
+                return me;
+            }
+        };
+
+        CVScrollTo.init();
+        tool.vScrollTo = CVScrollTo;
+    })();
+
     return tool;
 });

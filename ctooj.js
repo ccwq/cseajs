@@ -702,5 +702,25 @@ define(function (require) {
         tool.vScrollTo = CVScrollTo;
     })();
 
+    /*
+    * 最大化等比剪裁，与ctool内同名方法不同个，可以附加posi
+    * */
+    !function(){
+        function max_on_container(continerWH, picWH, space, posi) {
+            if(!space)  space=0;
+            var def_posi  = {top:0,left:0,top_perc:0.5,left_perc:0.5};
+            posi = $.extend(def_posi,posi);
+            var cw = continerWH[0] - space,ch = continerWH[1] - space;
+            var pw = picWH[0],ph = picWH[1];
+            var cn = cw / ch,pn = pw / ph;
+            var tmpArr=(cn > pn)?[cw, cw / pn]:[ch * pn, ch];
+            tmpArr.push((cw - tmpArr[0]) * posi.left_perc  +  posi.left);
+            tmpArr.push((ch - tmpArr[1]) * posi.top_perc   +  posi.top);
+            tmpArr.css={width:tmpArr[0],height:tmpArr[1],left:tmpArr[2],top:tmpArr[3]};
+            return tmpArr;
+        };
+        ctool.max_on_container = max_on_container;
+    }();
+
     return tool;
 });

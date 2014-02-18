@@ -284,6 +284,18 @@ define(function (require) {
             return data.substring(bodyInner_start + body_str.length,bodyInner_end);
         }
         ctool.filter_html_in_body = filter_html_in_body;
+
+
+        //获取scrollElement       //目前有副作用，会使刷新后的页面回到顶端
+        !function(){
+            var scrollEle;
+            document.body.scrollTop = document.documentElement.scrollTop = 1;
+            if(document.body.scrollTop!==0) scrollEle = document.body;
+            else scrollEle = document.documentElement;
+            scrollEle.scrollTop = 0;
+            ctool.scrollElement = scrollEle;
+        }();
+
          //bottom
     })();
 

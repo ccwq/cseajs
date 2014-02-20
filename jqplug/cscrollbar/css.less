@@ -1,0 +1,27 @@
+//自定义滚动条
+@scrollBarZindex:500;
+.cscroller{
+	@w:10px;
+	@bar_height:80px;
+	position: fixed; width: @w; top: 0; right: 2px; height: 100%; z-index: @scrollBarZindex;
+	.csbar{
+		height: @bar_height; background-color: #333; ._alpha(60); position: absolute; top: 0; left: 0; width: 100%;
+	}
+}
+#cscrollMask{z-index: @scrollBarZindex - 1; height: 100%; width: 100%; top: 0; left: 0; position: fixed; background-color: #fff; ._alpha(0); display: none;}
+.noSelect{.noSelect};
+
+//以下为工具库
+.noSelect(){
+	-moz-user-select: none; /*火狐*/
+	-webkit-user-select: none;  /*webkit浏览器*/
+	-ms-user-select: none;   /*IE10*/
+	-khtml-user-select: none; /*早期浏览器*/
+	user-select: none;
+}
+
+//透明度调整
+._alpha(@val:80){
+	opacity: @val * 0.01;
+	filter: alpha(opacity=@val);
+}

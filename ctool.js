@@ -295,7 +295,6 @@ define(function (require) {
             scrollEle.scrollTop = 0;
             ctool.scrollElement = scrollEle;
         }();
-
          //bottom
     })();
 

@@ -722,5 +722,16 @@ define(function (require) {
         ctool.max_on_container = max_on_container;
     }();
 
+
+    !function(){
+        /**
+        *
+        * @year {number} 年份四位数
+        * @month {number} 月份
+        * */
+        ctool.dayNumOfMonth = function(year,month){
+            return new Date(Year,Month,0).getDate();
+        }
+    }();
     return tool;
 });

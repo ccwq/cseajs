@@ -725,16 +725,22 @@ define(function (require) {
     //get kissy
     !function(){
         //获取kissy
+
+        var kissy,req_ing=false,cache=[];
         tool.getKissy = function getKissy(callback,config){
-            if(getKissy.K){
-                callback && callback.call(getKissy.K,getKissy.K);
-                return;
-            }
+            if(kissy){ callback && callback.call(kissy,kissy); return; }
+
+            //防止在请求中，出现重复请求。保证全局kissy只有一个
+            if(req_ing){ cache.push(callback); return; }
+
             $.getScript("//g.tbcdn.cn/kissy/k/1.4.1/seed-min.js?t=20140212",function(){
-                getKissy.K = KISSY;
-                getKissy.K.config(config || { combine: true,debug:false});
-                getKissy(callback);
+                kissy = KISSY;
+                kissy.config(config || { combine: true,debug:false});
+                if(cache.length) $.each(cache,function(k,cb){
+                    getKissy(cb);
+                });
             });
+            req_ing = true;
         };
     }();
 

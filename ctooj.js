@@ -722,6 +722,21 @@ define(function (require) {
         ctool.max_on_container = max_on_container;
     }();
 
+    //get kissy
+    !function(){
+        //获取kissy
+        tool.getKissy = function getKissy(callback,config){
+            if(getKissy.K){
+                callback && callback.call(getKissy.K,getKissy.K);
+                return;
+            }
+            $.getScript("//g.tbcdn.cn/kissy/k/1.4.1/seed-min.js?t=20140212",function(){
+                getKissy.K = KISSY;
+                getKissy.K.config(config || { combine: true,debug:false});
+                getKissy(callback);
+            });
+        };
+    }();
 
 
     return tool;

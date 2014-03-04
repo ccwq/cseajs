@@ -724,11 +724,13 @@ define(function (require) {
 
     //get kissy
     !function(){
-        //获取kissy
-
-        var kissy,req_ing=false,cache=[];
+        var kissy = KISSY,req_ing=false,cache=[];
         tool.getKissy = function getKissy(callback,config){
-            if(kissy){ callback && callback.call(kissy,kissy); return; }
+            if(kissy){
+                kissy.config(config || { combine: true,debug:false});
+                callback && callback.call(kissy,kissy);
+                return;
+            }
 
             cache.push(callback);
 
@@ -737,7 +739,7 @@ define(function (require) {
 
             $.getScript("//g.tbcdn.cn/kissy/k/1.4.1/seed-min.js?t=20140212",function(){
                 kissy = KISSY;
-                kissy.config(config || { combine: true,debug:false});
+
                 if(cache.length) $.each(cache,function(k,cb){
                     getKissy(cb);
                 });

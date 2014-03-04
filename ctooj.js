@@ -730,8 +730,10 @@ define(function (require) {
         tool.getKissy = function getKissy(callback,config){
             if(kissy){ callback && callback.call(kissy,kissy); return; }
 
+            cache.push(callback);
+
             //防止在请求中，出现重复请求。保证全局kissy只有一个
-            if(req_ing){ cache.push(callback); return; }
+            if(req_ing)  return;
 
             $.getScript("//g.tbcdn.cn/kissy/k/1.4.1/seed-min.js?t=20140212",function(){
                 kissy = KISSY;

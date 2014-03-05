@@ -76,6 +76,15 @@ define(function (require) {
                     });
                 });
             };
+
+            $.fn.unblockImg = function(custom_key){
+                custom_key = (custom_key || "_src");
+                return this.each(function(){
+                    var me=$(this);
+                    var src = me.attr(custom_key);
+                    me.removeAttr(custom_key).attr({ src: src });
+                });
+            };
             /*--阻塞图片加载*/
 
             /*一些自定义alert tip msg confirm*/

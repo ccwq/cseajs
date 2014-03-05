@@ -66,12 +66,13 @@ define(function (require) {
                 });
             };
 
-            tool.unblock_img_load=function(){
+            tool.unblock_img_load = tool.unblockImg = function(custom_key){
+                custom_key = (custom_key || "block_src");
                 $(function(){
-                    $("img[block_src]").each(function(i){
+                    $("img[" + custom_key + "]").each(function(i){
                         var me=$(this);
-                        var src = me.attr("block_src");
-                        me.removeAttr("block_src").attr({ src: src });
+                        var src = me.attr(custom_key);
+                        me.removeAttr(custom_key).attr({ src: src });
                     });
                 });
             };
@@ -724,24 +725,22 @@ define(function (require) {
 
     //get kissy
     !function(){
-        var kissy = KISSY,req_ing=false,cache=[];
+        var cfg = { combine: true,debug:false};
+        var kissy = window.KISSY,req_ing=false,cache=[];
         tool.getKissy = function getKissy(callback,config){
             if(kissy){
-                kissy.config(config || { combine: true,debug:false});
+                kissy.config($.extend(true,cfg,config));
                 callback && callback.call(kissy,kissy);
                 return;
             }
-
-            cache.push(callback);
-
+            cache.push({cb:callback,paras:config});
             //防止在请求中，出现重复请求。保证全局kissy只有一个
             if(req_ing)  return;
 
             $.getScript("//g.tbcdn.cn/kissy/k/1.4.1/seed-min.js?t=20140212",function(){
                 kissy = KISSY;
-
-                if(cache.length) $.each(cache,function(k,cb){
-                    getKissy(cb);
+                if(cache.length) $.each(cache,function(k,ele){
+                    getKissy(ele.cb,ele.paras);
                 });
             });
             req_ing = true;

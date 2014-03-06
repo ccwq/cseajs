@@ -152,49 +152,8 @@ define(function (require) {
         //----------------------------
         /*表单元素美化插件 table实现*/
         (function(){
-            var def = {label_top:0,label_left:0,label_textIndent:4};
             require.async("ctool.css");
             $.fn.extend({
-                beaFormItem:function(config){
-                    var c = $.extend({},config,def);
-                    return this.each(function(i){
-                        var me=$(this),d=me.data();
-                        var width = me.width();
-                        me.wrap('<table class="fitemWrapperTable"><tr><td class="fitemWrapper"></td></tr></table>');
-                        var wpTable = me.closest(".fitemWrapper");
-                        var wper = me.parent();
-                        var edge_pblr=wper.edgeWidth("pb,lr");
-                        me.width(width - edge_pblr);
-
-                        var blt = me.attr("blank_text") || me.attr("placeholder");
-                        me.removeAttr("placeholder");
-                        if(blt){
-                            var label = $("<span class='blank_label'></span>").text(blt);
-                            me.after(label);
-                            if(label.css("top") && label.css("top")!="auto")  c.label_top = "";
-                            if(label.css("left") && label.css("left")!="auto") c.label_left = "";
-                            label.css({position:"absolute",display:"block",
-                                left: c.label_left,top: c.label_top ,width:"auto", height:"100%",textIndent: c.label_textIndent + "px"
-                            });
-                            wper.css({position:"relative"});
-                            me.css({position:"relative",zIndex:5});
-                            label.css({lineHeight:label.height() + "px"});
-
-                            me.bind("blur focus",function(e){
-                                if(e.type == "focus")                           label.hide();
-                                else if(e.type == "blur" && !me.val())         label.show();
-                            });
-
-                            //自动填充密码后 标签仍再的问题
-                            setTimeout(function(){
-                                if(me.val())    label.hide();
-                            },210);
-                            wper.click(function(){ me.focus(); });
-                        }
-                    });
-                },
-                //end of beaFormItem
-
                 inputsee:function(config_method,para){
                     return this.each(function(i){
                         var me=$(this), d=me.data();

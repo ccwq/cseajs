@@ -439,6 +439,7 @@ define(function (require) {
                     size:{w:0,h:0},                          //直接设定显示尺寸 最优先
                     autoFresh:false,                        //在窗口尺寸改变时自动刷新
                     calls:"",callsParam:{},                  //方法调用
+                                                             //目前支持$el.maxOn({calls:"EV_fresh"})  （执行次函授以当父容器尺寸改变时候）重新计算一次尺寸
                     msRadio:1,                               //鼠标移动上去之后图片缩放
                     msToggleSetting:{},
                     callback:function($this,cssObject,is_first_callback){}

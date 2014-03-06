@@ -498,7 +498,7 @@ define(function (require) {
                     if(img_org_w && img_org_h) fresh();
                     else{
                         tool.getImageOrigSize(
-                            ti.attr("src") || window.errorImageUrl || "At maxOn plug" + Math.random(),
+                            ti.attr("src") || ti.attr("_src") || window.errorImageUrl || "At maxOn plug" + Math.random(),
                             function(w,h,info){
                                 if(info.error || !ti.attr("src")) ti.attr("src",this.src);
                                 img_org_w = d.img_org_w = w; img_org_h = d.img_org_h = h;
@@ -717,7 +717,5 @@ define(function (require) {
             req_ing = true;
         };
     }();
-
-
     return tool;
 });

@@ -45,6 +45,8 @@ c){P.push(c)});B.preload=P;f.config=function(b){for(var c in b){var a=b[c],d=h[c
     ctool.root = root;          //相对于js的网站根目录
     window.ctool = ctool;
 
+    var scripts = document.getElementsByTagName("script");
+
     //增加id
     var snode = document.getElementById("seajsnode") || scripts[scripts.length - 1];
     var idstr = snode.getAttribute("id");

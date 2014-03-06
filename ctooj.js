@@ -119,7 +119,6 @@ define(function (require) {
                 setTimeout(function(){ require.async("jBox/j"); }, 1800);
             });
 
-
             /*
              * 尺寸为0的容器,用于存放特殊dom对象
              * */
@@ -145,8 +144,60 @@ define(function (require) {
                     if($ti.parent().is("#hidebox")) $ti.remove();
                 });
             }
-            tool.getImageOrigSize = getImageOrigSize;
+            tool.getImageOrigSize = tool.getImageSizeByPath = getImageOrigSize;
+
+
+            /*
+            * 获取图片原始尺寸$jq
+            * */
+            $.fn.get_imgOrg_size = function(callback){
+                return this.each(function(){
+                    var ti = $(this);
+                    if(!ti.is("img"))   throw "元素必须是图片";
+
+                    getImageOrigSize(ti.attr("src") || ti.attr("_src"),function(iw,ih){
+                        if(callback) callback.call(ti,iw,ih);
+                    });
+                });
+            };
+
+
+            !function(){
+                /**
+                * 剪裁以匹配父容器
+                * */
+                $.fn.maxonLite = function(){
+                    return this.each(function(){
+                        var ti=$(this),d=ti.data();
+                        var par = ti.parent();
+                        if("absolut|fixed".indexOf(par.css("position"))===-1){
+                            par.css({position:"relative",overflow:"hidden"});
+                        }
+                        ti.css({position:"absolute"});
+                        var path = ti.attr("src") || ti.attr("_src");
+                        if(!path)   throw "图片元素无效，没有src或者_src属性";
+
+                        if(!d.org_size){
+                            ti.get_imgOrg_size(function(iw,ih){
+                                d.org_size = [iw,ih];
+                                fit_out_on.call(ti, d.org_size,[par.width(),par.height()]);
+                            });
+                        }else{
+                            fit_out_on.call(ti, d.org_size,[par.width(),par.height()]);
+                        }
+
+                    });
+                };
+
+                function fit_out_on(sizeArr,parSizeArr){
+
+                    this.css(ctool.max_on_container(parSizeArr,sizeArr).css);
+                }
+            }();
+
         })();
+
+
 
 
         //----------------------------
@@ -439,7 +490,7 @@ define(function (require) {
                     size:{w:0,h:0},                          //直接设定显示尺寸 最优先
                     autoFresh:false,                        //在窗口尺寸改变时自动刷新
                     calls:"",callsParam:{},                  //方法调用
-                                                             //目前支持$el.maxOn({calls:"EV_fresh"})  （执行次函授以当父容器尺寸改变时候）重新计算一次尺寸
+                                                                //目前支持$el.maxOn({calls:"EV_fresh"})  （执行次函授以当父容器尺寸改变时候）重新计算一次尺寸
                     msRadio:1,                               //鼠标移动上去之后图片缩放
                     msToggleSetting:{},
                     callback:function($this,cssObject,is_first_callback){}
@@ -479,9 +530,9 @@ define(function (require) {
                     wrapper.addClass("scaleWrapper").css(wrapperCss);
 
                     var is_first_callback = true;
-                    function fresh(){
+                    function fresh(customSizeArray){
                         if(!img_org_w || !img_org_h)  return;
-                        var da = ctool.max_on_container([display_w,display_h],[img_org_w,img_org_h], c.space, c.posi);
+                        var da = ctool.max_on_container(customSizeArray || [display_w,display_h],[img_org_w,img_org_h], c.space, c.posi);
                         ti.css(da.css);
                         c.callback.call(ti,da.css,is_first_callback);
                         if(c.msRadio!=1 && is_first_callback){
@@ -516,6 +567,11 @@ define(function (require) {
             };
 
             var methods = {
+                fresh:function(size){
+                    return this.each(function(){
+
+                    });
+                },
                 tweenResizeTo:function(para){
                     var css = para.css, dura = para.dura;
                     return this.each(function(i){

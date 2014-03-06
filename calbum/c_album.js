@@ -10,6 +10,7 @@ define(function (require) {
     var ins;
     var $ = require("seajq");
     var ctool = require("ctool");
+    var cj = require("ctooj");
     require("calbum/embed/c.css");
     var templete =
         '<div>'+
@@ -181,7 +182,7 @@ define(function (require) {
     * 公开
     * 根据url或者json数组显示
     * */
-    fn.setData=function(url_json,fieldname_init_index){          //fieldname样例:"name1.name2"
+    fn.setData=function(url_json,fieldname_init_index){          //fieldname样例:"{name:"name",src:"name2"}
         var me=this,data;
         if(typeof url_json == "string"){
             loading.show();
@@ -427,7 +428,7 @@ define(function (require) {
     function getImageOrigSize(url_paras,callback){
         ctool.imgPreLoad(url_paras,function(result){
             var $ti = $(this);
-            getHideBox().append($ti);
+            cj.getHideBox().append($ti);
             callback && callback.call(this,$ti.width(),$ti.height(),result);
             if($ti.parent().is("#hidebox")) $ti.remove();
         });
@@ -436,6 +437,7 @@ define(function (require) {
         if(!ins) ins = new calbum(config);
         return ins;
     }};
+
 
 
 

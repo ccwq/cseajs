@@ -77,6 +77,9 @@ define(function (require) {
                 });
             };
 
+            /*
+            * 开始加载被延迟的图片
+            * */
             $.fn.unblockImg = function(custom_key){
                 custom_key = (custom_key || "_src");
                 return this.each(function(){

@@ -2,8 +2,9 @@
 define(function (require) {
     var tool = {};
     var $ = require("seajq"),jQuery = $;
-    var ctool = require("ctool"),  bro = ctool.bro;;
+    var ctool = require("ctool"),  bro = ctool.bro;
     var bro_str = "_" + ctool.bro();
+    $(function(){ $("body").addClass(bro_str); });
     (function(){
         (function(){
             var wi = $(window),sw = 0, sh=0, resiFunc;
@@ -36,7 +37,7 @@ define(function (require) {
             }
             tool.winResize = winResize;
 
-            /*增加scrpt标签 适用于百度分享*/
+            /*增加scrpt标签 适用于百度分享等功能*/
             tool.addScript = function(url_para,para){
                 if(typeof url_para=="string"){
                     para = para || {};

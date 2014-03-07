@@ -115,10 +115,6 @@ define(function (require) {
                 });
             };
 
-            $(window).load(function(){
-                setTimeout(function(){ require.async("jBox/j"); }, 1800);
-            });
-
             /*
              * 尺寸为0的容器,用于存放特殊dom对象
              * */
@@ -190,7 +186,6 @@ define(function (require) {
                 };
 
                 function fit_out_on(sizeArr,parSizeArr){
-
                     this.css(ctool.max_on_container(parSizeArr,sizeArr).css);
                 }
             }();

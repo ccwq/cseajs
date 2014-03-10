@@ -311,5 +311,18 @@ define(function (require) {
         }
     }();
 
+    !function(){
+        var regCache = {}; //避免建立太多的RegExp对象
+        /**
+         * 增加replaceAll方法
+         * */
+         String.prototype.replaceAll = function(s1, s2) {
+            var reg = regCache[s1] || (regCache[s1]=new RegExp(s1, "gm"));
+            return this.replace(reg, s2); //g全局
+        }
+    }();
+
+
+
     return ctool;
 });

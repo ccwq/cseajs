@@ -751,6 +751,10 @@ define(function (require) {
     !function(){
         var cfg = { combine: true,debug:false};
         var kissy = window.KISSY,req_ing=false,cache=[];
+
+        /**
+        * 从tbcdn获取KISSY资源
+        * */
         tool.getKissy = function getKissy(callback,config){
             if(kissy){
                 kissy.config($.extend(true,cfg,config));

@@ -11,9 +11,9 @@ td.fitemWrapper{border: 1px solid #3D3D3D; padding:2px 5px;}
 ._ie7 .inputsee input,.inputsee_ie7 input
 {
     /*有时候会出现问题。先禁止掉*/
-    /*
-        margin-top:expression(this._marginTop ||(this._marginTop = 0.5*this.parentElement.clientHeight - 0.5*this.clientHeight));
-    */
+
+        *margin-top:expression(this._marginTop ||(this._marginTop = 0.5*this.parentElement.clientHeight - 0.5*this.clientHeight));
+
      /*ie垂直居中表达式*/
 }
 

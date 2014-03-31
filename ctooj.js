@@ -25,14 +25,19 @@ define(function (require) {
             *   callback:   回调
             *           function(window.width,window.height,$(window))
             * */
-            function winResize(callback_immediately_run,callback){
+            function winResize(callback_immediately_run,callback,callbackScope){
                 var immediately_run = false;
                 if(typeof callback_immediately_run =="function")
                     callback=callback_immediately_run;
                 else
                     immediately_run = callback_immediately_run;
+
+                var scope = callbackScope;
+                if($.isFunction(callback_immediately_run)){
+                    scope = callback;
+                }
                 cb.add(callback);
-                if(immediately_run) callback(wi.width(),wi.height(),wi);
+                if(immediately_run) callback(scope || wi.width(),wi.height(),wi);
                 return wi;
             }
             tool.winResize = winResize;
@@ -751,6 +756,7 @@ define(function (require) {
     !function(){
         var cfg = { combine: true,debug:false};
         var kissy = window.KISSY,req_ing=false,cache=[];
+        var kissPath = "//g.tbcdn.cn/kissy/k/1.4.1/seed-min.js?t=20140212";
 
         /**
         * 从tbcdn获取KISSY资源
@@ -765,12 +771,15 @@ define(function (require) {
             //防止在请求中，出现重复请求。保证全局kissy只有一个
             if(req_ing)  return;
 
-            $.getScript("//g.tbcdn.cn/kissy/k/1.4.1/seed-min.js?t=20140212",function(){
-                kissy = KISSY;
-                if(cache.length) $.each(cache,function(k,ele){
-                    getKissy(ele.cb,ele.paras);
-                });
-            });
+            $.getScript(kissPath)
+                .done(function(){
+                    kissy = KISSY;
+                    if(cache.length) $.each(cache,function(k,ele){
+                        getKissy(ele.cb,ele.paras);
+                    });
+                })
+                .fail(function(e){ throw "tbcdn获取失败！" })
+            ;
             req_ing = true;
         };
     }();

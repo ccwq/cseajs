@@ -18,26 +18,27 @@ define(function (require) {
             resiFunc();
             if(sw==0 || sh==0)  $(resiFunc);
 
-            /*
-            * callback_immediately_run
-            *                           :true 立即调用一次
-            *                           ：function 回调
-            *   callback:   回调
-            *           function(window.width,window.height,$(window))
-            * */
-            function winResize(callback_immediately_run,callback,callbackScope){
-                var immediately_run = false;
-                if(typeof callback_immediately_run =="function")
-                    callback=callback_immediately_run;
-                else
-                    immediately_run = callback_immediately_run;
+            /**
+             * @param throttleDelay 节流阀延时，如果为0,或者为true，表示不适用节流阀
+             * @param callback 回调function(windowWidth,widnowHeight,$window){}
+             * @returns {*|jQuery|HTMLElement}
+             */
+            function winResize(throttleDelay,callback){
+                var delay = 0;
 
-                var scope = callbackScope;
-                if($.isFunction(callback_immediately_run)){
-                    scope = callback;
+                if($.isFunction(throttleDelay))
+                    callback = throttleDelay;
+                else
+                    delay = throttleDelay;
+
+                //delay为0或者true，表示不适用节流阀
+                if(delay === 0 || delay === true){
+                    cb.add(callback);
+                }else{
+                    cb.add(cl.throttle(delay,callback));
                 }
-                cb.add(callback);
-                if(immediately_run) callback(scope || wi.width(),wi.height(),wi);
+                //立即执行一次
+                callback(wi.width(),wi.height(),wi);
                 return wi;
             }
             tool.winResize = winResize;
@@ -202,7 +203,7 @@ define(function (require) {
 
 
         //----------------------------
-        /*表单元素美化插件 table实现*/
+        /*表单元素美化插件 span实现*/
         (function(){
             require.async("ctool.css");
             $.fn.extend({
@@ -808,7 +809,6 @@ define(function (require) {
             if(typeof reqPathArray == "string") {
                 reqPathArray = reqPathArray.split(";")
             }
-
             if($.isFunction(para)){
                 callback = para;
             }
@@ -818,17 +818,15 @@ define(function (require) {
 
             //todo:此处问题过于灵异，暂时回避
             if(typeof para == "string") {
-                console.log("到底执行了没"+typeValue);
                 typeValue = para;
                 reqType = para;
                 para=undefined;
-                console.log("到底执行了没::"+typeValue);
             }
 
             //如果type包含分号，则认为此type同时设置requestType和dataType
             //if(typeValue.indexOf(";")!=-1){       //todo:此处会出错，因为typeValue无论如何都会为空
-            if(reqType && reqType.indexOf(";")!=-1){
-                var splitList = typeValue.split(";");
+            if(reqType && reqType.indexOf(":")!=-1){
+                var splitList = typeValue.split(":");
                 reqType = splitList.shift();
                 dataType = splitList.shift();
             }

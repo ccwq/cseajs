@@ -336,7 +336,7 @@ define(function (require) {
             for(var i=0; i<le; i++){
                 str+=ar[i].toString() + ",";
             }
-            console.log(str);
+            console.log(str.substr(0,str.length-1));
         };
 
         getWinCtool().log = ctool.log;

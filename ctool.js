@@ -2,6 +2,7 @@
 define(function (require) {
     var ctool = {};
 
+    //存留一份全局ctool到ctool.ctl
     if(window.ctool){
         ctool.ctl = window.ctool;
         ctool.root = window.ctool.root;
@@ -322,7 +323,36 @@ define(function (require) {
         }
     }();
 
+    //log
+    !function(){
+        /**
+         * 参数可以任意多
+         */
+        ctool.log = function(){
+            var ar =arguments;
+            if(!console)    return;
+
+            var le = ar.length,str="";
+            for(var i=0; i<le; i++){
+                str+=ar[i].toString() + ",";
+            }
+            console.log(str);
+        };
+
+        getWinCtool().log = ctool.log;
+    }();
 
 
+
+
+
+
+    //此ctool为window全局对象。非seajs mould
+    function getWinCtool(){
+        if(!window.ctool) window.ctool = {};
+        return window.ctool;
+    }
     return ctool;
 });
+
+

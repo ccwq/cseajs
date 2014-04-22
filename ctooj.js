@@ -783,5 +783,85 @@ define(function (require) {
             req_ing = true;
         };
     }();
+
+
+    //多参数请求
+    !function(){
+        /**
+         * ajax多地址请求，第n个路径请求失败，则自动请求地n+1个路径
+         * @param reqPathArray 路径，或者路径列表，列表支持两种形式["path1","path2"]和"path1;path2"
+         * @param 请求参数，当传入String类型，则认为此项为type
+         * @type string "GET"表示使用get方式请求;"GET;json",表示使用GET方式请求，数据类型为json
+         * @return $.Deferred.
+         * */
+        tool.reqPlus = $.reqPlus = function(reqPathArray,para,typeValue,callback){
+            var df = $.Deferred();
+            var dataType = "text",typeStr,reqType;
+            if(!reqPathArray || !reqPathArray.length){
+                df.reject("未传入有效的路径");
+                throw "未传入有效的路径";
+            }
+
+            reqType = typeValue;
+
+            //多地址间用分号分割
+            if(typeof reqPathArray == "string") {
+                reqPathArray = reqPathArray.split(";")
+            }
+
+            if($.isFunction(para)){
+                callback = para;
+            }
+            if( $.isFunction(typeValue)){
+                callback = para;
+            }
+
+            //todo:此处问题过于灵异，暂时回避
+            if(typeof para == "string") {
+                console.log("到底执行了没"+typeValue);
+                typeValue = para;
+                reqType = para;
+                para=undefined;
+                console.log("到底执行了没::"+typeValue);
+            }
+
+            //如果type包含分号，则认为此type同时设置requestType和dataType
+            //if(typeValue.indexOf(";")!=-1){       //todo:此处会出错，因为typeValue无论如何都会为空
+            if(reqType && reqType.indexOf(";")!=-1){
+                var splitList = typeValue.split(";");
+                reqType = splitList.shift();
+                dataType = splitList.shift();
+            }
+
+            var cur_path_index = 0;
+
+            //递归请求
+            function reqStart(path){
+                req(reqPathArray[cur_path_index],para,reqType,dataType)
+                    .done(function(data){
+                        df.resolve(data);
+                        if(callback) callback.call(null,data)
+                    })
+                    .fail(function(msg){
+                        cur_path_index++;
+                        if(reqPathArray[cur_path_index]) reqStart(reqPathArray[cur_path_index]);
+                        throw "请求地址:" + reqPathArray[cur_path_index - 1] + ",出错";
+                    })
+                ;
+            };
+            reqStart(reqPathArray[0]);
+            return df;
+        }
+
+        function req(url,para,type,dataType){
+            return $.ajax({
+                url:url,
+                data:para,
+                type:type || "GET",
+                dataType:dataType
+            });
+        }
+    }();
+    //多参数请求end
     return tool;
 });

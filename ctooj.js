@@ -2,8 +2,8 @@
 define(function (require) {
     var tool = {};
     var $ = require("seajq"),jQuery = $;
-    var ctool = require("ctool"),  bro = ctool.bro;
-    var bro_str = "_" + ctool.bro();
+    var cl = require("ctool"),  bro = cl.bro;
+    var bro_str = "_" + cl.bro();
     $(function(){ $("body").addClass(bro_str); });
     (function(){
         (function(){
@@ -139,7 +139,7 @@ define(function (require) {
              * 获取图片原始尺寸
              * */
             function getImageOrigSize(url_paras,callback){
-                ctool.imgPreLoad(url_paras,function(result){
+                cl.imgPreLoad(url_paras,function(result){
                     var $ti = $(this);
                     getHideBox().append($ti);
                     callback && callback.call(this,$ti.width(),$ti.height(),result);
@@ -192,7 +192,7 @@ define(function (require) {
                 };
 
                 function fit_out_on(sizeArr,parSizeArr){
-                    this.css(ctool.max_on_container(parSizeArr,sizeArr).css);
+                    this.css(cl.max_on_container(parSizeArr,sizeArr).css);
                 }
             }();
 
@@ -533,7 +533,7 @@ define(function (require) {
                     var is_first_callback = true;
                     function fresh(customSizeArray){
                         if(!img_org_w || !img_org_h)  return;
-                        var da = ctool.max_on_container(customSizeArray || [display_w,display_h],[img_org_w,img_org_h], c.space, c.posi);
+                        var da = cl.max_on_container(customSizeArray || [display_w,display_h],[img_org_w,img_org_h], c.space, c.posi);
                         ti.css(da.css);
                         c.callback.call(ti,da.css,is_first_callback);
                         if(c.msRadio!=1 && is_first_callback){
@@ -584,7 +584,7 @@ define(function (require) {
                         }
                         function resize_img(){
                             d.wrapper.stop(true).animate(css,dura || 360);
-                            var da = ctool.max_on_container([css.width,css.height],[d.img_org_w, d.img_org_h]);
+                            var da = cl.max_on_container([css.width,css.height],[d.img_org_w, d.img_org_h]);
                             me.stop(true).animate(da.css,dura || 360);
                         }
                     });
@@ -596,7 +596,7 @@ define(function (require) {
                         var me=$(this),d=me.data();
                         var cs = $.extend(css,{width: d.display_w,height: d.display_h});
                         d.wrapper.stop(true).animate(cs,dura || 360);
-                        var da = ctool.max_on_container([d.display_w, d.display_h],[d.img_org_w, d.img_org_h]);
+                        var da = cl.max_on_container([d.display_w, d.display_h],[d.img_org_w, d.img_org_h]);
                         me.stop(true).animate(da.css,dura || 360);
                     });
                 }
@@ -749,7 +749,7 @@ define(function (require) {
             tmpArr.css={width:tmpArr[0],height:tmpArr[1],left:tmpArr[2],top:tmpArr[3]};
             return tmpArr;
         };
-        ctool.max_on_container = max_on_container;
+        cl.max_on_container = max_on_container;
     }();
 
     //get kissy
@@ -845,7 +845,7 @@ define(function (require) {
                     .fail(function(msg){
                         cur_path_index++;
                         if(reqPathArray[cur_path_index]) reqStart(reqPathArray[cur_path_index]);
-                        throw "请求地址:" + reqPathArray[cur_path_index - 1] + ",出错";
+                        cl.log("地址请求失败(上一个错误，可忽略)",reqPathArray[cur_path_index - 1]);
                     })
                 ;
             };

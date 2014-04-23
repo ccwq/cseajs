@@ -1,11 +1,11 @@
 /*ctool no jquery*/
 define(function (require) {
-    var ctool = {};
+    var tl = {};
 
     //存留一份全局ctool到ctool.ctl
     if(window.ctool){
-        ctool.ctl = window.ctool;
-        ctool.root = window.ctool.root;
+        tl.ctl = window.ctool;
+        tl.root = window.ctool.root;
     }
 
     (function(){
@@ -73,7 +73,7 @@ define(function (require) {
                 return reverse_map["Other"];
             } //myBrowser() end
         };
-        ctool.bro=bro;
+        tl.bro=bro;
         bro.cls = function(){ return "_" + bro(); }
         bro._ = "_" + bro();
 
@@ -92,7 +92,7 @@ define(function (require) {
             tmpArr.css={width:tmpArr[0],height:tmpArr[1],left:tmpArr[2],top:tmpArr[3]};
             return tmpArr;
         }
-        ctool.fit_on_container = fit_on_container;
+        tl.fit_on_container = fit_on_container;
 
         //最大化等比剪裁
         function max_on_container(continerWH, picWH, space) {
@@ -106,9 +106,9 @@ define(function (require) {
             tmpArr.css={width:tmpArr[0],height:tmpArr[1],left:tmpArr[2],top:tmpArr[3]};
             return tmpArr;
         };
-        ctool.max_on_container = max_on_container;
+        tl.max_on_container = max_on_container;
 
-        ctool.getHideBox = function(){
+        tl.getHideBox = function(){
             throw "该方法已经迁移至ctooj！";
         };
 
@@ -141,7 +141,7 @@ define(function (require) {
                 if(paras && paras.no_error_replace)   return;         //加载错误时禁止去加载默认图
                 if(!paras) paras = {};
                 paras.origUrl = url;
-                paras.url = paras.errurl || ctool.err_img_url || window.err_img_url;
+                paras.url = paras.errurl || tl.err_img_url || window.err_img_url;
                 isLoadDefaultPic || imgPreLoad(paras, function () {
                     callback && callback.call(this, {error: true,paras:paras});
                 }, true);
@@ -155,12 +155,12 @@ define(function (require) {
                 return;
             }
         };
-        ctool.imgPreLoad = imgPreLoad;
+        tl.imgPreLoad = imgPreLoad;
 
         //调试 firebug
         function debugStart(){(function(F,i,r,e,b,u,g,L,I,T,E){if(F.getElementById(b))return;E=F[i+'NS']&&F.documentElement.namespaceURI;E=E?F[i+'NS'](E,'script'):F[i]('script');E[r]('id',b);E[r]('src',I+g+T);E[r](b,u);(F[e]('head')[0]||F[e]('body')[0]).appendChild(E);E=new Image;E[r]('src',I+L);})(document,'createElement','setAttribute','getElementsByTagName','FirebugLite','4','firebug-lite-debug.js','releases/lite/debug/skin/xp/sprite.png','https://getfirebug.com/','#startOpened');};
         if(1+ location.href.indexOf("debug")) debugStart();
-        ctool.firebug = debugStart;
+        tl.firebug = debugStart;
         window.firebug = debugStart;
 
         /*
@@ -182,7 +182,7 @@ define(function (require) {
                 }
             }else   return str;
         };
-        ctool.strleng = strleng;
+        tl.strleng = strleng;
         String.prototype.strleng = function(word_num,mor_sign){return strleng(this,word_num||10,mor_sign);}
 
 
@@ -203,10 +203,11 @@ define(function (require) {
             }
             return urlObject;
         };
-        ctool.urlParas = urlParas;
+        tl.urlParas = urlParas;
 
 
-        /*
+        /**
+        * 节流阀
         * throttle / debounce - v1.1 - 3/7/2010
         * http://benalman.com/projects/jquery-throttle-debounce-plugin/
         * Copyright (c) 2010 "Cowboy" Ben Alman
@@ -214,7 +215,7 @@ define(function (require) {
         * http://benalman.com/about/license/
         */
         (function(window,undefined){
-            var $ = ctool, jq_throttle;
+            var $ = tl, jq_throttle;
             /*像机关枪，把持续的小间隔的执行，转换为自定义间隔*/
             $.throttle = jq_throttle = function( delay, no_trailing, callback, debounce_mode ) {
                 var timeout_id, last_exec = 0;
@@ -265,7 +266,7 @@ define(function (require) {
                 link.href = window.ctool.root + url_segment;
                 head[is_prepend_mode?"prepend":"appendChild"](link);
             }
-            ctool.loadcss = loadcss;
+            tl.loadcss = loadcss;
         })();
 
 
@@ -284,7 +285,7 @@ define(function (require) {
             }
             return data.substring(bodyInner_start + body_str.length,bodyInner_end);
         }
-        ctool.filter_html_in_body = filter_html_in_body;
+        tl.filter_html_in_body = filter_html_in_body;
 
 
         //获取scrollElement       //目前有副作用，会使刷新后的页面回到顶端
@@ -294,7 +295,7 @@ define(function (require) {
             if(document.body.scrollTop!==0) scrollEle = document.body;
             else scrollEle = document.documentElement;
             scrollEle.scrollTop = 0;
-            ctool.scrollElement = scrollEle;
+            tl.scrollElement = scrollEle;
         }();
          //bottom
     })();
@@ -303,11 +304,10 @@ define(function (require) {
 
     !function(){
         /**
-         *
          * @year {number} 年份四位数
          * @month {number} 月份
          * */
-        ctool.dayNumOfMonth = function(year,month){
+        tl.dayNumOfMonth = function(year,month){
             return new Date(Year,Month,0).getDate();
         }
     }();
@@ -328,7 +328,7 @@ define(function (require) {
         /**
          * 参数可以任意多
          */
-        ctool.log = function(){
+        tl.log = function(){
             var ar =arguments;
             if(!console)    return;
 
@@ -339,12 +339,45 @@ define(function (require) {
             console.log(str.substr(0,str.length-1));
         };
 
-        getWinCtool().log = ctool.log;
+        getWinCtool().log = tl.log;
+    }();
+
+    //截取路径
+    !function(){
+        var rgTpl = "([^\/]+\/?){{n}}$";
+
+        /**
+         * 截取路径cutPath("/a/c/d/e",3)结果为/a/
+         * @param path
+         * @param n
+         * @returns {*}
+         */
+        function cutPath(path,n){
+            n = n||1;
+            var rg = getRegexp(rgTpl.replace("{n}",n));
+            return path.replace(rg,"");
+        }
+        getWinCtool().cutPath = tl.cutPath = cutPath;
     }();
 
 
 
-
+    /**
+     * 创建一个Regexp,避免多次创建（使用对象池优化）
+     * @param str 字符串
+     * @param flag 标志位
+     * @returns {Regexp}
+     */
+    function getRegexp(str,flag){
+        flag = flag || "";
+        var pool = getRegexp.pool || (getRegexp.pool={});
+        var rg = pool[str+flag];
+        if(rg) return rg;
+        rg = new RegExp(str,flag);
+        pool[str+flag] = rg;
+        return rg;
+    }
+    tl.getRegexp = getRegexp;
 
 
     //此ctool为window全局对象。非seajs mould
@@ -352,7 +385,7 @@ define(function (require) {
         if(!window.ctool) window.ctool = {};
         return window.ctool;
     }
-    return ctool;
+    return tl;
 });
 
 

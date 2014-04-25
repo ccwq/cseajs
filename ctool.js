@@ -300,14 +300,31 @@ define(function (require) {
             }
 
 
-            tl.scrollTop = function(){
-                return (
-                    window.pageYOffset                   || //用于FF
-                    document.documentElement.scrollTop   ||
-                    document.body.scrollTop              ||
-                    0
-                );
+            function scrollY(val){
+
+                if(val===undefined)
+                    return (
+                        window.pageYOffset                   || //用于FF
+                        document.documentElement.scrollTop   ||
+                        document.body.scrollTop              ||
+                        0
+                    );
+                window.scrollTo(scrollX(), val);
             }
+
+            function scrollX(val){
+                if(val===undefined)
+                    return (
+                        window.pageXOffset                   || //用于FF
+                        document.documentElement.scrollLeft   ||
+                        document.body.scrollLeft              ||
+                        0
+                    );
+                window.scrollTo(val, scrollY());
+            }
+
+            tl.scrollX = scrollX;
+            tl.scrollY = scrollY;
         }();
 
 

@@ -14,15 +14,17 @@ define(function (require, exports, module) {
         $(function(){ $body = $("body"); });
         var nullFunc = function(){};
         var def = {
-            mousewheelValue:0.05,               //滚轮滚动一次移动的像素
+            mousewheelValue:0.05,                       //滚轮滚动一次移动的像素
             onScroll:nullFunc,
             onScrollComplete:nullFunc,
-            disabledMousewhellHandler:false,    //禁止自动的鼠标滚动关联（使用环境，需要根据条件外部条件滚动的情况，需配合onMousewheel使用）
-            onMousewheel:nullFunc                   //当鼠标滚动时候
+            disabledMousewhellHandler:false,            //禁止自动的鼠标滚动关联（使用环境，需要根据条件外部条件滚动的情况，需配合onMousewheel使用）
+            onMousewheel:nullFunc,                       //当鼠标滚动时候
+            amoment:300                                 //临时禁止事件触发间隔
         };
         var Cscroller = function($cscroll,setting){
             var setting = $.extend(true,{},def,setting);
             var me = this;
+            me.sett = setting;
             me.el = $cscroll;
             var $bar = me.bar = me.el.find(">.csbar");
 
@@ -83,33 +85,43 @@ define(function (require, exports, module) {
             //
             me.scrolling = function scrolling(ratio){
                 me.ratio = ratio;
+                if(me.forbidEvt)    return;
                 setting.onScroll.call(me,ratio);
             }
 
             me.scrollComplete = function scrollComplete(){
+                if(me.forbidEvt)    return;
                 setting.onScrollComplete.call(me,me.ratio);
             }
-        }
+        };
 
-        /*
-         * 根据0-1之间的小数滚动
-         * 后面两参数可选，表示是否派发相应事件
-         * */
-        Cscroller.prototype.scrollto = function(ratio,isDispatchCompleteEvent,isDispatchScrollingEvent){
+        var fn = Cscroller.prototype;
+
+        /**
+         * 根据0-1之间的小数滚动,后面两参数可选，表示是否派发相应事件
+         * @param ratio 0~1之间的小数
+         * @param isDispatchCompleteEvent 派发滚动完成事件
+         * @param isDispatchScrollingEvent 派发滚动中事件
+         */
+        fn.scrollto = function(ratio,isDispatchCompleteEvent,isDispatchScrollingEvent){
             var me = this;
             if(ratio<0) ratio=0;
             if(ratio>1) ratio = 1;
             var bartop = (me.height - me.barHieght) * ratio;
             me.bar.stop(true).animate({top:bartop},210);
             me.ratio = ratio;
+            if(me.forbidEvt)    return;
             isDispatchCompleteEvent && me.scrollComplete(ratio);
             isDispatchScrollingEvent && me.scrolling(ratio);
         };
 
-        /*
+        /**
          * 尺寸改变
-         * */
-        Cscroller.prototype.reSize = function(h,isDispatchCompleteEvent,isDispatchScrollingEvent){
+         * @param h 高度
+         * @param isDispatchCompleteEvent 派发滚动完成事件
+         * @param isDispatchScrollingEvent 派发滚动中事件
+         */
+        fn.reSize = function(h,isDispatchCompleteEvent,isDispatchScrollingEvent){
             var me = this;
             if(h===undefined){
                 me.height = me.el.height();
@@ -117,7 +129,22 @@ define(function (require, exports, module) {
                 me.el.height(me.height = h);
             }
             me.scrollto(me.ratio,isDispatchCompleteEvent,isDispatchScrollingEvent);
-        }
+        };
+
+
+        /**
+         * 禁止派发事件一瞬
+         * @param dura 间隔
+         */
+        fn.forbitEvtAMoment = function(dura){
+            var me = this;
+            var dura = dura || me.sett.amoment;
+
+            me.forbidEvt = true;
+            setTimeout(function(){
+                me.forbidEvt = false;
+            },dura);
+        };
         Cscroller__ = Cscroller;
 
         //全局

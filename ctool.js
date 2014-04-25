@@ -290,13 +290,27 @@ define(function (require) {
 
         //获取scrollElement       //目前有副作用，会使刷新后的页面回到顶端
         !function(){
-            var scrollEle;
-            document.body.scrollTop = document.documentElement.scrollTop = 1;
-            if(document.body.scrollTop!==0) scrollEle = document.body;
-            else scrollEle = document.documentElement;
-            scrollEle.scrollTop = 0;
-            tl.scrollElement = scrollEle;
+            tl.getScrollEle = function(){
+                var scrollEle;
+                document.body.scrollTop = document.documentElement.scrollTop = 1;
+                if(document.body.scrollTop!==0) scrollEle = document.body;
+                else scrollEle = document.documentElement;
+                scrollEle.scrollTop = 0;
+                return tl.scrollElement = scrollEle;
+            }
+
+
+            tl.scrollTop = function(){
+                return (
+                    window.pageYOffset                   || //用于FF
+                    document.documentElement.scrollTop   ||
+                    document.body.scrollTop              ||
+                    0
+                );
+            }
         }();
+
+
          //bottom
     })();
 

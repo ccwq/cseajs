@@ -119,9 +119,11 @@ define(function (require) {
             dropElement.data().host = me;
             dropElement.host = me;
             var ofs = me.offset();
-            var doc_offset_y = document.documentElement.scrollTop + document.body.scrollTop;
+            var doc_offset_y = cl.scrollY();
+            var doc_offset_x = cl.scrollX();
+
             dropElement.css({
-                left:ofs.left + c.offsetx,
+                left:ofs.left + c.offsetx - doc_offset_x,
                 top:ofs.top + c.offsety + me.height() - doc_offset_y
             });
             dropElement.stop(true).animate({height:dropElement.prop("scrollHeight")}, c.dura);

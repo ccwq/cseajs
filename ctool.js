@@ -373,7 +373,7 @@ define(function (require) {
         getWinCtool().log = tl.log;
     }();
 
-    //截取路径
+    //对路径操作的一些正则
     !function(){
         var rgTpl = "([^\/]+\/?){{n}}$";
 
@@ -389,6 +389,40 @@ define(function (require) {
             return path.replace(rg,"");
         }
         getWinCtool().cutPath = tl.cutPath = cutPath;
+
+
+        var folderRg = /([^\/]+)\/[^\/]+$/;
+
+        /**
+         * 获取目录名称
+         * @param path
+         * @returns {*} 返回目录名称或者undefined
+         */
+        function getFolderName(path){
+            if(folderRg.test(path || location.href)){
+                return RegExp["$1"];
+            }
+            return undefined;
+        }
+        getWinCtool().getFolderName = tl.getFolderName = getFolderName;
+
+
+
+        //提取文件名称正则
+        var fileNameRg = /\/([^\/?]+)[?#]?[^\/]*$/;
+
+        /**
+         * 获取文件名称，支持提取/abc.aas?ppa#ss;(abc.ass)
+         * @param path
+         * @returns {*}
+         */
+        function getFileName(path){
+            if(fileNameRg.test(path || location.href)){
+                return RegExp["$1"];
+            }
+            return false;
+        }
+        getWinCtool().getFileName = tl.getFileName = getFileName;
     }();
 
 

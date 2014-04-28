@@ -167,8 +167,8 @@ define(function (require) {
 
             !function(){
                 var config = {
-                    sw:undefined,                   //如果此值设置，parent宽度会被此值代替
-                    sh:undefined
+                    pw:undefined,                   //如果此值设置，parent宽度会被此值代替
+                    ph:undefined
                 };
                 /**
                  * 剪裁以匹配父容器

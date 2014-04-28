@@ -167,8 +167,10 @@ define(function (require) {
 
             !function(){
                 /**
-                * 剪裁以匹配父容器
-                * */
+                 * 剪裁以匹配父容器
+                 * 注意事项:1父容器必须设置尺寸
+                 * @returns {*}
+                 */
                 $.fn.maxonLite = function(){
                     return this.each(function(){
                         var ti=$(this),d=ti.data();
@@ -188,12 +190,14 @@ define(function (require) {
                         }else{
                             fit_out_on.call(ti, d.org_size,[par.width(),par.height()]);
                         }
-
                     });
                 };
 
                 function fit_out_on(sizeArr,parSizeArr){
-                    this.css(cl.max_on_container(parSizeArr,sizeArr).css);
+                    var css = cl.max_on_container(parSizeArr,sizeArr).css;
+                   //css.marginLeft = -css.left * 0.5;
+                    //css.left = "50%";
+                    this.css(css);
                 }
             }();
 
@@ -755,7 +759,7 @@ define(function (require) {
 
     //get kissy
     !function(){
-        var cfg = { combine: true,debug:false};
+        var cfg = { combine: true,debug:true,tag:""};
         var kissy = window.KISSY,req_ing=false,cache=[];
         var kissPath = "//g.tbcdn.cn/kissy/k/1.4.1/seed-min.js?t=20140212";
 

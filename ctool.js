@@ -365,11 +365,23 @@ define(function (require) {
 
             var le = ar.length,str="";
             for(var i=0; i<le; i++){
-                str+=ar[i].toString() + ",";
+                str+="," + ar[i].toString();
             }
-            console.log(str.substr(0,str.length-1));
+            console.log(str.substr(1));
         };
 
+        /**
+         * 支持多参数alert
+         */
+        tl.alert = function(){
+            var ar =arguments;
+            var le = ar.length,str="";
+            for(var i=0; i<le; i++){
+                str+="," + ar[i].toString();
+            }
+
+            alert(str.substr(1));
+        }
         getWinCtool().log = tl.log;
     }();
 

@@ -166,12 +166,17 @@ define(function (require) {
 
 
             !function(){
+                var config = {
+                    sw:undefined,                   //如果此值设置，parent宽度会被此值代替
+                    sh:undefined
+                };
                 /**
                  * 剪裁以匹配父容器
                  * 注意事项:1父容器必须设置尺寸
                  * @returns {*}
                  */
-                $.fn.maxonLite = function(){
+                $.fn.maxonLite = function(setting){
+                    var sett = $.extend({},config,setting);
                     return this.each(function(){
                         var ti=$(this),d=ti.data();
                         var par = ti.parent();
@@ -185,17 +190,17 @@ define(function (require) {
                         if(!d.org_size){
                             ti.get_imgOrg_size(function(iw,ih){
                                 d.org_size = [iw,ih];
-                                fit_out_on.call(ti, d.org_size,[par.width(),par.height()]);
+                                fit_out_on.call(ti, d.org_size,[sett.sw || par.width(),sett.sh ||par.height()]);
                             });
                         }else{
-                            fit_out_on.call(ti, d.org_size,[par.width(),par.height()]);
+                            fit_out_on.call(ti, d.org_size,[sett.sw || par.width(), sett.sh || par.height()]);
                         }
                     });
                 };
 
                 function fit_out_on(sizeArr,parSizeArr){
                     var css = cl.max_on_container(parSizeArr,sizeArr).css;
-                   //css.marginLeft = -css.left * 0.5;
+                    //css.marginLeft = (-css.left - parSizeArr) * 0.5;
                     //css.left = "50%";
                     this.css(css);
                 }

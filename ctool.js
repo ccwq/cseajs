@@ -255,7 +255,7 @@ define(function (require) {
             };
         })(this);
 
-        /*
+        /**
         *css loader css加载器
         * */
         (function(){
@@ -326,8 +326,6 @@ define(function (require) {
             tl.scrollX = scrollX;
             tl.scrollY = scrollY;
         }();
-
-
          //bottom
     })();
 

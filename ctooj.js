@@ -166,6 +166,7 @@ define(function (require) {
 
 
             !function(){
+                var psizeRg = /\d+\,\d+/;
                 var config = {
                     pw:undefined,                   //如果此值设置，parent宽度会被此值代替
                     ph:undefined
@@ -186,6 +187,13 @@ define(function (require) {
                         ti.css({position:"absolute"});
                         var path = ti.attr("src") || ti.attr("_src");
                         if(!path)   throw "图片元素无效，没有src或者_src属性";
+
+                        //预设尺寸
+                        var psize = ti.attr("psize");
+                        if(psize && psizeRg.test(psize)){
+                            var s = psize.split(",");
+                            d.org_size = [s[0]*1,s[1]*1];
+                        }
 
                         if(!d.org_size){
                             ti.get_imgOrg_size(function(iw,ih){
@@ -783,7 +791,7 @@ define(function (require) {
 
             $.getScript(kissPath)
                 .done(function(){
-                    kissy = KISSY;
+                    kissy = window.KISSY;
                     if(cache.length) $.each(cache,function(k,ele){
                         getKissy(ele.cb,ele.paras);
                     });

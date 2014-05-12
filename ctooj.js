@@ -181,7 +181,7 @@ define(function (require) {
                     return this.each(function(){
                         var ti=$(this),d=ti.data();
                         var par = ti.parent();
-                        if("absolut|fixed".indexOf(par.css("position"))===-1){
+                        if("absolute|fixed".indexOf(par.css("position"))===-1){
                             par.css({position:"relative",overflow:"hidden"});
                         }
                         ti.css({position:"absolute"});

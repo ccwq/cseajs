@@ -187,8 +187,8 @@ define(function (require) {
 
 
         /*
-        * url参数反序列化
-        * */
+         * url参数反序列化
+         * */
         var urlParas = function(url) {
             url = url||location.href;
             var urlObject = {};

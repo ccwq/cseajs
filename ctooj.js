@@ -199,10 +199,10 @@ define(function (require) {
                         if(!d.org_size){
                             ti.get_imgOrg_size(function(iw,ih){
                                 d.org_size = [iw,ih];
-                                fit_out_on.call(ti, d.org_size,[sett.sw || par.width(),sett.sh ||par.height()], sett.customLay);
+                                fit_out_on.call(ti, d.org_size,[sett.pw || par.width(),sett.ph || par.height()], sett.customLay);
                             });
                         }else{
-                            fit_out_on.call(ti, d.org_size,[sett.sw || par.width(), sett.sh || par.height()], sett.customLay);
+                            fit_out_on.call(ti, d.org_size,[sett.pw || par.width(), sett.ph || par.height()], sett.customLay);
                         }
                     });
                 };
@@ -211,7 +211,7 @@ define(function (require) {
                     var css = cl.max_on_container(parSizeArr,sizeArr).css;
                     //css.marginLeft = (-css.left - parSizeArr) * 0.5;
                     //css.left = "50%";
-                    css = css || customLay(css,sizeArr,parSizeArr);
+                    css = customLay(css,sizeArr,parSizeArr) || css;
                     this.css(css);
                 }
             }();

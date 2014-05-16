@@ -169,7 +169,8 @@ define(function (require) {
                 var psizeRg = /\d+\,\d+/;
                 var config = {
                     pw:undefined,                   //如果此值设置，parent宽度会被此值代替
-                    ph:undefined
+                    ph:undefined,
+                    customLay: $.noop                  //自定义布局
                 };
                 /**
                  * 剪裁以匹配父容器
@@ -198,18 +199,19 @@ define(function (require) {
                         if(!d.org_size){
                             ti.get_imgOrg_size(function(iw,ih){
                                 d.org_size = [iw,ih];
-                                fit_out_on.call(ti, d.org_size,[sett.sw || par.width(),sett.sh ||par.height()]);
+                                fit_out_on.call(ti, d.org_size,[sett.sw || par.width(),sett.sh ||par.height()], sett.customLay);
                             });
                         }else{
-                            fit_out_on.call(ti, d.org_size,[sett.sw || par.width(), sett.sh || par.height()]);
+                            fit_out_on.call(ti, d.org_size,[sett.sw || par.width(), sett.sh || par.height()], sett.customLay);
                         }
                     });
                 };
 
-                function fit_out_on(sizeArr,parSizeArr){
+                function fit_out_on(sizeArr,parSizeArr,customLay){
                     var css = cl.max_on_container(parSizeArr,sizeArr).css;
                     //css.marginLeft = (-css.left - parSizeArr) * 0.5;
                     //css.left = "50%";
+                    css = css || customLay(css,sizeArr,parSizeArr);
                     this.css(css);
                 }
             }();

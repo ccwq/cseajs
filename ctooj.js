@@ -168,10 +168,11 @@ define(function (require) {
             !function(){
                 var psizeRg = /\d+\,\d+/;
                 var config = {
-                    pw:undefined,                   //如果此值设置，parent宽度会被此值代替
+                    pw:undefined,                       //如果此值设置，parent宽度会被此值代替
                     ph:undefined,
-                    customLay: $.noop                  //自定义布局
+                    customLay: $.noop                   //自定义布局
                 };
+
                 /**
                  * 剪裁以匹配父容器
                  * 注意事项:1父容器必须设置尺寸
@@ -213,6 +214,20 @@ define(function (require) {
                     //css.left = "50%";
                     css = customLay(css,sizeArr,parSizeArr) || css;
                     this.css(css);
+                }
+
+                /**
+                 * 自定义，位置函数
+                 */
+                $.maxonLite = {
+                    /**
+                     * 使用相对位置居中图片，适用于，父容宽度变化
+                     */
+                    centerImgFunc:function(css){
+                        css.left = "50%";
+                        css.marginLeft = -css.width * 0.5;
+                        return css;
+                    }
                 }
             }();
 

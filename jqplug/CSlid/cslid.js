@@ -12,49 +12,46 @@ define(function (require, exports, module) {
     var CTimer = require("CTimer");
     require("./css.css");
 
-    /**
-     * prototype
-     */
+
     var fn;
 
     /**
      * 默认配置
      */
     var def = {
-        /**
-         * 是否使用序列模式加载，true，表示在元素n加载完成之后，才会加载n+1
-         */
+        //是否使用序列模式加载，true，表示在元素n加载完成之后，才会加载n+1
         sequMode:true,
 
-        /**
-         * 在缩略图加载完成后，就加入显示列表；否则，需要等待主图加载完成后才加入显示列表
-         */
+
+        //在缩略图加载完成后，就加入显示列表；否则，需要等待主图加载完成后才加入显示列表
         addOnPreLoaded:true,
 
-        /**
-         * 间隔
-         */
         delay:1500,
 
-        /**
-         * 渲染容器
-         */
+        //dom,selector,htmlstr
         cont:"#CSLid",
 
-        /**
-         * 开始切换
-         */
+        //开始切换
         switchStartCbk: $.Callbacks(),
 
-        /**
-         * 切换完成
-         */
+        //切换完成
         switchCompleteCbk: $.Callbacks(),
 
         autoPlay:true,
 
-        size:{w:500,h:300}
+        /**
+         * 分4种情况,
+         * w:number,h:number,此值无用
+         * w:"auto",h:number,w计算出的值，h为number。无用
+         * w:number,h:"auto",h为w*scaleWH
+         * w:"auto",h:"auto",w计算得出,h为w*scaleWh
+         */
+        scaleWH:0.66,
+        //初始尺寸
+        size:{w:500,h:300},
 
+        //当宽度为auto时，的节流间隔
+        aotuFreshDelay:180
     };
 
     /**
@@ -73,21 +70,15 @@ define(function (require, exports, module) {
         var me= this;
         var sett = $.extend(true,{},def,setting);
         //私有变量
-
-        /**
-         * 配置信息
-         */
         me.sett = sett;
 
         /**
          * 所有图片加载完成？初始有0张图片，所以任务所有已加载完成
-         * @type {boolean}
          */
         me.loaded = true;
 
         /**
          * 当前有效的播放列表
-         * @type {Array}
          */
         me._data = [];
 
@@ -98,31 +89,30 @@ define(function (require, exports, module) {
 
         /**
          * 当前索引
-         * @type {number}
          */
         me._index = -1;
 
         /**
          * 可视尺寸
-         * @type {number}
          */
         me.width = 0;
         me.height = 0;
 
         /**
-         * 滚动尺寸
+         * 滚动元素的宽度
          */
         me.scrollWidth = 0;
 
+        //主体元素
         me.el = $(sett.cont);
         me.el.addClass("cslid");
         if(!me.el.length) throw "请传入有效的选择器";
 
+        //滚动元素
         me.scrollEle = me.el.children(".scrollEle");
         if(!me.scrollEle.length){
             me.scrollEle = $(scrollTpl).appendTo(me.el);
         }
-
 
         //控制点
         me.ctrlPan = $("<div class='ctrlPan'></div>").appendTo(me.el);
@@ -139,9 +129,8 @@ define(function (require, exports, module) {
             me.addAll(orgEles);
         }
 
+        //初始尺寸
         me.setSize(sett.size.w,sett.size.h);
-
-        //me.loadNext();
 
         //计时器
         me.tock = new CTimer({
@@ -151,12 +140,23 @@ define(function (require, exports, module) {
             }
         });
 
+        //自动播
         sett.autoPlay && me.play();
+
+        var winRize = function(){
+
+        }
+
+        cj.winResize(sett.aotuFreshDelay, function (w, h) {
+            if(!me.autoWidth)   return;
+            me.width = me.el.width();
+            if(me.autoHeight){
+                me.height = me.width * sett.scaleWH;
+            }
+            me._setSize();
+        });
     };
 
-    /**
-     * Slid prototype
-     */
     fn = Slid.prototype;
 
     /**
@@ -226,7 +226,7 @@ define(function (require, exports, module) {
      * 播放到第n
      * @param i
      */
-    fn.index = function(i,isByClick){
+    fn.index = function(i,dura){
         var me = this;
         if(i===undefined)   return me._index;
 
@@ -234,14 +234,14 @@ define(function (require, exports, module) {
         if(i>me._data.length-1) i = 0;
 
         me._index = i;
-        me.animate();
+        me.animate(dura);
         me.ctrlPan.children().removeClass("cur").eq(i).addClass("cur");
     };
 
     /**
      * 执行动画
      */
-    fn.animate = function(leftVal){
+    fn.animate = function(dura){
         var me = this;
         var curEle = me._data[me._index];
         me.animating = true;
@@ -249,7 +249,7 @@ define(function (require, exports, module) {
             {
                 left:-curEle.el.position().left
             }
-            ,300,
+            ,dura===undefined?300:dura,
             function(){
                 me.animating = false;
             }
@@ -257,16 +257,34 @@ define(function (require, exports, module) {
     }
 
     /**
-     * 改变尺寸
+     * 改变尺寸,可以接受auto
      * @param w
      * @param h
      */
     fn.setSize = function(w,h){
         var me = this;
-        w = me.width    =   w   || me.width;
-        h = me.height   =   h   || me.height;
-        me.freshSize();
+        //宽度自动布局
+        me.autoWidth = (w=="auto");
+        if(me.autoWidth){
+            me.el.css({width:"auto"});
+            w = me.el.width();
+        }
+        me.autoHeight = (h=="auto")
+        if(me.autoHeight){
+            h = w * me.sett.scaleWH;
+        }
+
+        me._setSize(w,h)
     };
+
+
+    //内部方法 只接受数字
+    fn._setSize = function(w,h){
+        var me = this;
+        w = me.width    =   w   ||  me.width;
+        h = me.height   =   h   ||  me.height;
+        me.freshSize();
+    }
 
 
 
@@ -276,7 +294,7 @@ define(function (require, exports, module) {
     fn.freshSize = function(){
         var me = this;
         me.el.css({
-            width:me.width,
+            width:me.autoWidth?"auto":me.width,
             height:me.height
         });
 
@@ -297,7 +315,7 @@ define(function (require, exports, module) {
         }
 
         if(me._data.length)
-            me.index(me.index());
+            me.index(me.index(),0);
 
     }
 

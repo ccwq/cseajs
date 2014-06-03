@@ -146,6 +146,9 @@ define(function (require) {
                     callback && callback.call(this, {error: true,paras:paras});
                 }, true);
             }
+
+            img.src = url;
+
             if (img.complete) {
                 if(callback){
                     callback.call(img, {paras:paras});
@@ -154,7 +157,6 @@ define(function (require) {
                 return;
             }
 
-            img.src = url;
 
         };
         tl.imgPreLoad = imgPreLoad;

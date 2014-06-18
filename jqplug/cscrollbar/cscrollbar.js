@@ -4,10 +4,15 @@
  * Date: 14-2-20
  * Time: 上午9:06
  * To change this template use File | Settings | File Templates.
+ *
+ * CScrollbar domTpl
+ *<div id="cscroll"><div class="csbar"></div></div>
+ *
  */
 define(function (require, exports, module) {
     var $ = require("jq");
     require("$/mousewheel");        //支持滑轮
+    require("./css.css");
     var Cscroller__;
     !function(){
         var $body = $();
@@ -25,7 +30,7 @@ define(function (require, exports, module) {
             var setting = $.extend(true,{},def,setting);
             var me = this;
             me.sett = setting;
-            me.el = $cscroll;
+            me.el = $($cscroll).addClass("cscroller");
             var $bar = me.bar = me.el.find(">.csbar");
 
             //public

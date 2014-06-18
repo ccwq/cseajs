@@ -559,7 +559,7 @@ define(function (require, exports, module) {
      * @returns {w:xxx,h:xxx}
      */
     function getImgSize(img){
-        var hb = cj.getHideBox();
+        var hb = $("body");;
         hb.append(img);
         var size = {
             w:img.clientWidth,

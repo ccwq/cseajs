@@ -362,14 +362,15 @@ define(function (require) {
          * 参数可以任意多
          */
         tl.log = function(){
+            var co = window.console;
             var ar =arguments;
-            if(!console)    return;
+            if(!co)    return;
 
             var le = ar.length,str="";
             for(var i=0; i<le; i++){
                 str+="," + ar[i].toString();
             }
-            console.log(str.substr(1));
+            co.log(str.substr(1));
         };
 
         /**

@@ -80,6 +80,7 @@ define(function (require, exports, module) {
             });
 
             $(document).mouseup(function(e){
+                if(!isMsDown)   return;
                 isMsDown = false;
                 scrollMsk.hide();
                 me.scrollComplete();

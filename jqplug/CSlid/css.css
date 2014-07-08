@@ -3,6 +3,9 @@
   top: 0;
   overflow: hidden;
 }
+.csele img {
+  max-width: none;
+}
 .csele .mainCont {
   position: absolute;
   width: 100%;
@@ -44,4 +47,3 @@
   width: 12px;
   height: 12px;
 }
-/*# sourceMappingURL=css.css.map */

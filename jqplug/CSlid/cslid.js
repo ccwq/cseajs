@@ -28,6 +28,9 @@ define(function (require, exports, module) {
 
         delay:1500,
 
+        //滚动完成后执行 onScrollComplete(cur_index){this==$cur};
+        onScrollComplete: $.noop,
+
         //dom,selector,htmlstr
         cont:"#CSLid",
 
@@ -252,6 +255,7 @@ define(function (require, exports, module) {
             ,dura===undefined?300:dura,
             function(){
                 me.animating = false;
+                me.sett.onScrollComplete.call(curEle,me._index);
             }
         );
     }

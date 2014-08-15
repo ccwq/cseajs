@@ -26,9 +26,26 @@ define(function (require, exports, module) {
         //在缩略图加载完成后，就加入显示列表；否则，需要等待主图加载完成后才加入显示列表
         addOnPreLoaded:true,
 
+        //滑动间隔
         delay:1500,
 
-        //滚动完成后执行 onScrollComplete(cur_index){this==$cur};
+        //自定义重新计算尺寸方法
+        /**
+         * customResizeFunc(eleWidth, eleHeight){
+         *      this //Ele instance
+         *      this.img //主图
+         *      this.preimg  //预加载图
+         * }
+         */
+        customResizeFunc: null,
+
+
+        //滚动完成后执行
+        /**
+         * function onScrollComplete(cur_index){
+         *      this //cur $le
+         * }
+         */
         onScrollComplete: $.noop,
 
         //dom,selector,htmlstr
@@ -138,13 +155,14 @@ define(function (require, exports, module) {
         //计时器
         me.tock = new CTimer({
             delay:sett.delay,
+            autoStart:sett.autoPlay,
             callback:function(){
                 me.index(me.index() + 1);
             }
         });
 
         //自动播
-        sett.autoPlay && me.play();
+        //sett.autoPlay && me.play();
 
         var winRize = function(){
 
@@ -200,9 +218,7 @@ define(function (require, exports, module) {
     /**
      * 删除一个元素
      */
-    fn.remove = function(){
-
-    }
+    fn.remove = function(){ }
 
     /**
      * 开始播放
@@ -341,7 +357,8 @@ define(function (require, exports, module) {
             load:function(){
                 me.loadNext();
             },
-            el: cache.shift()
+            el: cache.shift(),
+            hostSett:me.sett
         });
     };
 
@@ -456,8 +473,14 @@ define(function (require, exports, module) {
             width:w,height:h
         });
 
-        me.preimg.maxonLite();
-        me.pic.maxonLite();
+        var hsett = me.sett.hostSett;
+        if(hsett.customResizeFunc){
+            hsett.customResizeFunc.call(me,w,h)
+        }else{
+            me.preimg.maxonLite();
+            me.pic.maxonLite();
+        }
+
     };
 
     /**

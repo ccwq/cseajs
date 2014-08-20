@@ -7,6 +7,8 @@ define(function (require, exports, module) {
     var CTimer = module.exports = function(opt){
         var me = this;
 
+        me.status = CTimer.statusStoping;;
+
         //处理参数
         opt = opt || {};
         for(var k in def){
@@ -17,24 +19,36 @@ define(function (require, exports, module) {
         if(sett.autoStart)  me.start();
     }
 
+    //三个状态
+    CTimer.statusPlaying = 1;
+    CTimer.statusPausing = 0;
+    CTimer.statusStoping = -1;
+
+
     var fn = CTimer.prototype;
 
     fn.start = function(){
+        me.status = CTimer.statusPlaying;
+
         this.itv = this._getItv();
         return this;
     }
 
     fn.pause = function(){
+        me.status = CTimer.statusPausing;
         return this.stop();
     }
 
     fn.stop = function(){
         var m = this;
+        me.status = CTimer.statusStoping;
         clearInterval(m.itv);
         return m;
     }
 
     fn.reCount = function(){
+        //如果不是播放状态，reCount无效
+        if(this.status !== CTimer.statusPlaying) return;
         this.stop().start();
     }
 

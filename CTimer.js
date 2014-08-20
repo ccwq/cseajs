@@ -28,20 +28,20 @@ define(function (require, exports, module) {
     var fn = CTimer.prototype;
 
     fn.start = function(){
-        me.status = CTimer.statusPlaying;
+        this.status = CTimer.statusPlaying;
 
         this.itv = this._getItv();
         return this;
     }
 
     fn.pause = function(){
-        me.status = CTimer.statusPausing;
+        this.status = CTimer.statusPausing;
         return this.stop();
     }
 
     fn.stop = function(){
         var m = this;
-        me.status = CTimer.statusStoping;
+        m.status = CTimer.statusStoping;
         clearInterval(m.itv);
         return m;
     }

@@ -59,6 +59,11 @@ define(function (require, exports, module) {
 
         autoPlay:true,
 
+        //使用淡入淡出模式切换
+        fadeMode:false,
+        //淡入淡出的间隔
+        fadeDura:510,
+
         /**
          * 分4种情况,
          * w:number,h:number,此值无用
@@ -263,14 +268,23 @@ define(function (require, exports, module) {
     fn.animate = function(dura){
         var me = this;
         var curEle = me._data[me._index];
+        dura===undefined?300:dura;
+        if(me.sett.fadeMode){
+            curEle.el.fadeTo(0,0);
+            dura = 0;
+        }
         me.animating = true;
         me.scrollEle.stop(true).animate(
             {
                 left:-curEle.el.position().left
-            }
-            ,dura===undefined?300:dura,
+            },
+            dura,
             function(){
                 me.animating = false;
+                if(me.sett.fadeMode){
+                    curEle.el.stop(true).fadeTo(me.sett.fadeDura,1)
+                }
+
                 me.sett.onScrollComplete.call(curEle,me._index);
             }
         );

@@ -261,7 +261,7 @@ define(function (require) {
                         //span.css({lineHeight:span.height() + "px"});
 
                         var blt = me.attr("blank_text") || me.attr("placeholder");
-                        me.removeAttr("placeholder");
+                        me.attr("placeholder") && me.removeAttr("placeholder");
                         if(blt){
                             var label = d.label = $("<span class='blank_label'></span>").text(blt);
                             var labelClass = me.attr("blank_lable_class");      //空label设置class

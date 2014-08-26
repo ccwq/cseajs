@@ -24,8 +24,6 @@ define(function (require, exports, module) {
     !function(){
         var def = {
             //KISSY Page config
-            
-            //必须为选择器，而不是jqueryDom，否则会出现异常bug
             container:"",
             total_page: 1,
             continuous_page: 5,
@@ -87,7 +85,7 @@ define(function (require, exports, module) {
                     pg.on("page:skip",function(e){
                         me.st.onSkip.call(me,e);
                         me.currentPageno = e.pageNum;
-                        if(me.st.dataType==null || !me.set.reqPath){     //空类型//或者请求地址为空 不进行网络请求
+                        if(me.st.dataType==null || !me.st.reqPath){     //空类型//或者请求地址为空 不进行网络请求
                             return;
                         }
                         var para = setting.reqPara;

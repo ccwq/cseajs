@@ -223,7 +223,7 @@ define(function (require, exports, module) {
             if(pageInfo.totalPage){
                 totalPage=pageInfo.totalPage;
             }else if(pageInfo.totalCount){
-                pageInfo.totalPage = totalPage = ~~(pageInfo.totalCount/me.st.rowsMount)+1;
+                pageInfo.totalPage = totalPage = ~~((pageInfo.totalCount-1)/me.st.rowsMount) + 1;
             }
             me.setTotalPangeNum(totalPage);
 

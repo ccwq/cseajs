@@ -10,6 +10,12 @@ define(function (require, exports, module) {
     var cj = require("ctooj");
     var $ = require("jq");
     var nullFunc = function(){ };
+
+    //常量
+    var constVar = {
+        rowsMount:10
+    }
+
     //带分页的，分段请求功能类
     !function(){
         var def = {
@@ -48,7 +54,7 @@ define(function (require, exports, module) {
             defTotalPage:1,                     //如果未获取到页数信息，显示多少页
             pagenoFieldName:"page",             //请求参数：页码字段的name,如 do?page=1
             rowsFiledName:"rows",               //请求参数：每次返回的条目数字段的名称 如(rows的作用):do?rows=10&page=2
-            rowsMount:10,                       //请求参数：返回条目数量 如(10的作用):do?rows=10&page=2
+            rowsMount:undefined,                //请求参数：返回条目数量 如(10的作用):do?rows=10&page=2,该值取值优先级，用户config的值>行内设置的值>预设值
             hidePageNav:false,                 //当此项为true时候，隐藏分页按钮（用来发起自定义请求，实现如 换一批等功能）
 
             a:0
@@ -61,9 +67,11 @@ define(function (require, exports, module) {
             var me = this;
             me.initedCb = $.Callbacks("memory");
             var setting = me.setting = me.st = $.extend(true, {}, def, cfg);
+            var pageCont = me.container = $(setting.container);
+            //先去
+            setting.rowsMount = setting.rowsMount || pageCont.attr("rowsMount") || constVar.rowsMount;
             cj.getKissy(function(S){
                 S.use("gallery/page/1.0/index",function(S,Page){
-                    var pageCont = me.container = $(setting.container);
                     setting.reqPath = pageCont.attr("data_reqPath") || setting.reqPath;
                     setting.dataType = pageCont.attr("data_dataType") || setting.dataType;
                     pageCont.addClass("page_nav");

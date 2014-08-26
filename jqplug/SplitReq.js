@@ -1,9 +1,13 @@
 /**
- * Created with WebStorm.
- * User: Administrator
- * Date: 14-8-25
- * Time: 下午5:11
- * To change this template use File | Settings | File Templates.
+ * 一个可以分段请求数据的组件，自带分页控件。
+ * 支持如下集中数据返回格式
+ * json模式 (注：同时设置totalCount和totalPage时totalPage优先)
+ *      {"totalCount": "13"，"data": [ { "id": "a104a9d9fc8d429cb96dbaaf5c10160c"}]}
+ *      {"totalPage": "9"，"data": [ { "id": "a104a9d9fc8d429cb96dbaaf5c10160c"}]}
+ *      {"pageInfo": {totalCount:"13"}，"data": [ { "id": "a104a9d9fc8d429cb96dbaaf5c10160c"}]}
+ * html模式
+ *      <!--{"totalPage":118}--> <div classitem>条目</div> <div classitem>条目</div> ....
+ *
  */
 define(function (require, exports, module) {
     var cl = require("ctool");
@@ -226,7 +230,6 @@ define(function (require, exports, module) {
                 pageInfo.totalPage = totalPage = ~~((pageInfo.totalCount-1)/me.st.rowsMount) + 1;
             }
             me.setTotalPangeNum(totalPage);
-
             me.pageInfo = pageInfo;
         }
     }();

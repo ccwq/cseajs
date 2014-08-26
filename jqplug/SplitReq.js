@@ -24,6 +24,8 @@ define(function (require, exports, module) {
     !function(){
         var def = {
             //KISSY Page config
+            
+            //必须为选择器，而不是jqueryDom，否则会出现异常bug
             container:"",
             total_page: 1,
             continuous_page: 5,

@@ -36,7 +36,8 @@ define(function (require, exports, module) {
             skip_show: false,                   //显示跳转到
 
             //custome config
-            reqPath:"",                        //允许使用模式如  /root/html_{pageno}.html
+            reqPath:"",                         //允许使用模式如  /root/html_{pageno}.html
+                                                //如果为空，不进行网络请求，需要手动配置total_page
             //目前支持 {pageno}(当前页码)，{_}(web根路径)
             //可以写在分页div上 例： <div class="pageSize" data_reqPath="{_}zxhdManage/getActivityPageListZxhdManage.tg"></div>
             reqPara:{rows:5},               	//请求所带参数。默认传rows:5，表示每页显示5条
@@ -84,7 +85,7 @@ define(function (require, exports, module) {
                     pg.on("page:skip",function(e){
                         me.st.onSkip.call(me,e);
                         me.currentPageno = e.pageNum;
-                        if(me.st.dataType=="null"){     //空类型
+                        if(me.st.dataType==null || !me.set.reqPath){     //空类型//或者请求地址为空 不进行网络请求
                             return;
                         }
                         var para = setting.reqPara;

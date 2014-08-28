@@ -169,9 +169,7 @@ define(function (require, exports, module) {
         //自动播
         //sett.autoPlay && me.play();
 
-        var winRize = function(){
-
-        }
+        var winRize = function(){}
 
         cj.winResize(sett.aotuFreshDelay, function (w, h) {
             if(!me.autoWidth)   return;
@@ -180,6 +178,18 @@ define(function (require, exports, module) {
                 me.height = me.width * sett.scaleWH;
             }
             me._setSize();
+        });
+		
+		//href单击跳转
+        me.el.delegate("*[href]","click",function(e){
+            var t = $(this);
+            var href = t.attr("href");
+            e.preventDefault();
+            t.attr("target")=="_blank"?
+                window.open(href)
+                :
+                location.href = href
+            ;
         });
     };
 

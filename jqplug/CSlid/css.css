@@ -18,6 +18,9 @@
 .scrollEle {
   position: absolute;
 }
+.scrollEle *[href] {
+  cursor: pointer;
+}
 .ctrlPan {
   font-size: 0;
   position: absolute;

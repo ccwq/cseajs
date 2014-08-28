@@ -893,7 +893,20 @@ define(function (require) {
                 dataType:dataType
             });
         }
+    }();//多参数请求end
+	
+	
+	//根据 html或者body的某种选择器，来执行相应的函数
+    !function(){
+        function rootCondiFunc($root,funcMap, isDomReady){
+            $.each(funcMap, function(k, el){
+                if($root.is(k+"," +k+" body") && el){
+                    isDomReady?$(el):el();
+                }
+            });
+        }
+
+        tool.rootCondiFunc = rootCondiFunc;
     }();
-    //多参数请求end
     return tool;
 });

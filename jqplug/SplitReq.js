@@ -35,9 +35,10 @@ define(function (require, exports, module) {
             edge_page: 2,
             skip_show: false,                   //显示跳转到
 
-            //custome config
+
             reqPath:"",                         //允许使用模式如  /root/html_{pageno}.html
-                                                //如果为空，不进行网络请求，需要手动配置total_page
+            pathVars:{ },                       //路径中的变量 如 {"_root","abc/"}会使路径"{_root}d.json"解析为"abc/d.json"
+            //如果为空，不进行网络请求，需要手动配置total_page
             //目前支持 {pageno}(当前页码)，{_}(web根路径)
             //可以写在分页div上 例： <div class="pageSize" data_reqPath="{_}zxhdManage/getActivityPageListZxhdManage.tg"></div>
             reqPara:{rows:5},               	//请求所带参数。默认传rows:5，表示每页显示5条
@@ -62,7 +63,8 @@ define(function (require, exports, module) {
             rowsMount:undefined,                //请求参数：返回条目数量 如(10的作用):do?rows=10&page=2,该值取值优先级，用户config的值>行内设置的值>预设值
             hidePageNav:false,                 //当此项为true时候，隐藏分页按钮（用来发起自定义请求，实现如 换一批等功能）
 
-            a:0
+
+            a: 0
         };
         /**
          * 分页或者换一批请求，一个class
@@ -78,6 +80,7 @@ define(function (require, exports, module) {
             cj.getKissy(function(S){
                 S.use("gallery/page/1.0/index",function(S,Page){
                     setting.reqPath = pageCont.attr("data_reqPath") || setting.reqPath;
+                    $.each(setting.pathVars,function(k,vl){   setting.reqPath = setting.reqPath.replaceAll("{"+k+"}",vl);    });            //解析路径变量
                     setting.dataType = pageCont.attr("data_dataType") || setting.dataType;
                     pageCont.addClass("page_nav");
 

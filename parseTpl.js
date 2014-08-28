@@ -11,7 +11,6 @@ define(function (require, exports, module) {
      * 解析模板
      * 模板字段介绍
      * {_index}:遍历到的索引
-     * {_}:root
      * */
     function parseTpl(lists,tpl){
         var outPut="",item="";

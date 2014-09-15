@@ -898,7 +898,8 @@ define(function (require) {
 	
 	//根据 html或者body的某种选择器，来执行相应的函数
     !function(){
-        function rootCondiFunc($root,funcMap, isDomReady){
+        var $root = $("html");
+        function rootCondiFunc(funcMap, isDomReady){
             $.each(funcMap, function(k, el){
                 if($root.is(k+"," +k+" body") && el){
                     isDomReady?$(el):el();

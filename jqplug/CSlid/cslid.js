@@ -75,6 +75,9 @@ define(function (require, exports, module) {
         //初始尺寸
         size:{w:500,h:300},
 
+        //如果true，size数据直接从css里读取，上面两个配置失效。
+        sizeFromCss:false,
+
         //当宽度为auto时，的节流间隔
         aotuFreshDelay:180
     };
@@ -82,9 +85,7 @@ define(function (require, exports, module) {
     /**
      * 模板
      */
-    var scrollTpl =
-            "<div class='scrollEle'></div>"
-        ;
+    var scrollTpl = "<div class='scrollEle'></div>";
 
     /**
      * 类定义
@@ -94,42 +95,41 @@ define(function (require, exports, module) {
     var Slid = module.exports = CSlid = function(setting){
         var me= this;
         var sett = $.extend(true,{},def,setting);
+
         //私有变量
         me.sett = sett;
 
-        /**
-         * 所有图片加载完成？初始有0张图片，所以任务所有已加载完成
-         */
+        //所有图片加载完成？初始有0张图片，所以任务所有已加载完成
         me.loaded = true;
 
-        /**
-         * 当前有效的播放列表
-         */
+        //当前有效的播放列表
         me._data = [];
 
-        /**
-         * 播放列表缓存
-         */
+        //播放列表缓存
         me._dataCache = [];
 
-        /**
-         * 当前索引
-         */
+        //当前索引
         me._index = -1;
 
-        /**
-         * 可视尺寸
-         */
+        //可视尺寸
+
         me.width = 0;
         me.height = 0;
 
-        /**
-         * 滚动元素的宽度
-         */
+        //滚动元素的宽度
         me.scrollWidth = 0;
 
         //主体元素
         me.el = $(sett.cont);
+
+        //尺寸信息来源于css时执行
+        if(sett.sizeFromCss){
+            sett.size = {
+                w:me.el.width(),
+                h:me.el.height()
+            };
+        }
+
         me.el.addClass("cslid");
         if(!me.el.length) throw "请传入有效的选择器";
 
@@ -634,7 +634,7 @@ define(function (require, exports, module) {
             im.wrap("<div class='csele'><div class='mainCont'></div></div>");
         });
         $el.wrapInner("<div class='scrollEle'></div>");
-        return new CSlid(config);
 
+        return new CSlid(config);
     }
 });

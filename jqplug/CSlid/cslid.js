@@ -83,8 +83,8 @@ define(function (require, exports, module) {
      * 模板
      */
     var scrollTpl =
-        "<div class='scrollEle'></div>"
-    ;
+            "<div class='scrollEle'></div>"
+        ;
 
     /**
      * 类定义
@@ -142,7 +142,7 @@ define(function (require, exports, module) {
         //控制点
         me.ctrlPan = $("<div class='ctrlPan'></div>").appendTo(me.el);
         me.ctrlPan.delegate(">a","click",function(e){
-           var ti = $(this);
+            var ti = $(this);
             me.reCount();
             me.index(ti.index(),true);
         });
@@ -179,8 +179,8 @@ define(function (require, exports, module) {
             }
             me._setSize();
         });
-		
-		//href单击跳转
+
+        //href单击跳转
         me.el.delegate("*[href]","click",function(e){
             var t = $(this);
             var href = t.attr("href");
@@ -405,11 +405,11 @@ define(function (require, exports, module) {
         loadedOnPreComplete:false
     };
     var eleTpl =
-        "<div class='csele'>" +
+            "<div class='csele'>" +
             "<div class='mainCont'><img _src='{src}' preSrc=''/></div>" +
             "<div class='subCont'></div>" +
-        "</div>"
-    ;
+            "</div>"
+        ;
     /**
      * 滑动项元素
      * @constructor
@@ -427,7 +427,7 @@ define(function (require, exports, module) {
                 //路径形式，转换为配置形式处理
                 el = {src:el};
             }
-        //dom对象//jq的判断方式
+            //dom对象//jq的判断方式
         }else if(el.nodeType){
             el = $(el);//转交给jquery
         }
@@ -441,7 +441,7 @@ define(function (require, exports, module) {
                 src:img.attr("_src") || img.attr("src"),
                 preSrc:img.attr("preSrc")
             });
-        //配置对象
+            //配置对象
         }else if($.isPlainObject(el)){
             me.info = getScrollEleInfo(el);
             me.info.el = eleTpl.replace("{src}",el.src);
@@ -619,4 +619,23 @@ define(function (require, exports, module) {
         hb.children(":last").remove();
         return size;
     };
+
+
+    /**
+     * 从平行列表的开始创建slid 形如<div><img/><img/><img/></div>结构.缺点是无法使用自定义element层内容
+     * @param $el外部容器
+     * @param config配置
+     */
+    CSlid.fromPlaneList = function($el,config){
+        $el = $($el);
+        config.cont = config.cont || $el.selector;
+
+
+        $el.find(">img").each(function(){
+            var im = $(this);
+            im.wrap("<div class='csele'><div class='mainCont'></div></div>");
+        });
+        $el.wrapInner("<div class='scrollEle'></div>");
+        debugger;
+    }
 });

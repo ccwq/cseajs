@@ -634,7 +634,7 @@ define(function (require, exports, module) {
             im.wrap("<div class='csele'><div class='mainCont'></div></div>");
         });
         $el.wrapInner("<div class='scrollEle'></div>");
-
         return new CSlid(config);
+
     }
 });

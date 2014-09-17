@@ -909,5 +909,45 @@ define(function (require) {
 
         tool.rootCondiFunc = rootCondiFunc;
     }();
+
+    /**
+     * 获取$元素css的值（剔除单位）
+     * @param prop
+     * @returns {Number}
+     */
+    $.fn.getCssVal = function(prop){
+        return  parseInt( this.css(prop) );
+    };
+
+    /**
+     * 获取css规则某属性的值（只适用于简单规则如#a{},.bb{}）
+     *  fn("#abc","fontSize")
+     *  fn("fontSize")               //取#bridge fontSize的值
+     *
+     * @param id_or_class css规则名称 #foo|.bar，如果非#或者.开头表示指定prop的值。默认取#bridge的规则
+     * @param prop  规则的属性名
+     * @returns {Number}
+     */
+    tool.getCssRuleVal = $.getCssRuleVal = function(id_or_class, prop){
+        var bd = $("body");
+        if(!bd.length)  throw "请于dom ready之后调用该函数！";
+        cssRuleShadow.removeAttr("id").removeAttr("class");
+
+        //带有#或者.的字符串
+        if(/^(#|\.)/.test(id_or_class)){
+            cssRuleShadow.attr(RegExp["$1"]=="#"?"id":"class", id_or_class.substr(1));
+        }else{
+            //参数1不合法，认为参数1为#bridge,并且认为参数1为prop
+            cssRuleShadow.attr("id","bridge");
+            prop = id_or_class;
+        }
+
+        bd.append(cssRuleShadow);
+        var re = cssRuleShadow.getCssVal(prop);
+        cssRuleShadow.detach();
+        return re;
+    };
+    var cssRuleShadow = $("<div style='display:none;'></div>");
+
     return tool;
 });

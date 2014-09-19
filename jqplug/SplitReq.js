@@ -33,7 +33,13 @@ define(function (require, exports, module) {
             next_show: true,
             last_show: true,
             edge_page: 2,
-            skip_show: false,                  //显示跳转到
+            skip_show: false,                       //显示跳转到
+            total_show:false,                    //是否总页数
+            total_text:"共{totalPage}页",         //总页数文案
+            first_text:"首页",                    //各种文案
+            last_text:"末页",
+            preview_text:"上一页",
+            next_text:"下一页",
 
             //custome config
             reqPath:"",                         //允许使用模式如  /root/html_{pageno}.html
@@ -73,7 +79,7 @@ define(function (require, exports, module) {
             me.initedCb = $.Callbacks("memory");
             var setting = me.setting = me.st = $.extend(true, {}, def, cfg);
 
-            if(typeof sett.container != "string"){
+            if(typeof setting.container != "string"){
                 throw "config.container必须为选择器字符串";
             }
 

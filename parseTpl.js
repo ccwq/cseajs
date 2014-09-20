@@ -23,6 +23,7 @@ define(function (require, exports, module) {
             item = tpl;
             for(var k2 in el1){
                 var el2 = el1[k2];
+                el2 = pt.valAlias[el2]===undefined?el2:pt.valAlias[el2];
                 item = item.replaceAll("{"+k2+"}",el2)
             }
             outPut+=("\n"+item);
@@ -38,6 +39,12 @@ define(function (require, exports, module) {
     };
 
     var pt = parseTpl;
+    
+    /**
+     * 值的别名
+     */
+    pt.valAlias = {};
+    
 
     /**
      * 全局字典
@@ -60,6 +67,16 @@ define(function (require, exports, module) {
         }
         for(var k in map){
             pt.vars[k] = map[k];
+        }
+    }
+
+    /**
+     * 增加变量别名
+     * @param obj
+     */
+    pt.addValAlias = function(obj){
+        for(var k in obj){
+            pt.valAlias[k] = obj[k];
         }
     }
 

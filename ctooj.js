@@ -950,7 +950,35 @@ define(function (require) {
     };
 
 
- 
+    //css单位
+    var rg_css_unit = /(:\s?\d+)(ms|px|s|em)/g;
+
+    /**
+     * 获取并解析font配置中的信息。
+     * @param id_or_class 柜子名称，id或者class
+     *
+     *
+     * #bridge{
+     *      font-family: "hh:@{header_h},h:'9555ss',song:'8855px', cc:4545px";
+     * }
+     * 结果:Object  {hh: 112, h: "9555ss", song: "8855px", cc: 4545}
+     *
+     */
+    tool.getCJObj = function(id_or_class){
+        id_or_class = id_or_class || "#bridge"
+        var ffs = tool.getCssRuleVal(id_or_class,"fontFamily", true);
+        var ffs = $.trim(ffs).replace(/^"|'/,"({").replace(/"|'$/,"})");
+
+        //去除单位
+        ffs = ffs.replace(rg_css_unit,"$1");
+
+        //去除引号转义
+        ffs = ffs.replace(/\\('|")/g,"\"");
+
+        var obj = eval(ffs);
+
+        return obj;
+    }
     var cssRuleShadow = $("<div style='display:none;'></div>");
 
     return tool;

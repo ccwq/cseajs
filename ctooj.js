@@ -915,8 +915,8 @@ define(function (require) {
      * @param prop
      * @returns {Number}
      */
-    $.fn.getCssVal = function(prop){
-        return  parseInt( this.css(prop) );
+    $.fn.getCssVal = function(prop,getFullString){
+        return  getFullString?this.css(prop):parseInt( this.css(prop) );
     };
 
     /**
@@ -928,7 +928,7 @@ define(function (require) {
      * @param prop  规则的属性名
      * @returns {Number}
      */
-    tool.getCssRuleVal = $.getCssRuleVal = function(id_or_class, prop){
+    tool.getCssRuleVal = $.getCssRuleVal = function(id_or_class, prop, getFullString){
         var bd = $("body");
         if(!bd.length)  throw "请于dom ready之后调用该函数！";
         cssRuleShadow.removeAttr("id").removeAttr("class");
@@ -940,13 +940,17 @@ define(function (require) {
             //参数1不合法，认为参数1为#bridge,并且认为参数1为prop
             cssRuleShadow.attr("id","bridge");
             prop = id_or_class;
+            getFullString = prop;
         }
 
         bd.append(cssRuleShadow);
-        var re = cssRuleShadow.getCssVal(prop);
+        var re = cssRuleShadow.getCssVal(prop,getFullString);
         cssRuleShadow.detach();
         return re;
     };
+
+
+ 
     var cssRuleShadow = $("<div style='display:none;'></div>");
 
     return tool;

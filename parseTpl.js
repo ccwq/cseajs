@@ -7,11 +7,18 @@
  */
 define(function (require, exports, module) {
     var numRg = /\d+/;
+
+
     /**
-     * 解析模板
-     * 模板字段介绍
-     * {_index}:遍历到的索引
-     * */
+     * 模板解析
+     * 方法 addVars({}),设定默认变量值
+     * 方法 addValAlias({}) 设置变量别名
+     *
+     * @param lists 数据，可以是[{},{},{}]，也可以是{}
+     * @param tpl 模板,例如<a>{name}</a>
+     *              {_index_}:遍历到的索引
+     * @returns {string}
+     */
     function parseTpl(lists,tpl){
         var outPut="",item="";
         if(!isArray(lists))   lists = [lists];
@@ -20,7 +27,7 @@ define(function (require, exports, module) {
         for(var k1 in lists){
             var el1 = lists[k1];
             if(!numRg.test(k1)) continue;           //数字验证。如果字段不是数字，滚。cao fk ie；
-            item = tpl;
+            item = tpl.replaceAll("{_index_}",k1);
             for(var k2 in el1){
                 var el2 = el1[k2];
                 el2 = pt.valAlias[el2]===undefined?el2:pt.valAlias[el2];
@@ -39,12 +46,12 @@ define(function (require, exports, module) {
     };
 
     var pt = parseTpl;
-    
+
     /**
      * 值的别名
      */
     pt.valAlias = {};
-    
+
 
     /**
      * 全局字典

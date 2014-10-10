@@ -981,5 +981,36 @@ define(function (require) {
     }
     var cssRuleShadow = $("<div style='display:none;'></div>");
 
+
+    //ajax ifarme
+    !function(){
+        /**
+         * 使div增加类似iframe的配置
+         * @returns {*}
+         */
+        $.fn.aiframe = function(){
+            return this.each(function(i){
+                var me = $(this);
+                var src = me.attr("src");
+                if(!src) return;
+                var typeString = me.attr("type") || "find";
+                var seletor = me.attr("selector");
+                $.get(src)
+                    .done(function(data){
+                        var dom = $(data);
+                        if(seletor){
+                            dom = dom[typeString](seletor);
+                        }
+                        me.append(dom);
+                        me.removeClass("aiframe");
+                    })
+                    .fail(function(){
+                        throw "aiframe请求失败:" + src;
+                    })
+                ;
+            });
+        }
+    }();
+
     return tool;
 });

@@ -465,6 +465,31 @@ define(function (require) {
         if(!window.ctool) window.ctool = {};
         return window.ctool;
     }
+
+
+
+    /**
+     * 用于在html中定义js变量
+     * html中应该这样写 <mate id="pagevars" content="path:'root/abc, imgbase:'ddd'"></mate>
+     * @param mateId 默认id为pagevars如果用其他的id，请传入id名称
+     * @returns {*}
+     */
+    tl.getPageVars = function(mateId){
+        mateId = mateId || "pagevars";
+        var mat = document.getElementById(mateId);
+        if(!mat) throw "未找到#"+mateId+"，参数对象";
+
+        var str = mat.getAttribute("content");
+        var obj;
+        try{
+            obj = eval("({"+str+"})");
+        }catch(e){
+            throw "页面变量格式有误!";
+        }
+        return obj;
+    };
+
+
     return tl;
 });
 

@@ -1013,7 +1013,9 @@ define(function (require) {
     }();
 
 
-    //href扩展
+    /**
+     * 使所有标签支持href跳转
+     */
     tool.hrefPlus = function(){
         $(document).delegate("[href]","click",function(){
             var cur = $(this);
@@ -1024,6 +1026,26 @@ define(function (require) {
                 location.href = cur.attr("href");
             }
         });
+    }
+
+
+    /**
+     * 传入各种类型，传出json
+     * 标准json字符串（属性名带引号），非标准,objcet（此情况直接返回）
+     * @param string_objcet
+     */
+    tool.tojson = function(string_objcet){
+        var reobj;
+        if(typeof string_objcet == "string"){
+            try{
+                reobj = $.parseJSON(string_objcet);
+            }catch(e){
+                reobj = eval("(" + string_objcet + ")")
+            }
+        }else{
+            reobj = string_objcet;
+        }
+        return reobj;
     }
 
 

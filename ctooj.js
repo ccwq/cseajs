@@ -1012,5 +1012,20 @@ define(function (require) {
         }
     }();
 
+
+    //href扩展
+    tool.hrefPlus = function(){
+        $(document).delegate("[href]","click",function(){
+            var cur = $(this);
+            if(cur.is("a")) return;
+            if(cur.is("[target=_blank]")){
+                open(cur.attr("href"));
+            }else{
+                location.href = cur.attr("href");
+            }
+        });
+    }
+
+
     return tool;
 });

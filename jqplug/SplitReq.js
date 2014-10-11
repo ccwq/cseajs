@@ -14,11 +14,23 @@ define(function (require, exports, module) {
     var cj = require("ctooj");
     var $ = require("jq");
     var nullFunc = function(){ };
+    require("$/simplePagination");
 
     //常量
     var constVar = {
         rowsMount:10
     }
+
+    var field_transport = {
+        total_page:"pages",
+        continuous_page:"displayedPages",
+        current_page:"currentPage",
+        edge_page:"edges",
+        preview_text:"prevText",
+        next_text:"nextText",
+        rowsMount:"itemsOnPage",
+        0:0
+    };
 
     //带分页的，分段请求功能类
     !function(){
@@ -68,6 +80,7 @@ define(function (require, exports, module) {
             rowsMount:undefined,                //请求参数：返回条目数量 如(10的作用):do?rows=10&page=2,该值取值优先级，用户config的值>行内设置的值>预设值
             hidePageNav:false,                 //当此项为true时候，隐藏分页按钮（用来发起自定义请求，实现如 换一批等功能）
 
+            cssStyle: 'lite-theme',
             a:0
         };
         /**
@@ -86,31 +99,38 @@ define(function (require, exports, module) {
             var pageCont = me.container = $(setting.container);
             //先去
             setting.rowsMount = setting.rowsMount || pageCont.attr("rowsMount") || constVar.rowsMount;
-            cj.getKissy(function(S){
-                S.use("gallery/page/1.0/index",function(S,Page){
-                    setting.reqPath = pageCont.attr("data_reqPath") || setting.reqPath;
-                    setting.dataType = pageCont.attr("data_dataType") || setting.dataType;
-                    pageCont.addClass("page_nav");
 
-                    var pg = me.page = new Page(setting);
-                    pg.on("page:skip",function(e){
-                        me.st.onSkip.call(me,e);
-                        me.currentPageno = e.pageNum;
-                        if(!me.st.reqPath || me.st.dataType==null){     //空类型
-                            return;
-                        }
-                        var para = setting.reqPara;
-                        para[setting.pagenoFieldName] = e.pageNum;
-                        para[setting.rowsFiledName] = me.st.rowsMount;                     //一次请求多少条
-                        var back = setting.onReq.call(me,para);
-                        if(back) para = back;
-                        me.req(para);
-                    });
-                    if(setting.firstReqAuto) me.skip(1);
-                    me.st.onInit.call(me,pg);
-                    me.initedCb.fire();
-                });/*s use end*/
-            });/*getKissy end*/
+            setting.reqPath = pageCont.attr("data_reqPath") || setting.reqPath;
+            setting.dataType = pageCont.attr("data_dataType") || setting.dataType;
+
+            //字段变换
+            $.each(field_transport,function(old,neww){ setting[neww] = setting[old]; });
+            pageCont.addClass("page_nav");
+            setting.onPageClick = function(num,e){
+                me.st.onSkip.call(me,e);
+                me.currentPageno = num;
+                if(!me.st.reqPath || me.st.dataType==null){     //空类型
+                    return;
+                }
+                var para = setting.reqPara;
+                para[setting.pagenoFieldName] = num;
+                para[setting.rowsFiledName] = me.st.rowsMount;                     //一次请求多少条
+                var back = setting.onReq.call(me,para);
+                if(back) para = back;
+                me.req(para);
+            };
+
+
+            var pg = me.page = $(setting.container).pagination(setting);
+            pg.call = function(method, para){
+                return pg.pagination(method, para);
+            }
+
+            //自动跳转
+            if(setting.firstReqAuto) pg.call("selectPage",1);
+            me.st.onInit.call(me,pg);
+            me.initedCb.fire();
+
         };
 
         var fn = module.exports.prototype;
@@ -169,7 +189,7 @@ define(function (require, exports, module) {
          */
         function doskip(pageno){
             var me = this;
-            me.page.skip(pageno || 1);
+            me.page.call("selectPage",pageno || 1);
         }
 
         /**
@@ -198,8 +218,7 @@ define(function (require, exports, module) {
         fn.setTotalPangeNum = function(num){
             if(this.st.hidePageNav)    return;
             var me = this;
-            me.page.changetTotalPage(num || 1);
-            me.page.renderPage();
+            me.page.call("updateItems",(num || 1) * me.st.itemsOnPage);
         };
 
         /**

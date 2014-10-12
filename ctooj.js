@@ -6,521 +6,518 @@ define(function (require) {
     var bro_str = "_" + cl.bro();
     $(function(){ $("body").addClass(bro_str); });
     (function(){
-        (function(){
-            var wi = $(window),sw = 0, sh=0, resiFunc;
-            var cb = $.Callbacks();
-            wi.resize(resiFunc = function(){
-                sw = wi.width();
-                sh = wi.height();
-                if(sw==0 || sh==0)  return;
-                cb.fire(sw,sh,wi);
-            });
-            resiFunc();
-            if(sw==0 || sh==0)  $(resiFunc);
+        var wi = $(window),sw = 0, sh=0, resiFunc;
+        var cb = $.Callbacks();
+        wi.resize(resiFunc = function(){
+            sw = wi.width();
+            sh = wi.height();
+            if(sw==0 || sh==0)  return;
+            cb.fire(sw,sh,wi);
+        });
+        resiFunc();
+        if(sw==0 || sh==0)  $(resiFunc);
 
-            /**
-             * @param throttleDelay 节流阀延时，如果为0,或者为true，表示不适用节流阀
-             * @param callback 回调function(windowWidth,widnowHeight,$window){}
-             * @returns {*|jQuery|HTMLElement}
-             */
-            function winResize(throttleDelay,callback){
-                var delay = 0;
+        /**
+         * @param throttleDelay 节流阀延时，如果为0,或者为true，表示不适用节流阀
+         * @param callback 回调function(windowWidth,widnowHeight,$window){}
+         * @returns {*|jQuery|HTMLElement}
+         */
+        function winResize(throttleDelay,callback){
+            var delay = 0;
 
-                if($.isFunction(throttleDelay))
-                    callback = throttleDelay;
-                else
-                    delay = throttleDelay;
+            if($.isFunction(throttleDelay))
+                callback = throttleDelay;
+            else
+                delay = throttleDelay;
 
-                //delay为0或者true，表示不适用节流阀
-                if(delay === 0 || delay === true){
-                    cb.add(callback);
-                }else{
-                    cb.add(cl.throttle(delay,callback));
-                }
-                //立即执行一次
-                callback(wi.width(),wi.height(),wi);
-                return wi;
+            //delay为0或者true，表示不适用节流阀
+            if(delay === 0 || delay === true){
+                cb.add(callback);
+            }else{
+                cb.add(cl.throttle(delay,callback));
             }
-            tool.winResize = winResize;
+            //立即执行一次
+            callback(wi.width(),wi.height(),wi);
+            return wi;
+        }
+        tool.winResize = winResize;
 
-            /*增加scrpt标签 适用于百度分享等功能*/
-            tool.addScript = function(url_para,para){
-                if(typeof url_para=="string"){
-                    para = para || {};
-                    para.src = url_para;
-                }else{
-                    para = url_para;
-                }
-                para.type = "text/javascript";
-                para.parentSel = para.parentSel || "head";
-                var scr = document.createElement("script");
-                var dom_par = $(para.parentSel).get(0);
-                if(!dom_par) throw "script父元素未选择到";
-                dom_par.appendChild(scr);
-                delete para.parentSel;
-                $(scr).attr(para);
-            };
+        /*增加scrpt标签 适用于百度分享等功能*/
+        tool.addScript = function(url_para,para){
+            if(typeof url_para=="string"){
+                para = para || {};
+                para.src = url_para;
+            }else{
+                para = url_para;
+            }
+            para.type = "text/javascript";
+            para.parentSel = para.parentSel || "head";
+            var scr = document.createElement("script");
+            var dom_par = $(para.parentSel).get(0);
+            if(!dom_par) throw "script父元素未选择到";
+            dom_par.appendChild(scr);
+            delete para.parentSel;
+            $(scr).attr(para);
+        };
 
-            /*阻塞图片加载*/
-            /*阻塞网页上当前所有图片加载 直到调用tool.unblock_img_load*/
-            tool.block_img_load=function(){
-                $(function(){
-                    $("img").each(function(i){
-                        var me=$(this);
-                        var src = me.attr("src");
-                        me.removeAttr("src").attr({ block_src: src });
-                    });
+        /*阻塞图片加载*/
+        /*阻塞网页上当前所有图片加载 直到调用tool.unblock_img_load*/
+        tool.block_img_load=function(){
+            $(function(){
+                $("img").each(function(i){
+                    var me=$(this);
+                    var src = me.attr("src");
+                    me.removeAttr("src").attr({ block_src: src });
                 });
-            };
+            });
+        };
 
-            tool.unblock_img_load = tool.unblockImg = function(custom_key){
-                custom_key = (custom_key || "block_src");
-                $(function(){
-                    $("img[" + custom_key + "]").each(function(i){
-                        var me=$(this);
-                        var src = me.attr(custom_key);
-                        me.removeAttr(custom_key).attr({ src: src });
-                    });
-                });
-            };
-
-            /*
-            * 开始加载被延迟的图片
-            * */
-            $.fn.unblockImg = function(custom_key){
-                custom_key = (custom_key || "_src");
-                return this.each(function(){
+        tool.unblock_img_load = tool.unblockImg = function(custom_key){
+            custom_key = (custom_key || "block_src");
+            $(function(){
+                $("img[" + custom_key + "]").each(function(i){
                     var me=$(this);
                     var src = me.attr(custom_key);
                     me.removeAttr(custom_key).attr({ src: src });
                 });
-            };
-            /*--阻塞图片加载*/
-
-            /*一些自定义alert tip msg confirm*/
-            tool.jbox_alert = function(msg,title,type,config){
-                require.async("jBox/j",function(){
-                    $.jBox.prompt(msg, title, type, config);
-                });
-            };
-
-            tool.jbox_tip = function(msg,type,config){
-                require.async("jBox/j",function(){
-                    $.jBox.tip(msg || '正在优化', type || 'loading', $.extend({opacity:0.72},config));
-                });
-            };
-
-            tool.jbox_msg = function(msg,tit,config){
-                require.async("jBox/j",function(){
-                    $.jBox.messager(msg || "温馨提示", tit||"温馨提示！", null, config);
-                });
-            };
-
-            tool.jbox_confirm = function(msg,tit,callback,config){
-                require.async("jBox/j",function(){
-                    $.jBox.confirm(msg ||"确定？", tit||"请选择：", callback, config);
-                });
-            };
-
-            /*
-             * 尺寸为0的容器,用于存放特殊dom对象
-             * */
-            var hidebox;
-            function getHideBox(){
-                if(!hidebox){
-                    hidebox = $("#hidebox");
-                    if(!hidebox.length)  hidebox = $("<div id='hidebox' style='width: 0; height: 0; overflow: hidden; font-size: 0; position: absolute;'></div>").appendTo("body");
-                    hidebox.addClass(bro.cls());
-                }
-                return hidebox;
-            };
-            tool.getHideBox = getHideBox;
-
-            /*
-             * 获取图片原始尺寸
-             * */
-            function getImageOrigSize(url_paras,callback){
-                cl.imgPreLoad(url_paras,function(result){
-                    var $ti = $(this);
-                    getHideBox().append($ti);
-                    callback && callback.call(this,$ti.width(),$ti.height(),result);
-                    if($ti.parent().is("#hidebox")) $ti.remove();
-                });
-            }
-            tool.getImageOrigSize = tool.getImageSizeByPath = getImageOrigSize;
-
-
-            /*
-            * 获取图片原始尺寸$jq
-            * */
-            $.fn.get_imgOrg_size = function(callback){
-                return this.each(function(){
-                    var ti = $(this);
-                    if(!ti.is("img"))   throw "元素必须是图片";
-
-                    getImageOrigSize(ti.attr("src") || ti.attr("_src"),function(iw,ih){
-                        if(callback) callback.call(ti,iw,ih);
-                    });
-                });
-            };
-
-
-            !function(){
-                var psizeRg = /\d+\,\d+/;
-                var config = {
-                    pw:undefined,                       //如果此值设置，parent宽度会被此值代替
-                    ph:undefined,
-                    customLay: $.noop                   //自定义布局
-                };
-
-                /**
-                 * 剪裁以匹配父容器
-                 * 注意事项:1父容器必须设置尺寸
-                 * @returns {*}
-                 */
-                $.fn.maxonLite = function(setting){
-                    var sett = $.extend({},config,setting);
-                    return this.each(function(){
-                        var ti=$(this),d=ti.data();
-                        var par = ti.parent();
-                        if("absolute|fixed".indexOf(par.css("position"))===-1){
-                            par.css({position:"relative",overflow:"hidden"});
-                        }
-                        ti.css({position:"absolute"});
-                        var path = ti.attr("src") || ti.attr("_src");
-                        if(!path)   throw "图片元素无效，没有src或者_src属性";
-
-                        //预设尺寸
-                        var psize = ti.attr("psize");
-                        if(psize && psizeRg.test(psize)){
-                            var s = psize.split(",");
-                            d.org_size = [s[0]*1,s[1]*1];
-                        }
-
-                        if(!d.org_size){
-                            ti.get_imgOrg_size(function(iw,ih){
-                                d.org_size = [iw,ih];
-                                fit_out_on.call(ti, d.org_size,[sett.pw || par.width(),sett.ph || par.height()], sett.customLay);
-                            });
-                        }else{
-                            fit_out_on.call(ti, d.org_size,[sett.pw || par.width(), sett.ph || par.height()], sett.customLay);
-                        }
-                    });
-                };
-
-                function fit_out_on(sizeArr,parSizeArr,customLay){
-                    var css = cl.max_on_container(parSizeArr,sizeArr).css;
-                    //css.marginLeft = (-css.left - parSizeArr) * 0.5;
-                    //css.left = "50%";
-                    css = customLay(css,sizeArr,parSizeArr) || css;
-                    this.css(css);
-                }
-
-                /**
-                 * 自定义，位置函数
-                 */
-                $.maxonLite = {
-                    /**
-                     * 使用相对位置居中图片，适用于，父容宽度变化
-                     */
-                    centerImgFunc:function(css){
-                        css.left = "50%";
-                        css.marginLeft = -css.width * 0.5;
-                        return css;
-                    }
-                }
-            }();
-
-        })();
-
-
-
-
-        //----------------------------
-        /*表单元素美化插件 span实现*/
-        (function(){
-            require.async("ctool.css");
-            $.fn.extend({
-                inputsee:function(config_method,para){
-                    return this.each(function(i){
-                        var me=$(this), d=me.data();
-                        if(typeof config_method == "string"){
-                            if(!inputsee_method[config_method]) throw "您调用的方法不存在！";
-                            inputsee_method[config_method].call(me,para);
-                        }
-                        if(me.parent().is(".inputsee")) return;
-                        var span = $("<span class='inputsee'></span>").addClass("inputsee" + bro_str);
-                        me.after(span).appendTo(span);
-                        if(me.is("textarea")){
-                            span.addClass("textarea");
-                        }
-
-                        span.addClass(me.attr("inputsee_class")); //外套设置class
-
-                        //debugger;
-                        //span.css({lineHeight:span.height() + "px"});
-
-                        var blt = me.attr("blank_text") || me.attr("placeholder");
-                        me.attr("placeholder") && me.removeAttr("placeholder");
-                        if(blt){
-                            var label = d.label = $("<span class='blank_label'></span>").text(blt);
-                            var labelClass = me.attr("blank_lable_class");      //空label设置class
-                            labelClass && label.addClass("labelClass");
-                            me.after(label);
-                            me.bind("blur focus",function(e){
-                                if(e.type == "focus")                           label.hide();
-                                else if(e.type == "blur" && !me.val())         label.show();
-                            });
-                            //自动填充密码后 标签仍再的问题
-                            setTimeout(function(){
-                                if(me.val())    label.hide();
-                            },210);
-                        }
-
-                        span.click(function(){ me.focus(); }).addClass(bro());
-                    });
-                }
             });
+        };
 
-            var inputsee_method = {
-                setBlankText:function(para){
-                    var me=this,d=me.data();
-                    if(d.label) d.label.text(para);
-                }
+        /*
+        * 开始加载被延迟的图片
+        * */
+        $.fn.unblockImg = function(custom_key){
+            custom_key = (custom_key || "_src");
+            return this.each(function(){
+                var me=$(this);
+                var src = me.attr(custom_key);
+                me.removeAttr(custom_key).attr({ src: src });
+            });
+        };
+        /*--阻塞图片加载*/
+
+        /*一些自定义alert tip msg confirm*/
+        tool.jbox_alert = function(msg,title,type,config){
+            require.async("jBox/j",function(){
+                $.jBox.prompt(msg, title, type, config);
+            });
+        };
+
+        tool.jbox_tip = function(msg,type,config){
+            require.async("jBox/j",function(){
+                $.jBox.tip(msg || '正在优化', type || 'loading', $.extend({opacity:0.72},config));
+            });
+        };
+
+        tool.jbox_msg = function(msg,tit,config){
+            require.async("jBox/j",function(){
+                $.jBox.messager(msg || "温馨提示", tit||"温馨提示！", null, config);
+            });
+        };
+
+        tool.jbox_confirm = function(msg,tit,callback,config){
+            require.async("jBox/j",function(){
+                $.jBox.confirm(msg ||"确定？", tit||"请选择：", callback, config);
+            });
+        };
+
+        /*
+         * 尺寸为0的容器,用于存放特殊dom对象
+         * */
+        var hidebox;
+        function getHideBox(){
+            if(!hidebox){
+                hidebox = $("#hidebox");
+                if(!hidebox.length)  hidebox = $("<div id='hidebox' style='width: 0; height: 0; overflow: hidden; font-size: 0; position: absolute;'></div>").appendTo("body");
+                hidebox.addClass(bro.cls());
             }
-        })();
-        /*--表单元素美化插件 table实现*/
+            return hidebox;
+        };
+        tool.getHideBox = getHideBox;
 
-        //垂直居中
-        (function(){
-            $.fn.middle = function(){
-                return this.each(function(i){
-                    var me=$(this);
-                    var val = 0.5*(me.parent().height() - me.height());
-                    if(me.css("position") == "absolute" && me.css("position") == "position"){
-                        me.css({top:val});
-                    }else{
-                        me.css({marginTop:val});
-                    }
-                });
-            };
-        })();
-
-
-        (function(){
-            $.fn.maxOn=function(config,para){
-                if(typeof config == "string"){
-                    var method = methods[config];
-                    if(!method) throw "访问的方法不存在！";
-                    return method.call(this,para);
-                };
-
-                if(config && config.calls){
-                    this.trigger(config.calls,config.callsParam);
-                    return this;
-                }
-                if(typeof config == "string") config = {clor:config};
-                var defaultConfig = {
-                    space:0, edgeFix:{bottom:-5,right:0},       //inline-block间距的bug
-                    posi:{left_perc:0.5,top_perc:0.5,top:0,left:0},     //截取位置。默认居中 即left_perc:0.5,top_perc:0.5
-                    clor:undefined,                          //closest选择器
-                    size:{w:0,h:0},                          //直接设定显示尺寸 最优先
-                    autoFresh:false,                        //在窗口尺寸改变时自动刷新
-                    calls:"",callsParam:{},                  //方法调用
-                                                                //目前支持$el.maxOn({calls:"EV_fresh"})  （执行次函授以当父容器尺寸改变时候）重新计算一次尺寸
-                    msRadio:1,                               //鼠标移动上去之后图片缩放
-                    msToggleSetting:{},
-                    callback:function($this,cssObject,is_first_callback){}
-                };
-                var EV_fresh="EV_fresh";
-                var c = $.extend(true,{},defaultConfig,config);
-                var staticObject={};
-                this.each(function(){
-                    var ti=$(this),d = ti.data();
-                    if(ti.parent().hasClass("scaleWrapper"))    return;
-                    var
-                        img_org_w = d.img_org_w = c.size.w || parseInt(ti.attr("data_pw")),
-                        img_org_h = d.img_org_h = c.size.h || parseInt(ti.attr("data_ph"))
-                    ;
-                    var closer;
-                    if(typeof c.clor == "string") closer = ti.closest(c.clor);
-                    else if(c.clor && c.clor.jquery) closer = c.clor;         //jq对象
-
-                    /*显示尺寸 先取参数尺寸，再 closer尺寸 最后本身尺寸*/
-                    var
-                        display_w = d.display_w = c.size.w   || (closer && closer.width())   ||  ti.width(),
-                        display_h = d.display_h = c.size.h   || (closer && closer.height())  ||  ti.height()
-                    ;
-
-                    var wrapper;
-                    if(c.clor)  wrapper = closer;
-                    else  wrapper = ti.wrap("<span></span>").parent();
-                    d.wrapper = wrapper;
-                    ti.css({position:"absolute"});
-                    var wrapperCss = {
-                        width: display_w - c.space * 2,  height: display_h - c.space *2,
-                        position:wrapper.css("position")=="absolute"?"absolute":"relative",  display: wrapper.css("display") == "block"?"block":"inline-block",
-                        marginBottom: c.edgeFix.bottom, //inline-block间距的bug
-                        overflow:"hidden"
-                    };
-                    if(c.space) wrapperCss.top = wrapperCss.left = c.space;
-                    wrapper.addClass("scaleWrapper").css(wrapperCss);
-
-                    var is_first_callback = true;
-                    function fresh(customSizeArray){
-                        if(!img_org_w || !img_org_h)  return;
-                        var da = cl.max_on_container(customSizeArray || [display_w,display_h],[img_org_w,img_org_h], c.space, c.posi);
-                        ti.css(da.css);
-                        c.callback.call(ti,da.css,is_first_callback);
-                        if(c.msRadio!=1 && is_first_callback){
-                            var sizeRatio = c.msRadio, css = da.css;
-                            ti.msToggle($.extend(true,c.msToggleSetting,{animCss:{
-                                width:css.width*sizeRatio,
-                                height:css.height*sizeRatio,
-                                left:(1-sizeRatio)*css.width*0.5 + css.left,
-                                top:(1-sizeRatio)*css.height*0.5 + css.top
-                            }}));
-                        }
-                        is_first_callback=false;
-                    }
-
-                    if(img_org_w && img_org_h) fresh();
-                    else{
-                        tool.getImageOrigSize(
-                            ti.attr("src") || ti.attr("_src") || window.errorImageUrl || "At maxOn plug" + Math.random(),
-                            function(w,h,info){
-                                if(info.error || !ti.attr("src")) ti.attr("src",this.src);
-                                img_org_w = d.img_org_w = w; img_org_h = d.img_org_h = h;
-                                fresh();
-                                ti.trigger("size_got");
-                            }
-                        );
-                    };
-
-                    if(c.autoFresh) $(window).resize(function(){ fresh(); });
-                    ti.bind(EV_fresh,fresh);
-                });
-                return this;
-            };
-
-            var methods = {
-                fresh:function(size){
-                    return this.each(function(){
-
-                    });
-                },
-                tweenResizeTo:function(para){
-                    var css = para.css, dura = para.dura;
-                    return this.each(function(i){
-                        var me=$(this),d=me.data();
-                        if(d.img_org_w + d.img_org_h){
-                            resize_img();
-                        }else{
-                            me.bind("size_got",function(){ resize_img(); });
-                        }
-                        function resize_img(){
-                            d.wrapper.stop(true).animate(css,dura || 360);
-                            var da = cl.max_on_container([css.width,css.height],[d.img_org_w, d.img_org_h]);
-                            me.stop(true).animate(da.css,dura || 360);
-                        }
-                    });
-                },
-                tweenBack:function(para){
-                    var dura= para.dura;
-                    var css = para.css;
-                    return this.each(function(){
-                        var me=$(this),d=me.data();
-                        var cs = $.extend(css,{width: d.display_w,height: d.display_h});
-                        d.wrapper.stop(true).animate(cs,dura || 360);
-                        var da = cl.max_on_container([d.display_w, d.display_h],[d.img_org_w, d.img_org_h]);
-                        me.stop(true).animate(da.css,dura || 360);
-                    });
-                }
-            };
-        })();
-        //maxOn-----------------------------------------------------------------------------------
-
-        /*字符截取*/
-        (function(){
-            $.fn.textLeng = function(leng,more_sign){
-                return this.each(function(i){
-                    var t = $(this);
-                    var length = leng || t.attr("strleng");
-                    if(length!==undefined)
-                        t.text(t.text().replace(/\s/g,"").strleng(length,more_sign));
-                });
-            };
-        })();
-        //textleng------------------------------------
-
+        /*
+         * 获取图片原始尺寸
+         * */
+        function getImageOrigSize(url_paras,callback){
+            cl.imgPreLoad(url_paras,function(result){
+                var $ti = $(this);
+                getHideBox().append($ti);
+                callback && callback.call(this,$ti.width(),$ti.height(),result);
+                if($ti.parent().is("#hidebox")) $ti.remove();
+            });
+        }
+        tool.getImageOrigSize = tool.getImageSizeByPath = getImageOrigSize;
 
 
         /*
-         * 鼠标感应
-         * */
-        $.fn.msToggle = function(config){
-            var defaultConfig = {
-                cls:"msover",           //切换class
-                css:{},                  //切换css
-                animCss:{},
-                animDura:200,           //动画切换时间
-                attr:{},                 //切换属性        //src属性时候{dir}{fname}{ftype}分别表示目录路径，文件名称，文件类型名称
-                org_config:{},
-                host:null,              //host为空，鼠标感应自己切换自己，否则感应host 切换自己
-                plug:{},
-                disableStr : {mover:"disableMover",mout:"disableMout",all:"disableAll"},          //禁用字符串
-                isPreLoadImage:true
+        * 获取图片原始尺寸$jq
+        * */
+        $.fn.get_imgOrg_size = function(callback){
+            return this.each(function(){
+                var ti = $(this);
+                if(!ti.is("img"))   throw "元素必须是图片";
+
+                getImageOrigSize(ti.attr("src") || ti.attr("_src"),function(iw,ih){
+                    if(callback) callback.call(ti,iw,ih);
+                });
+            });
+        };
+
+
+        !function(){
+            var psizeRg = /\d+\,\d+/;
+            var config = {
+                pw:undefined,                       //如果此值设置，parent宽度会被此值代替
+                ph:undefined,
+                customLay: $.noop                   //自定义布局
             };
-            var c = $.extend(true,defaultConfig,config);
-            this.each(function (i) {
-                var me = $(this);
-                var d = me.data();
-                d.status = {};d.me=me;
-                var cc = d.cc = $.extend(true,{},c);    //深复制配置
-                var val_org = d.val_org = {css:{},attr:{},animCss:{}};
-                var has_css = d.status.has_css = !$.isEmptyObject(cc.css);
-                var has_attr = d.status.has_attr = !$.isEmptyObject(cc.attr);
-                var has_animCss = d.status.has_animCss = !$.isEmptyObject(cc.animCss);
 
-                if(has_css)  for (var k1 in cc.css) {val_org.css[k1] = me.css(k1);}
-                var reg_dir_fname_ftype = /(.*\/)([^\/]*)\.(\w{1,5})$/
-                if(has_attr) for (var k2 in cc.attr) {
-                    val_org.attr[k2] = me.attr(k2);
-                    if(k2 == "src"){
-                        reg_dir_fname_ftype.test(me.attr(k2));
-                        cc.attr[k2] = cc.attr[k2].replace("{dir}",RegExp["$1"]).replace("{fname}",RegExp["$2"]).replace("{ftype}",RegExp["$3"]);
-                        cc.isPreLoadImage && imgPreLoad(cc.attr[k2]);//预加载
+            /**
+             * 剪裁以匹配父容器
+             * 注意事项:1父容器必须设置尺寸
+             * @returns {*}
+             */
+            $.fn.maxonLite = function(setting){
+                var sett = $.extend({},config,setting);
+                return this.each(function(){
+                    var ti=$(this),d=ti.data();
+                    var par = ti.parent();
+                    if("absolute|fixed".indexOf(par.css("position"))===-1){
+                        par.css({position:"relative",overflow:"hidden"});
                     }
+                    ti.css({position:"absolute"});
+                    var path = ti.attr("src") || ti.attr("_src");
+                    if(!path)   throw "图片元素无效，没有src或者_src属性";
+
+                    //预设尺寸
+                    var psize = ti.attr("psize");
+                    if(psize && psizeRg.test(psize)){
+                        var s = psize.split(",");
+                        d.org_size = [s[0]*1,s[1]*1];
+                    }
+
+                    if(!d.org_size){
+                        ti.get_imgOrg_size(function(iw,ih){
+                            d.org_size = [iw,ih];
+                            fit_out_on.call(ti, d.org_size,[sett.pw || par.width(),sett.ph || par.height()], sett.customLay);
+                        });
+                    }else{
+                        fit_out_on.call(ti, d.org_size,[sett.pw || par.width(), sett.ph || par.height()], sett.customLay);
+                    }
+                });
+            };
+
+            function fit_out_on(sizeArr,parSizeArr,customLay){
+                var css = cl.max_on_container(parSizeArr,sizeArr).css;
+                //css.marginLeft = (-css.left - parSizeArr) * 0.5;
+                //css.left = "50%";
+                css = customLay(css,sizeArr,parSizeArr) || css;
+                this.css(css);
+            }
+
+            /**
+             * 自定义，位置函数
+             */
+            $.maxonLite = {
+                /**
+                 * 使用相对位置居中图片，适用于，父容宽度变化
+                 */
+                centerImgFunc:function(css){
+                    css.left = "50%";
+                    css.marginLeft = -css.width * 0.5;
+                    return css;
                 }
-                if(has_animCss) for (var k3 in cc.animCss) {val_org.animCss[k3] = me.css(k3);}
+            }
+        }();
 
-                //自定义原始属性
-                if(!$.isEmptyObject(cc.org_config)){$.extend(true,val_org,cc.org_config);}
-                if(c.host)  c.host.data().me=me;
-                (c.host||me).mouseenter(function(e){
-                    if(d[c.disableStr.all] || d[c.disableStr.mover])    return;
-                    me.addClass(d.cc.cls);
-                    if(has_css) me.css(d.cc.css);
-                    if(has_attr) me.attr(d.cc.attr);
-                    if(has_animCss){
-                        me.stop(true);
-                        me.animate(cc.animCss,cc.animDura);
+    })();
+
+    //----------------------------
+    /*表单元素美化插件 span实现*/
+    (function(){
+        require.async("ctool.css");
+        $.fn.extend({
+            inputsee:function(config_method,para){
+                return this.each(function(i){
+                    var me=$(this), d=me.data();
+                    if(typeof config_method == "string"){
+                        if(!inputsee_method[config_method]) throw "您调用的方法不存在！";
+                        inputsee_method[config_method].call(me,para);
                     }
-                });
-                (c.host||me).mouseleave(function(e){
-                    if(d[c.disableStr.all] || d[c.disableStr.mout])    return;
-                    me.removeClass(d.cc.cls);
-                    if(has_css) me.css(d.val_org.css);
-                    if(has_attr) me.attr(d.val_org.attr);
-                    if(has_animCss){
-                        me.stop(true);
-                        me.animate(d.val_org.animCss,d.cc.animDura);
+                    if(me.parent().is(".inputsee")) return;
+                    var span = $("<span class='inputsee'></span>").addClass("inputsee" + bro_str);
+                    me.after(span).appendTo(span);
+                    if(me.is("textarea")){
+                        span.addClass("textarea");
                     }
+
+                    span.addClass(me.attr("inputsee_class")); //外套设置class
+
+                    //debugger;
+                    //span.css({lineHeight:span.height() + "px"});
+
+                    var blt = me.attr("blank_text") || me.attr("placeholder");
+                    me.attr("placeholder") && me.removeAttr("placeholder");
+                    if(blt){
+                        var label = d.label = $("<span class='blank_label'></span>").text(blt);
+                        var labelClass = me.attr("blank_lable_class");      //空label设置class
+                        labelClass && label.addClass("labelClass");
+                        me.after(label);
+                        me.bind("blur focus",function(e){
+                            if(e.type == "focus")                           label.hide();
+                            else if(e.type == "blur" && !me.val())         label.show();
+                        });
+                        //自动填充密码后 标签仍再的问题
+                        setTimeout(function(){
+                            if(me.val())    label.hide();
+                        },210);
+                    }
+
+                    span.click(function(){ me.focus(); }).addClass(bro());
                 });
+            }
+        });
+
+        var inputsee_method = {
+            setBlankText:function(para){
+                var me=this,d=me.data();
+                if(d.label) d.label.text(para);
+            }
+        }
+    })();
+    /*--表单元素美化插件 table实现*/
+
+    //垂直居中
+    (function(){
+        $.fn.middle = function(){
+            return this.each(function(i){
+                var me=$(this);
+                var val = 0.5*(me.parent().height() - me.height());
+                if(me.css("position") == "absolute" && me.css("position") == "position"){
+                    me.css({top:val});
+                }else{
+                    me.css({marginTop:val});
+                }
+            });
+        };
+    })();
+
+
+
+    (function(){
+        $.fn.maxOn=function(config,para){
+            if(typeof config == "string"){
+                var method = methods[config];
+                if(!method) throw "访问的方法不存在！";
+                return method.call(this,para);
+            };
+
+            if(config && config.calls){
+                this.trigger(config.calls,config.callsParam);
+                return this;
+            }
+            if(typeof config == "string") config = {clor:config};
+            var defaultConfig = {
+                space:0, edgeFix:{bottom:-5,right:0},       //inline-block间距的bug
+                posi:{left_perc:0.5,top_perc:0.5,top:0,left:0},     //截取位置。默认居中 即left_perc:0.5,top_perc:0.5
+                clor:undefined,                          //closest选择器
+                size:{w:0,h:0},                          //直接设定显示尺寸 最优先
+                autoFresh:false,                        //在窗口尺寸改变时自动刷新
+                calls:"",callsParam:{},                  //方法调用
+                                                            //目前支持$el.maxOn({calls:"EV_fresh"})  （执行次函授以当父容器尺寸改变时候）重新计算一次尺寸
+                msRadio:1,                               //鼠标移动上去之后图片缩放
+                msToggleSetting:{},
+                callback:function($this,cssObject,is_first_callback){}
+            };
+            var EV_fresh="EV_fresh";
+            var c = $.extend(true,{},defaultConfig,config);
+            var staticObject={};
+            this.each(function(){
+                var ti=$(this),d = ti.data();
+                if(ti.parent().hasClass("scaleWrapper"))    return;
+                var
+                    img_org_w = d.img_org_w = c.size.w || parseInt(ti.attr("data_pw")),
+                    img_org_h = d.img_org_h = c.size.h || parseInt(ti.attr("data_ph"))
+                ;
+                var closer;
+                if(typeof c.clor == "string") closer = ti.closest(c.clor);
+                else if(c.clor && c.clor.jquery) closer = c.clor;         //jq对象
+
+                /*显示尺寸 先取参数尺寸，再 closer尺寸 最后本身尺寸*/
+                var
+                    display_w = d.display_w = c.size.w   || (closer && closer.width())   ||  ti.width(),
+                    display_h = d.display_h = c.size.h   || (closer && closer.height())  ||  ti.height()
+                ;
+
+                var wrapper;
+                if(c.clor)  wrapper = closer;
+                else  wrapper = ti.wrap("<span></span>").parent();
+                d.wrapper = wrapper;
+                ti.css({position:"absolute"});
+                var wrapperCss = {
+                    width: display_w - c.space * 2,  height: display_h - c.space *2,
+                    position:wrapper.css("position")=="absolute"?"absolute":"relative",  display: wrapper.css("display") == "block"?"block":"inline-block",
+                    marginBottom: c.edgeFix.bottom, //inline-block间距的bug
+                    overflow:"hidden"
+                };
+                if(c.space) wrapperCss.top = wrapperCss.left = c.space;
+                wrapper.addClass("scaleWrapper").css(wrapperCss);
+
+                var is_first_callback = true;
+                function fresh(customSizeArray){
+                    if(!img_org_w || !img_org_h)  return;
+                    var da = cl.max_on_container(customSizeArray || [display_w,display_h],[img_org_w,img_org_h], c.space, c.posi);
+                    ti.css(da.css);
+                    c.callback.call(ti,da.css,is_first_callback);
+                    if(c.msRadio!=1 && is_first_callback){
+                        var sizeRatio = c.msRadio, css = da.css;
+                        ti.msToggle($.extend(true,c.msToggleSetting,{animCss:{
+                            width:css.width*sizeRatio,
+                            height:css.height*sizeRatio,
+                            left:(1-sizeRatio)*css.width*0.5 + css.left,
+                            top:(1-sizeRatio)*css.height*0.5 + css.top
+                        }}));
+                    }
+                    is_first_callback=false;
+                }
+
+                if(img_org_w && img_org_h) fresh();
+                else{
+                    tool.getImageOrigSize(
+                        ti.attr("src") || ti.attr("_src") || window.errorImageUrl || "At maxOn plug" + Math.random(),
+                        function(w,h,info){
+                            if(info.error || !ti.attr("src")) ti.attr("src",this.src);
+                            img_org_w = d.img_org_w = w; img_org_h = d.img_org_h = h;
+                            fresh();
+                            ti.trigger("size_got");
+                        }
+                    );
+                };
+
+                if(c.autoFresh) $(window).resize(function(){ fresh(); });
+                ti.bind(EV_fresh,fresh);
             });
             return this;
         };
+
+        var methods = {
+            fresh:function(size){
+                return this.each(function(){
+
+                });
+            },
+            tweenResizeTo:function(para){
+                var css = para.css, dura = para.dura;
+                return this.each(function(i){
+                    var me=$(this),d=me.data();
+                    if(d.img_org_w + d.img_org_h){
+                        resize_img();
+                    }else{
+                        me.bind("size_got",function(){ resize_img(); });
+                    }
+                    function resize_img(){
+                        d.wrapper.stop(true).animate(css,dura || 360);
+                        var da = cl.max_on_container([css.width,css.height],[d.img_org_w, d.img_org_h]);
+                        me.stop(true).animate(da.css,dura || 360);
+                    }
+                });
+            },
+            tweenBack:function(para){
+                var dura= para.dura;
+                var css = para.css;
+                return this.each(function(){
+                    var me=$(this),d=me.data();
+                    var cs = $.extend(css,{width: d.display_w,height: d.display_h});
+                    d.wrapper.stop(true).animate(cs,dura || 360);
+                    var da = cl.max_on_container([d.display_w, d.display_h],[d.img_org_w, d.img_org_h]);
+                    me.stop(true).animate(da.css,dura || 360);
+                });
+            }
+        };
     })();
+    //maxOn-----------------------------------------------------------------------------------
+
+    /*字符截取*/
+    (function(){
+        $.fn.textLeng = function(leng,more_sign){
+            return this.each(function(i){
+                var t = $(this);
+                var length = leng || t.attr("strleng");
+                if(length!==undefined)
+                    t.text(t.text().replace(/\s/g,"").strleng(length,more_sign));
+            });
+        };
+    })();
+    //textleng------------------------------------
+
+
+
+    /*
+     * 鼠标感应
+     * */
+    $.fn.msToggle = function(config){
+        var defaultConfig = {
+            cls:"msover",           //切换class
+            css:{},                  //切换css
+            animCss:{},
+            animDura:200,           //动画切换时间
+            attr:{},                 //切换属性        //src属性时候{dir}{fname}{ftype}分别表示目录路径，文件名称，文件类型名称
+            org_config:{},
+            host:null,              //host为空，鼠标感应自己切换自己，否则感应host 切换自己
+            plug:{},
+            disableStr : {mover:"disableMover",mout:"disableMout",all:"disableAll"},          //禁用字符串
+            isPreLoadImage:true
+        };
+        var c = $.extend(true,defaultConfig,config);
+        this.each(function (i) {
+            var me = $(this);
+            var d = me.data();
+            d.status = {};d.me=me;
+            var cc = d.cc = $.extend(true,{},c);    //深复制配置
+            var val_org = d.val_org = {css:{},attr:{},animCss:{}};
+            var has_css = d.status.has_css = !$.isEmptyObject(cc.css);
+            var has_attr = d.status.has_attr = !$.isEmptyObject(cc.attr);
+            var has_animCss = d.status.has_animCss = !$.isEmptyObject(cc.animCss);
+
+            if(has_css)  for (var k1 in cc.css) {val_org.css[k1] = me.css(k1);}
+            var reg_dir_fname_ftype = /(.*\/)([^\/]*)\.(\w{1,5})$/
+            if(has_attr) for (var k2 in cc.attr) {
+                val_org.attr[k2] = me.attr(k2);
+                if(k2 == "src"){
+                    reg_dir_fname_ftype.test(me.attr(k2));
+                    cc.attr[k2] = cc.attr[k2].replace("{dir}",RegExp["$1"]).replace("{fname}",RegExp["$2"]).replace("{ftype}",RegExp["$3"]);
+                    cc.isPreLoadImage && imgPreLoad(cc.attr[k2]);//预加载
+                }
+            }
+            if(has_animCss) for (var k3 in cc.animCss) {val_org.animCss[k3] = me.css(k3);}
+
+            //自定义原始属性
+            if(!$.isEmptyObject(cc.org_config)){$.extend(true,val_org,cc.org_config);}
+            if(c.host)  c.host.data().me=me;
+            (c.host||me).mouseenter(function(e){
+                if(d[c.disableStr.all] || d[c.disableStr.mover])    return;
+                me.addClass(d.cc.cls);
+                if(has_css) me.css(d.cc.css);
+                if(has_attr) me.attr(d.cc.attr);
+                if(has_animCss){
+                    me.stop(true);
+                    me.animate(cc.animCss,cc.animDura);
+                }
+            });
+            (c.host||me).mouseleave(function(e){
+                if(d[c.disableStr.all] || d[c.disableStr.mout])    return;
+                me.removeClass(d.cc.cls);
+                if(has_css) me.css(d.val_org.css);
+                if(has_attr) me.attr(d.val_org.attr);
+                if(has_animCss){
+                    me.stop(true);
+                    me.animate(d.val_org.animCss,d.cc.animDura);
+                }
+            });
+        });
+        return this;
+    };
+
 
 
     /*

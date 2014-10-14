@@ -774,6 +774,12 @@ define(function (require) {
         ffs = ffs.replace(/\\('|")/g,"\"");
 
         var obj = eval(ffs);
+		
+		try{
+			obj = eval(ffs);
+		}catch(e){
+			throw "未找到" + id_or_class +"对应的css配置，或者配置非法:" + ffs;
+		}
 
         return obj;
     }

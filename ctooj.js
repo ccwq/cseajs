@@ -838,7 +838,11 @@ define(function (require) {
             try{
                 reobj = $.parseJSON(string_objcet);
             }catch(e){
-                reobj = eval("(" + string_objcet + ")")
+				try{
+					reobj = eval("(" + string_objcet + ")")
+				}catch(e){
+					throw "传入字符串非法:" + string_objcet;
+				}
             }
         }else{
             reobj = string_objcet;

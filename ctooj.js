@@ -788,11 +788,24 @@ define(function (require) {
 
     //ajax ifarme
     !function(){
+
+
+        var def = {
+            onload: $.noop                  //加载完成后执行 //如果有返回值，则以返回值处理的数据为准
+            /**
+             * onload:function(html){
+             *
+             * }
+             */
+        };
+
+
         /**
          * 使div增加类似iframe的配置
          * @returns {*}
          */
-        $.fn.aiframe = function(){
+        $.fn.aiframe = function(cfg){
+            var sett = $.extend({},def,cfg);
             return this.each(function(i){
                 var me = $(this);
                 var src = me.attr("src");
@@ -801,12 +814,18 @@ define(function (require) {
                 var seletor = me.attr("selector");
                 $.get(src)
                     .done(function(data){
-                        var dom = $(data);
-                        if(seletor){
-                            dom = dom[typeString](seletor);
+                        var onload_html = sett.onload(data);
+
+                        var dom;
+                        if(onload_html){
+                            dom = onload_html;
+                        }else{
+                            dom = $(data);
+                            if(seletor){
+                                dom = dom[typeString](seletor);
+                            }
                         }
-                        me.append(dom);
-                        me.removeClass("aiframe");
+                        me.expty().append(dom);
                     })
                     .fail(function(){
                         throw "aiframe请求失败:" + src;

@@ -722,28 +722,29 @@ define(function (require) {
      *  fn("#abc","fontSize")
      *  fn("fontSize")               //取#bridge fontSize的值
      *
-     * @param id_or_class css规则名称 #foo|.bar，如果非#或者.开头表示指定prop的值。默认取#bridge的规则
+     * @param selector 任意有效选择器
      * @param prop  规则的属性名
      * @returns {Number}
      */
-    tool.getCssRuleVal = $.getCssRuleVal = function(id_or_class, prop, getFullString){
+    tool.getCssRuleVal = $.getCssRuleVal = function(selector, prop, getFullString){
         var bd = $("body");
         if(!bd.length)  throw "请于dom ready之后调用该函数！";
         cssRuleShadow.removeAttr("id").removeAttr("class");
 
-        //带有#或者.的字符串
-        if(/^(#|\.)/.test(id_or_class)){
-            cssRuleShadow.attr(RegExp["$1"]=="#"?"id":"class", id_or_class.substr(1));
-        }else{
-            //参数1不合法，认为参数1为#bridge,并且认为参数1为prop
-            cssRuleShadow.attr("id","bridge");
-            prop = id_or_class;
-            getFullString = prop;
-        }
+        var $el = $(selector);
+        var re;
 
-        bd.append(cssRuleShadow);
-        var re = cssRuleShadow.getCssVal(prop,getFullString);
-        cssRuleShadow.detach();
+        if($el.length){
+            re = $el.getCssVal(prop,getFullString);
+        }else if(/^(#|\.)/.test(selector)){
+            cssRuleShadow.attr(RegExp["$1"]=="#"?"id":"class", selector.substr(1));
+            bd.append(cssRuleShadow);
+            re = cssRuleShadow.getCssVal(prop,getFullString);
+            cssRuleShadow.detach();
+        }else{
+            //什么都没找到
+            re = "";
+        }
         return re;
     };
 
@@ -773,8 +774,7 @@ define(function (require) {
         //去除引号转义
         ffs = ffs.replace(/\\('|")/g,"\"");
 
-        var obj = eval(ffs);
-		
+        var obj;
 		try{
 			obj = eval(ffs);
 		}catch(e){

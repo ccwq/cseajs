@@ -11,7 +11,7 @@ define(function (require) {
     var $ = require("seajq");
     var cl = require("ctool");
     var cj = require("ctooj");
-    require("calbum/embed/c.css");
+    require("./calbum/embed/c.css");
     var templete =
         '<div>'+
             '<div class="album_wrapper" id="c_album">'+

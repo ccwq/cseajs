@@ -9,7 +9,7 @@ define(function (require) {
     var plug_name = "c_album";
     var ins;
     var $ = require("seajq");
-    var ctool = require("ctool");
+    var cl = require("ctool");
     var cj = require("ctooj");
     require("calbum/embed/c.css");
     var templete =
@@ -28,7 +28,7 @@ define(function (require) {
         '</div>';
 
     var dom = $(templete).find("#c_album");
-    var oldie = ctool.bro("ie6,ie8,ie8");
+    var oldie = cl.bro("ie6,ie8,ie8");
     var loadedCacheDic = undefined;             //缓存那些图片已经加载完成
     var cb = $.Callbacks();
     var timeoutObj=null;
@@ -55,11 +55,17 @@ define(function (require) {
 
     //Class
     var def_config = {
-        margin:30, marginHori:false, marginVert:false,
-        dura:360, playInterval:3600,
-        maskAlpha:0.66, backAlpha:0.90,
-        photoMargin:37, photoMarginOffset:{left:0,top:-24},
-        onChange:function(){},
+        margin:30,
+        marginHori:false,
+        marginVert:false,
+        dura:360,
+        playInterval:3600,
+        maskAlpha:0.66,
+        backAlpha:0.90,
+        photoMargin:37,
+        photoMarginOffset:{left:0,top:-24},
+        onChange: $.noop,
+        onImage: $.noop,
         no:null
     };
     var setting = {};
@@ -143,7 +149,7 @@ define(function (require) {
         return me;
     };
 
-    /*
+    /**
     * 打开窗口
     * */
     fn.open=function(withLoading){
@@ -178,35 +184,35 @@ define(function (require) {
         return me;
     };
 
-    /*
-    * 公开
-    * 根据url或者json数组显示
-    * */
-    fn.setData=function(url_json,fieldname_init_index){          //fieldname样例:"{name:"name",src:"name2"}
+
+    /**
+     * 公开
+     * @param url_json 可以传入json地址或者json对象(不支持json字符串)
+     * @param initIndex
+     * @returns {calbum}
+     */
+     fn.setData=function(url_json,initIndex){          //fieldname样例:"{name:"name",src:"name2"}
         var me=this,data;
         if(typeof url_json == "string"){
             loading.show();
             $.get(url_json)
                 .done(function(data){
                     loading.hide();
-                    try{
-                        data = eval("("+ data +")");
-                    }catch(e){
-                        throw "返回数据内容非法！";
-                    }
+                    data = cl.tojson(data,function(){
+                        throw "数据已获取，但解析失败";
+                    });
 
-                    $.each(fieldname_init_index.split("."),function(key,ele){ data = data[ele]; });
-                    if(!data)  throw "fieldname选择后，数据为空";
-                    if(fieldname_init_index) data = data[fieldname_init_index];
-                    me.setDataByJson(data);
+                    //转换为对象后，重新调用
+                    me.setData(data,initIndex);
                 })
                 .fail(function(){
                     loading.hide();
-                    throw "请传入有效url;";
-                });
+                    throw "json请求失败，请检查传入地址;";
+                })
+            ;
         }else{
             data = url_json;
-            me.setDataByJson(data,parseInt(fieldname_init_index));
+            me.setDataByJson(data,initIndex || 0);
         }
         return me;
     };
@@ -215,23 +221,24 @@ define(function (require) {
     * 公开
     * 根据src或者src数组显示图片
     * */
-    fn.showImageBySrc=function(para,init_index){
+    fn.showImageBySrc=function(src_srclist,init_index){
         var me=this;
-        if(typeof para=="string") para = [para];
-        var data = $.map(para,function(ele){
+        if(typeof src_srclist=="string") src_srclist = [src_srclist];
+        var data = $.map(src_srclist,function(ele){
             return {src:ele};
         });
         me.setDataByJson(data,init_index);
     };
-
-    //暂时留空
-    fn.setDataByDom=function(dom){ };
 
     //显示某图片 私有
     fn.showElementByUrl=function(url,type){
         var me=this;
         loading.show();
         one_size.addClass("nouse");
+
+        //通过onImage回调，可以改变访问图片的路径
+        url = setting.onImage.call(null,url) || url;
+
         getImageOrigSize({url:url,index:me.index},function(w,h,resu){
             loadedCacheDic[resu.paras.index]= (resu.error?undefined:this);
             if(loadedCacheDic[me.index] || resu.error)    loading.hide();
@@ -262,7 +269,7 @@ define(function (require) {
         if(photo_wp_w>me.curImgSize.w && photo_wp_h>me.curImgSize.h){
             me.curImage.css({ left: (photo_wp_w-me.curImgSize.w)*0.5, top: (photo_wp_h - me.curImgSize.h)*0.5 ,width:"auto", height:"auto"});
         }else{
-            var css = ctool.fit_on_container([photo_wp_w,photo_wp_h],[me.curImgSize.w, me.curImgSize.h]).css;
+            var css = cl.fit_on_container([photo_wp_w,photo_wp_h],[me.curImgSize.w, me.curImgSize.h]).css;
             me.curImage.css(css);
         }
     }
@@ -426,19 +433,20 @@ define(function (require) {
      * 获取图片原始尺寸
      * */
     function getImageOrigSize(url_paras,callback){
-        ctool.imgPreLoad(url_paras,function(result){
+        cl.imgPreLoad(url_paras,function(result){
             var $ti = $(this);
             cj.getHideBox().append($ti);
             callback && callback.call(this,$ti.width(),$ti.height(),result);
             if($ti.parent().is("#hidebox")) $ti.remove();
         });
     };
-    return {create:function(config){
+
+
+    //全局唯一单例实例
+    calbum.create = function(config){
         if(!ins) ins = new calbum(config);
         return ins;
-    }};
+    }
 
-
-
-
+    return calbum;
 });

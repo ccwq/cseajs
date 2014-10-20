@@ -10,7 +10,7 @@ define(function (require, exports, module) {
     var cl = require("ctool");
     var cj = require("ctooj");
     var CTimer = require("CTimer");
-    require("./css.css");
+    require("./cslid/css.css");
 
 
     var fn;

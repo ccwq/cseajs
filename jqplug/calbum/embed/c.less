@@ -1,0 +1,55 @@
+@cl_back:#0f0f0f;
+@main_color:#00b3d4;
+.album_wrapper{
+	.album_wrapper{ position: fixed; z-index: 10; width: 100%; height: 100%; top: 0; left: 0; }
+	.container{ width: 100%; height: 100%; top: 0; left: 0; position: absolute; }
+	.mask{ background-color: #000; position: absolute; width: 100%; height: 100%; top: 0; left: 0; }
+	.photo_wrapper{ position: absolute; width: 100%; height: 100%; overflow: hidden; top: 0; left: 0; }
+	.btn{ background: @main_color none no-repeat 50% 50%; float: right; width: 36px; text-align: center; color: #fff; cursor: pointer;
+		transition-duration: 1200ms; opacity: 0.85;
+	}
+	.btn:hover{
+		background-color: #48C9E0; opacity: 1;
+		transition-duration: 160ms; box-shadow: 0px 0px 4px #FDA84C;
+	}
+
+	.arrow{ width: 36px; height: 72px; top: 300px; position: absolute; }
+	.left_arrow{ left: 0; background-image: url("img/left.gif"); }
+	.right_arrow{ right: 0; background-image: url("img/right.gif"); }
+	.back{ background-color: @cl_back; width: 100%; height: 100%; top: 0; left: 0; }
+	.loading{ background: url("img/loading.gif") no-repeat 50% 50%; position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; }
+
+	.close_btn{ background-image: url("img/xx.gif");
+		position: absolute; top: 0px; right: 0px; width: 36px; height: 36px; cursor: pointer; display: block;
+	}
+
+	.c_image{ position: absolute; }
+
+	.tools{ position: absolute; bottom: 0; left: 0; width: 100%; background-color: #212121; background-color: rgba(33, 33, 33, 0.85); }
+
+	.tools > *, .tools{ height: 27px; line-height: 27px; font-size: 14px; color: #fff; font-family: "微软雅黑" "黑体"; float: left; }
+
+	.tools > span{ }
+
+	.posiLabel{ height: 100%; font-size: 14px; text-align: center; color: #fff; padding: 0 15px; }
+
+	.fullScr{ background-image: url("img/fullSrc.png"); float: right; }
+	.fullScr.full{ background-image: url("img/fullSrc_min.png"); background-color: #047185; }
+
+	.play{ background-image: url("img/btn_play.png"); float: right; margin-right: 1px; }
+	.play.playing{ background-image: url("img/btn_stop.png"); background-color: #047185; }
+
+	.one_size{ margin-right: 1px; float: right; }
+	.one_size.showing{ background-color: #047185; }
+	.one_size.nouse{ color: #999; }
+	.one_size.nouse:hover{ color: #999;
+		background-color: #48C9E0; opacity: 1; transition-duration: 0; box-shadow: none;
+	}
+
+	.photo_scaler{ position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; display: none; cursor: move; }
+
+	.disable{
+		opacity: 0.15 !important; filter: alpha(opacity=15) !important; box-shadow: none !important;
+	}
+
+}

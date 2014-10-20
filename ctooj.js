@@ -860,8 +860,9 @@ define(function (require) {
      * 传入各种类型，传出json
      * 标准json字符串（属性名带引号），非标准,objcet（此情况直接返回）
      * @param string_objcet
+     * @param 如果解析出错，会执行改程序
      */
-    tool.tojson = function(string_objcet){
+    tool.tojson = function(string_objcet, errFunc){
         var reobj;
         if(typeof string_objcet == "string"){
             try{
@@ -870,7 +871,8 @@ define(function (require) {
 				try{
 					reobj = eval("(" + string_objcet + ")")
 				}catch(e){
-					throw "传入字符串非法:" + string_objcet;
+					cl.log("传入字符串非法:" + string_objcet);
+                    if(errFunc) errFunc.call(null);
 				}
             }
         }else{

@@ -9,7 +9,7 @@ define(function (require, exports, module) {
     var $ = require("jq");
     var cl = require("ctool");
     var cj = require("ctooj");
-    var CTimer = require("CTimer");
+    var CTimer = require("ctimer");
     require("./cslid/css.css");
 
 

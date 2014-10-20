@@ -96,27 +96,31 @@ define(function (require) {
         };
         /*--阻塞图片加载*/
 
+		
+		
         /*一些自定义alert tip msg confirm*/
-        tool.jbox_alert = function(msg,title,type,config){
-            require.async("jBox/j",function(){
+		
+		var jboxPath = "jBox/jqplug/j";
+        tool.jalert = function(msg,title,type,config){
+            require.async(jboxPath,function(){
                 $.jBox.prompt(msg, title, type, config);
             });
         };
 
-        tool.jbox_tip = function(msg,type,config){
-            require.async("jBox/j",function(){
+        tool.jtip = function(msg,type,config){
+            require.async(jboxPath,function(){
                 $.jBox.tip(msg || '正在优化', type || 'loading', $.extend({opacity:0.72},config));
             });
         };
 
-        tool.jbox_msg = function(msg,tit,config){
-            require.async("jBox/j",function(){
+        tool.jmsg = function(msg,tit,config){
+            require.async(jboxPath,function(){
                 $.jBox.messager(msg || "温馨提示", tit||"温馨提示！", null, config);
             });
         };
 
-        tool.jbox_confirm = function(msg,tit,callback,config){
-            require.async("jBox/j",function(){
+        tool.jconfirm = function(msg,tit,callback,config){
+            require.async(jboxPath,function(){
                 $.jBox.confirm(msg ||"确定？", tit||"请选择：", callback, config);
             });
         };

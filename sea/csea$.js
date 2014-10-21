@@ -28,7 +28,6 @@ c){P.push(c)});B.preload=P;f.config=function(b){for(var c in b){var a=b[c],d=h[c
     }
     seajs.config({
         base:base,
-        debugg:true,
         paths:{
             _               :       par.replace(/\/$/,""),                 //seajs父级目录
             rt              :       root.replace(/\/$/,""),                 //网站根目录（相对于js）
@@ -47,7 +46,6 @@ c){P.push(c)});B.preload=P;f.config=function(b){for(var c in b){var a=b[c],d=h[c
     window.ctool = ctool;
 
     var scripts = document.getElementsByTagName("script");
-
     //增加id
     var snode = document.getElementById("seajsnode") || scripts[scripts.length - 1];
     var idstr = snode.getAttribute("id");
@@ -71,8 +69,14 @@ c){P.push(c)});B.preload=P;f.config=function(b){for(var c in b){var a=b[c],d=h[c
         var main = dom_cseajs.getAttribute("main");
         if(main) seajs.use(main);
     })();
-
 })();
+
+//扩展use写法
+seajs.usep = seajs.useplus = function(modNames,callback){
+    seajs.use(modNames.split(/,|\|/),function(){
+        callback.apply(seajs,arguments);
+    });
+}
 
 /*jquery lib*/
 define("seajq",function(){

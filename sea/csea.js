@@ -70,6 +70,12 @@ c){P.push(c)});B.preload=P;f.config=function(b){for(var c in b){var a=b[c],d=h[c
         var main = dom_cseajs.getAttribute("main");
         if(main) seajs.use(main);
     })();
-
 })();
+
+//扩展use写法
+seajs.usep = seajs.useplus = function(modNames,callback){
+    seajs.use(modNames.split(/,|\|/),function(){
+        callback.apply(seajs,arguments);
+    });
+}
 

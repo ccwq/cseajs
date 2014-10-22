@@ -83,15 +83,20 @@ define(function (require) {
             });
         };
 
-        /*
-        * 开始加载被延迟的图片
-        * */
-        $.fn.unblockImg = function(custom_key){
+        /**
+         * 在子类或自身开始加载图片
+         * */
+        $.fn.unblockImg = function(custom_key,delay){
             custom_key = (custom_key || "_src");
             return this.each(function(){
                 var me=$(this);
-                var src = me.attr(custom_key);
-                me.removeAttr(custom_key).attr({ src: src });
+                me.find("img["+custom_key+"]").add(me).each(function(){
+                    var ti = $(this);
+                    if(!ti.is("img"))   return;
+                    var src = ti.attr(custom_key);
+                    ti.removeAttr(custom_key).attr({ src: src });
+                });
+
             });
         };
         /*--阻塞图片加载*/

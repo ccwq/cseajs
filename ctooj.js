@@ -190,6 +190,7 @@ define(function (require) {
                 var sett = $.extend({},config,setting);
                 return this.each(function(){
                     var ti=$(this),d=ti.data();
+                    ti.unblockImg();
                     var par = ti.parent();
                     if("absolute|fixed".indexOf(par.css("position"))===-1){
                         par.css({position:"relative",overflow:"hidden"});

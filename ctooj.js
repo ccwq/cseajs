@@ -73,7 +73,7 @@ define(function (require) {
         };
 
         tool.unblock_img_load = tool.unblockImg = function(custom_key){
-            custom_key = (custom_key || "block_src");
+            custom_key = (custom_key || "_src");
             $(function(){
                 $("img[" + custom_key + "]").each(function(i){
                     var me=$(this);
@@ -158,7 +158,7 @@ define(function (require) {
         tool.getImageOrigSize = tool.getImageSizeByPath = getImageOrigSize;
 
 
-        /*
+        /**
         * 获取图片原始尺寸$jq
         * */
         $.fn.get_imgOrg_size = function(callback){
@@ -801,17 +801,21 @@ define(function (require) {
 
 
         var def = {
-            onload: $.noop                  //加载完成后执行 //如果有返回值，则以返回值处理的数据为准
+            ondata: $.noop                  //加载完成后执行 //如果有返回值，则以返回值处理的数据为准
             /**
              * onload:function(html){
-             *
+             *      //return newhtml;
              * }
              */
+            ,complete: $.noop               //元素加入dom后，触发
+
+            ,splitTag:">>"
+            ,emptyCont:true
         };
 
 
         /**
-         * 使div增加类似iframe的配置
+         * 使div增加类似iframe的配置 <div src="/pages>>#abc span.light"/>
          * @returns {*}
          */
         $.fn.aiframe = function(cfg){
@@ -820,22 +824,18 @@ define(function (require) {
                 var me = $(this);
                 var src = me.attr("src");
                 if(!src) return;
-                var typeString = me.attr("type") || "find";
-                var seletor = me.attr("selector");
+                var arr = src.split(sett.splitTag);
+                src = arr[0];
+                var seletor = arr[1]||me.attr("selector");
                 $.get(src)
                     .done(function(data){
-                        var onload_html = sett.onload(data);
-
-                        var dom;
-                        if(onload_html){
-                            dom = onload_html;
-                        }else{
-                            dom = $(data);
-                            if(seletor){
-                                dom = dom[typeString](seletor);
-                            }
-                        }
-                        me.expty().append(dom);
+                        var data = sett.ondata(data)|| data;
+                        data = "<div>"+data+"</div>";               //有时候需要filter来找元素，这样可以全部用find
+                        var dom = $(data);
+                        if(seletor){ dom = dom.find(seletor); }
+                        if(sett.emptyCont){ me.empty(); }
+                        me.append(dom);
+                        sett.complete.call(me,dom);
                     })
                     .fail(function(){
                         throw "aiframe请求失败:" + src;

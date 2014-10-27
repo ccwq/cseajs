@@ -863,8 +863,8 @@ define(function (require) {
                         var dom = $(data);
                         if(seletor){ dom = dom.find(seletor); }
                         if(sett.emptyCont){ me.empty(); }
+                        dom = sett.complete.call(me,dom) || dom;
                         me.append(dom);
-                        sett.complete.call(me,dom);
                     })
                     .fail(function(){
                         throw "aiframe请求失败:" + src;

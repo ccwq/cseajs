@@ -489,6 +489,16 @@ define(function (require) {
         return obj;
     };
 
+    /**
+     * 判断是否是//doname/index.html | //doname/  | //doname形式的url
+     * @param url 地址，形如http://baidu.com;  //baidu.com
+     * @returns {boolean}
+     */
+    tl.is_index_url = function (url){
+        url = url.split(/\?\#/)[0];
+        return /(\/\/[^\/]+)($|\/$|\/index\.html)/.test(url)
+    }
+
 
     return tl;
 });

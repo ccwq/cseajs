@@ -1,6 +1,6 @@
 /*ctool base on jquery*/
 define(function (require) {
-    var tool = {};
+    var ctooj = {};
     var $ = require("seajq"),jQuery = $;
     var cl = require("ctool"),  bro = cl.bro;
     var bro_str = "_" + cl.bro();
@@ -40,10 +40,10 @@ define(function (require) {
             callback(wi.width(),wi.height(),wi);
             return wi;
         }
-        tool.winResize = winResize;
+        ctooj.winResize = winResize;
 
         /*增加scrpt标签 适用于百度分享等功能*/
-        tool.addScript = function(url_para,para){
+        ctooj.addScript = function(url_para,para){
             if(typeof url_para=="string"){
                 para = para || {};
                 para.src = url_para;
@@ -62,7 +62,7 @@ define(function (require) {
 
         /*阻塞图片加载*/
         /*阻塞网页上当前所有图片加载 直到调用tool.unblock_img_load*/
-        tool.block_img_load=function(){
+        ctooj.block_img_load=function(){
             $(function(){
                 $("img").each(function(i){
                     var me=$(this);
@@ -72,7 +72,7 @@ define(function (require) {
             });
         };
 
-        tool.unblock_img_load = tool.unblockImg = function(custom_key){
+        ctooj.unblock_img_load = ctooj.unblockImg = function(custom_key){
             custom_key = (custom_key || "_src");
             $(function(){
                 $("img[" + custom_key + "]").each(function(i){
@@ -106,25 +106,25 @@ define(function (require) {
         /*一些自定义alert tip msg confirm*/
 		
 		var jboxPath = "jBox/jqplug/j";
-        tool.jalert = function(msg,title,type,config){
+        ctooj.jalert = function(msg,title,type,config){
             require.async(jboxPath,function(){
                 $.jBox.prompt(msg, title, type, config);
             });
         };
 
-        tool.jtip = function(msg,type,config){
+        ctooj.jtip = function(msg,type,config){
             require.async(jboxPath,function(){
                 $.jBox.tip(msg || '正在优化', type || 'loading', $.extend({opacity:0.72},config));
             });
         };
 
-        tool.jmsg = function(msg,tit,config){
+        ctooj.jmsg = function(msg,tit,config){
             require.async(jboxPath,function(){
                 $.jBox.messager(msg || "温馨提示", tit||"温馨提示！", null, config);
             });
         };
 
-        tool.jconfirm = function(msg,tit,callback,config){
+        ctooj.jconfirm = function(msg,tit,callback,config){
             require.async(jboxPath,function(){
                 $.jBox.confirm(msg ||"确定？", tit||"请选择：", callback, config);
             });
@@ -142,7 +142,7 @@ define(function (require) {
             }
             return hidebox;
         };
-        tool.getHideBox = getHideBox;
+        ctooj.getHideBox = getHideBox;
 
         /*
          * 获取图片原始尺寸
@@ -155,7 +155,7 @@ define(function (require) {
                 if($ti.parent().is("#hidebox")) $ti.remove();
             });
         }
-        tool.getImageOrigSize = tool.getImageSizeByPath = getImageOrigSize;
+        ctooj.getImageOrigSize = ctooj.getImageSizeByPath = getImageOrigSize;
 
 
         /**
@@ -393,7 +393,7 @@ define(function (require) {
 
                 if(img_org_w && img_org_h) fresh();
                 else{
-                    tool.getImageOrigSize(
+                    ctooj.getImageOrigSize(
                         ti.attr("src") || ti.attr("_src") || window.errorImageUrl || "At maxOn plug" + Math.random(),
                         function(w,h,info){
                             if(info.error || !ti.attr("src")) ti.attr("src",this.src);
@@ -572,7 +572,7 @@ define(function (require) {
         };
 
         CVScrollTo.init();
-        tool.vScrollTo = CVScrollTo;
+        ctooj.vScrollTo = CVScrollTo;
     })();
 
     /*
@@ -604,7 +604,7 @@ define(function (require) {
         /**
         * 从tbcdn获取KISSY资源
         * */
-        tool.getKissy = function getKissy(callback,config){
+        ctooj.getKissy = function getKissy(callback,config){
             if(kissy){
                 kissy.config($.extend(true,cfg,config));
                 callback && callback.call(kissy,kissy);
@@ -637,7 +637,7 @@ define(function (require) {
          * @type string "GET"表示使用get方式请求;"GET;json",表示使用GET方式请求，数据类型为json
          * @return $.Deferred.
          * */
-        tool.reqPlus = $.reqPlus = function(reqPathArray,para,typeValue,callback){
+        ctooj.reqPlus = $.reqPlus = function(reqPathArray,para,typeValue,callback){
             var df = $.Deferred();
             var dataType = "text",typeStr,reqType;
             if(!reqPathArray || !reqPathArray.length){
@@ -744,7 +744,7 @@ define(function (require) {
             });
         }
 
-        tool.rootCondiFunc = rootCondiFunc;
+        ctooj.rootCondiFunc = rootCondiFunc;
     }();
 
     /**
@@ -765,7 +765,7 @@ define(function (require) {
      * @param prop  规则的属性名
      * @returns {Number}
      */
-    tool.getCssRuleVal = $.getCssRuleVal = function(selector, prop, getFullString){
+    ctooj.getCssRuleVal = $.getCssRuleVal = function(selector, prop, getFullString){
         var bd = $("body");
         if(!bd.length)  throw "请于dom ready之后调用该函数！";
         cssRuleShadow.removeAttr("id").removeAttr("class");
@@ -802,9 +802,9 @@ define(function (require) {
      * 结果:Object  {hh: 112, h: "9555ss", song: "8855px", cc: 4545}
      *
      */
-    tool.getCJObj = function(id_or_class){
+    ctooj.getCJObj = function(id_or_class){
         id_or_class = id_or_class || "#bridge"
-        var ffs = tool.getCssRuleVal(id_or_class,"fontFamily", true);
+        var ffs = ctooj.getCssRuleVal(id_or_class,"fontFamily", true);
         var ffs = $.trim(ffs).replace(/^"|'/,"({").replace(/"|'$/,"})");
 
         //去除单位
@@ -878,7 +878,7 @@ define(function (require) {
     /**
      * 使所有标签支持href跳转
      */
-    tool.hrefPlus = function(){
+    ctooj.hrefPlus = function(){
         $(document).delegate("[href]","click",function(){
             var cur = $(this);
             if(cur.is("a")) return;
@@ -897,7 +897,7 @@ define(function (require) {
      * @param string_objcet
      * @param 如果解析出错，会执行改方法
      */
-    tool.tojson = function(string_objcet, errFunc){
+    ctooj.tojson = function(string_objcet, errFunc){
         var reobj;
         if(typeof string_objcet == "string"){
             try{
@@ -917,5 +917,5 @@ define(function (require) {
     }
 
 
-    return tool;
+    return ctooj;
 });

@@ -1,11 +1,11 @@
 /*ctool no jquery*/
 define(function (require) {
-    var tl = {};
+    var ctool = {};
 
     //存留一份全局ctool到ctool.ctl
     if(window.ctool){
-        tl.ctl = window.ctool;
-        tl.root = window.ctool.root;
+        ctool.ctl = window.ctool;
+        ctool.root = window.ctool.root;
     }
 
     (function(){
@@ -73,7 +73,7 @@ define(function (require) {
                 return reverse_map["Other"];
             } //myBrowser() end
         };
-        tl.bro=bro;
+        ctool.bro=bro;
         bro.cls = function(){ return "_" + bro(); }
         bro._ = "_" + bro();
 
@@ -81,7 +81,7 @@ define(function (require) {
         /**
          * 使ie支持css3 媒体查询
          */
-        tl.mediaQueryIE = function(){
+        ctool.mediaQueryIE = function(){
             if(bro("ie6,ie7,ie8")){
                 require.async("css3-mediaqueries");
             }
@@ -102,7 +102,7 @@ define(function (require) {
             tmpArr.css={width:tmpArr[0],height:tmpArr[1],left:tmpArr[2],top:tmpArr[3]};
             return tmpArr;
         }
-        tl.fit_on_container = fit_on_container;
+        ctool.fit_on_container = fit_on_container;
 
         //最大化等比剪裁
         function max_on_container(continerWH, picWH, space) {
@@ -116,9 +116,9 @@ define(function (require) {
             tmpArr.css={width:tmpArr[0],height:tmpArr[1],left:tmpArr[2],top:tmpArr[3]};
             return tmpArr;
         };
-        tl.max_on_container = max_on_container;
+        ctool.max_on_container = max_on_container;
 
-        tl.getHideBox = function(){
+        ctool.getHideBox = function(){
             throw "该方法已经迁移至ctooj！";
         };
 
@@ -151,7 +151,7 @@ define(function (require) {
                 if(paras && paras.no_error_replace)   return;         //加载错误时禁止去加载默认图
                 if(!paras) paras = {};
                 paras.origUrl = url;
-                paras.url = paras.errurl || tl.err_img_url || window.err_img_url;
+                paras.url = paras.errurl || ctool.err_img_url || window.err_img_url;
                 isLoadDefaultPic || imgPreLoad(paras, function () {
                     callback && callback.call(this, {error: true,paras:paras});
                 }, true);
@@ -169,12 +169,12 @@ define(function (require) {
 
 
         };
-        tl.imgPreLoad = imgPreLoad;
+        ctool.imgPreLoad = imgPreLoad;
 
         //调试 firebug
         function debugStart(){(function(F,i,r,e,b,u,g,L,I,T,E){if(F.getElementById(b))return;E=F[i+'NS']&&F.documentElement.namespaceURI;E=E?F[i+'NS'](E,'script'):F[i]('script');E[r]('id',b);E[r]('src',I+g+T);E[r](b,u);(F[e]('head')[0]||F[e]('body')[0]).appendChild(E);E=new Image;E[r]('src',I+L);})(document,'createElement','setAttribute','getElementsByTagName','FirebugLite','4','firebug-lite-debug.js','releases/lite/debug/skin/xp/sprite.png','https://getfirebug.com/','#startOpened');};
         if(1+ location.href.indexOf("debug")) debugStart();
-        tl.firebug = debugStart;
+        ctool.firebug = debugStart;
         window.firebug = debugStart;
 
         /*
@@ -196,7 +196,7 @@ define(function (require) {
                 }
             }else   return str;
         };
-        tl.strleng = strleng;
+        ctool.strleng = strleng;
         String.prototype.strleng = function(word_num,mor_sign){return strleng(this,word_num||10,mor_sign);}
 
 
@@ -217,7 +217,7 @@ define(function (require) {
             }
             return urlObject;
         };
-        tl.urlParas = urlParas;
+        ctool.urlParas = urlParas;
 
 
         /**
@@ -229,7 +229,7 @@ define(function (require) {
         * http://benalman.com/about/license/
         */
         (function(window,undefined){
-            var $ = tl, jq_throttle;
+            var $ = ctool, jq_throttle;
             /*像机关枪，把持续的小间隔的执行，转换为自定义间隔*/
             $.throttle = jq_throttle = function( delay, no_trailing, callback, debounce_mode ) {
                 var timeout_id, last_exec = 0;
@@ -280,7 +280,7 @@ define(function (require) {
                 link.href = window.ctool.root + url_segment;
                 head[is_prepend_mode?"prepend":"appendChild"](link);
             }
-            tl.loadcss = loadcss;
+            ctool.loadcss = loadcss;
         })();
 
 
@@ -299,18 +299,18 @@ define(function (require) {
             }
             return data.substring(bodyInner_start + body_str.length,bodyInner_end);
         }
-        tl.filter_html_in_body = filter_html_in_body;
+        ctool.filter_html_in_body = filter_html_in_body;
 
 
         //获取scrollElement       //目前有副作用，会使刷新后的页面回到顶端
         !function(){
-            tl.getScrollEle = function(){
+            ctool.getScrollEle = function(){
                 var scrollEle;
                 document.body.scrollTop = document.documentElement.scrollTop = 1;
                 if(document.body.scrollTop!==0) scrollEle = document.body;
                 else scrollEle = document.documentElement;
                 scrollEle.scrollTop = 0;
-                return tl.scrollElement = scrollEle;
+                return ctool.scrollElement = scrollEle;
             }
 
 
@@ -337,8 +337,8 @@ define(function (require) {
                 window.scrollTo(val, scrollY());
             }
 
-            tl.scrollX = scrollX;
-            tl.scrollY = scrollY;
+            ctool.scrollX = scrollX;
+            ctool.scrollY = scrollY;
         }();
          //bottom
     })();
@@ -350,7 +350,7 @@ define(function (require) {
          * @year {number} 年份四位数
          * @month {number} 月份
          * */
-        tl.dayNumOfMonth = function(year,month){
+        ctool.dayNumOfMonth = function(year,month){
             return new Date(Year,Month,0).getDate();
         }
     }();
@@ -371,7 +371,7 @@ define(function (require) {
         /**
          * 参数可以任意多
          */
-        tl.log = function(){
+        ctool.log = function(){
             var co = window.console;
             var ar =arguments;
             if(!co)    return;
@@ -386,7 +386,7 @@ define(function (require) {
         /**
          * 支持多参数alert
          */
-        tl.alert = function(){
+        ctool.alert = function(){
             var ar =arguments;
             var le = ar.length,str="";
             for(var i=0; i<le; i++){
@@ -395,7 +395,7 @@ define(function (require) {
 
             alert(str.substr(1));
         }
-        getWinCtool().log = tl.log;
+        getWinCtool().log = ctool.log;
     }();
 
     //对路径操作的一些正则
@@ -413,7 +413,7 @@ define(function (require) {
             var rg = getRegexp(rgTpl.replace("{n}",n));
             return path.replace(rg,"");
         }
-        getWinCtool().cutPath = tl.cutPath = cutPath;
+        getWinCtool().cutPath = ctool.cutPath = cutPath;
 
 
         var folderRg = /([^\/]+)\/[^\/]+$/;
@@ -429,7 +429,7 @@ define(function (require) {
             }
             return undefined;
         }
-        getWinCtool().getFolderName = tl.getFolderName = getFolderName;
+        getWinCtool().getFolderName = ctool.getFolderName = getFolderName;
 
 
 
@@ -447,7 +447,7 @@ define(function (require) {
             }
             return false;
         }
-        getWinCtool().getFileName = tl.getFileName = getFileName;
+        getWinCtool().getFileName = ctool.getFileName = getFileName;
     }();
 
 
@@ -467,7 +467,7 @@ define(function (require) {
         pool[str+flag] = rg;
         return rg;
     }
-    tl.getRegexp = getRegexp;
+    ctool.getRegexp = getRegexp;
 
 
     //此ctool为window全局对象。非seajs mould
@@ -484,7 +484,7 @@ define(function (require) {
      * @param mateId 默认id为pagevars如果用其他的id，请传入id名称
      * @returns {*}
      */
-    tl.getPageVars = function(mateId){
+    ctool.getPageVars = function(mateId){
         mateId = mateId || "pagevars";
         var mat = document.getElementById(mateId);
         if(!mat) throw "未找到#"+mateId+"，参数对象";
@@ -504,13 +504,13 @@ define(function (require) {
      * @param url 地址，形如http://baidu.com;  //baidu.com
      * @returns {boolean}
      */
-    tl.is_index_url = function (url){
+    ctool.is_index_url = function (url){
         url = url.split(/\?\#/)[0];
         return /(\/\/[^\/]+)($|\/$|\/index\.html)/.test(url)
     }
 
 
-    return tl;
+    return ctool;
 });
 
 

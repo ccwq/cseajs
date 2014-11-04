@@ -78,6 +78,16 @@ define(function (require) {
         bro._ = "_" + bro();
 
 
+        /**
+         * 使ie支持css3 媒体查询
+         */
+        tl.mediaQueryIE = function(){
+            if(bro("ie6,ie7,ie8")){
+                require.async("css3-mediaqueries");
+            }
+        }
+
+
         /*
         * 最大化缩放至容器内部
         * */

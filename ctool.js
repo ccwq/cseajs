@@ -89,8 +89,8 @@ define(function (require) {
 
 
         /*
-        * 最大化缩放至容器内部
-        * */
+         * 最大化缩放至容器内部
+         * */
         function fit_on_container(continerWH, picWH, space){
             if(!space)  space=0;
             var cw = continerWH[0] - space,ch = continerWH[1] - space;
@@ -221,13 +221,13 @@ define(function (require) {
 
 
         /**
-        * 节流阀
-        * throttle / debounce - v1.1 - 3/7/2010
-        * http://benalman.com/projects/jquery-throttle-debounce-plugin/
-        * Copyright (c) 2010 "Cowboy" Ben Alman
-        * Dual licensed under the MIT and GPL licenses.
-        * http://benalman.com/about/license/
-        */
+         * 节流阀
+         * throttle / debounce - v1.1 - 3/7/2010
+         * http://benalman.com/projects/jquery-throttle-debounce-plugin/
+         * Copyright (c) 2010 "Cowboy" Ben Alman
+         * Dual licensed under the MIT and GPL licenses.
+         * http://benalman.com/about/license/
+         */
         (function(window,undefined){
             var $ = ctool, jq_throttle;
             /*像机关枪，把持续的小间隔的执行，转换为自定义间隔*/
@@ -270,8 +270,8 @@ define(function (require) {
         })(this);
 
         /**
-        *css loader css加载器
-        * */
+         *css loader css加载器
+         * */
         (function(){
             function loadcss(url_segment,is_prepend_mode){
                 var link = document.createElement("link");
@@ -285,8 +285,8 @@ define(function (require) {
 
 
         /*
-        * 过滤html代码中body之外的部分
-        * */
+         * 过滤html代码中body之外的部分
+         * */
         function filter_html_in_body(data){
             var bodyInner_start = data.search(/(<body[^>]*?>)/);
             if(bodyInner_start==-1){
@@ -318,10 +318,10 @@ define(function (require) {
 
                 if(val===undefined)
                     return (
-                        window.pageYOffset                   || //用于FF
-                        document.documentElement.scrollTop   ||
-                        document.body.scrollTop              ||
-                        0
+                    window.pageYOffset                   || //用于FF
+                    document.documentElement.scrollTop   ||
+                    document.body.scrollTop              ||
+                    0
                     );
                 window.scrollTo(scrollX(), val);
             }
@@ -329,10 +329,10 @@ define(function (require) {
             function scrollX(val){
                 if(val===undefined)
                     return (
-                        window.pageXOffset                   || //用于FF
-                        document.documentElement.scrollLeft   ||
-                        document.body.scrollLeft              ||
-                        0
+                    window.pageXOffset                   || //用于FF
+                    document.documentElement.scrollLeft   ||
+                    document.body.scrollLeft              ||
+                    0
                     );
                 window.scrollTo(val, scrollY());
             }
@@ -340,7 +340,7 @@ define(function (require) {
             ctool.scrollX = scrollX;
             ctool.scrollY = scrollY;
         }();
-         //bottom
+        //bottom
     })();
 
 
@@ -360,7 +360,7 @@ define(function (require) {
         /**
          * 增加replaceAll方法
          * */
-         String.prototype.replaceAll = function(s1, s2) {
+        String.prototype.replaceAll = function(s1, s2) {
             var reg = regCache[s1] || (regCache[s1]=new RegExp(s1, "gm"));
             return this.replace(reg, s2); //g全局
         }
@@ -521,7 +521,7 @@ define(function (require) {
         return be_mod>=0?(be_mod % mod):(((be_mod%mod)+mod)%mod);
     }
 
-    tl.modp = modp;
+    ctool.modp = modp;
 
 
 
@@ -550,10 +550,10 @@ define(function (require) {
 
         return obj[min_i];
     }
-    tl.round_subtract = round_subtract;
+    ctool.round_subtract = round_subtract;
 
 
-    return tl;
+    return ctool;
 });
 
 

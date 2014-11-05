@@ -27,7 +27,7 @@ define(function (require, exports, module) {
         addOnPreLoaded:true,
 
         //滑动间隔
-        delay:1500,
+        delay:2700,
 
         //自定义重新计算尺寸方法
         /**
@@ -79,7 +79,13 @@ define(function (require, exports, module) {
         sizeFromCss:false,
 
         //当宽度为auto时，的节流间隔
-        aotuFreshDelay:180
+        aotuFreshDelay:180,
+
+        //不显示control pan
+        noCtrlpan:false,
+
+        //控制选择器或者$el <div id=ctrlCont><a class=next>下一张</a><a class=prev>上一张</a></div>
+        controlCont:undefined
     };
 
     /**

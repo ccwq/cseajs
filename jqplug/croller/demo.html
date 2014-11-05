@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+    <ul id="notic_scroll">
+        <li class="item" style="top: -72px;"><a href="#">通知1</a></li>
+        <li class="item" style="top: -36px;"><a href="#">通知通知通知通知通知通知通知通知通知2</a></li>
+        <li class="item" style="top: 0px;"><a href="#">通知3</a></li>
+        <li class="item" style="top: 36px;"><a href="#">通知4.。。。。。。。。。。。。。。。</a></li>
+    </ul>
+
+    <div id="ctrl">
+        <a href="#" class="prev">上一条</a>
+        <a href="#" class="next">下一条</a>
+    </div>
+
+    <style type="text/css">
+        #notic_scroll,
+        #notic_scroll li{height: 24px; line-height: 24px; overflow: hidden;}
+    </style>
+
+    <script src="../../sea/csea$.js" id="seajsnode"></script>
+    <script>
+        seajs.usep("../croller",function(Croll){
+            new Croll("#notic_scroll",{
+                controlCont:"#ctrl"
+            })
+        });
+    </script>
+</body>
+</html>

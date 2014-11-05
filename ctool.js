@@ -510,7 +510,50 @@ define(function (require) {
     }
 
 
-    return ctool;
+
+    /**
+     * 取模运算
+     * @param be_mod        a%b 中的a
+     * @param mod           a%b 中的b
+     * @returns {number}    计算结果
+     */
+    function modp(be_mod,mod){
+        return be_mod>=0?(be_mod % mod):(((be_mod%mod)+mod)%mod);
+    }
+
+    tl.modp = modp;
+
+
+
+    /**
+     * 圆减法,举例，表盘上，12点到1点的距离是1个小时，round_subtract(12,1,12) //1
+     * @param value         减数
+     * @param subtract      被减数
+     * @param circle        周期
+     */
+    function round_subtract(value,subtract, circle){
+        value = modp(value,circle);
+        subtract = modp(subtract,circle);
+
+        var obj = [
+            value - subtract,
+            value - (subtract + circle),
+            (value + circle) - subtract
+        ]
+        var min = 9999999,min_i = 0;
+        for(var i=0; i<obj.length; i++){
+            if(Math.abs(obj[i])<min){
+                min = Math.abs(obj[i]);
+                min_i = i;
+            }
+        }
+
+        return obj[min_i];
+    }
+    tl.round_subtract = round_subtract;
+
+
+    return tl;
 });
 
 

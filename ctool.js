@@ -80,6 +80,7 @@ define(function (require) {
 
         /**
          * 使ie支持css3 媒体查询
+         * todo 在ie7上，可能会使某些元素，奇怪的小消失
          */
         ctool.mediaQueryIE = function(){
             if(bro("ie6,ie7,ie8")){

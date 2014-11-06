@@ -153,6 +153,10 @@ define(function (require, exports, module) {
             me.index(ti.index(),true);
         });
 
+        if(sett.noCtrlpan){
+            me.ctrlPan.hide();
+        }
+
         //处理自带的内置元素
         var orgEles = me.scrollEle.children(".csele");
         if(orgEles.length){
@@ -197,6 +201,17 @@ define(function (require, exports, module) {
                 location.href = href
             ;
         });
+
+
+        //外部控制器
+        if(sett.controlCont){
+            $(sett.controlCont).delegate(".prev,.next","click",function(e){
+                e.preventDefault();
+                var ti = $(this);
+                if(ti.is(".prev")) me.prev();
+                if(ti.is(".next")) me.next();
+            });
+        }
     };
 
     fn = Slid.prototype;
@@ -277,6 +292,25 @@ define(function (require, exports, module) {
         me.animate(dura);
         me.ctrlPan.children().removeClass("cur").eq(i).addClass("cur");
     };
+
+    /**
+     * 上一张
+     */
+    fn.next = function(n){
+        var me=this;
+        me.index(me.index()+ (n||1));
+        me.reCount();
+    };
+
+    /**
+     * 下一张
+     */
+    fn.prev = function(n){
+        var me=this;
+        me.index(me.index()-(n||1));
+        me.reCount();
+    }
+
 
     /**
      * 执行动画

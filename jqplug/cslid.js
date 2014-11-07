@@ -284,10 +284,7 @@ define(function (require, exports, module) {
     fn.index = function(i,dura){
         var me = this;
         if(i===undefined)   return me._index;
-
-        if(i<0) i=me._data.length-1;
-        if(i>me._data.length-1) i = 0;
-
+        i = cl.modp(i,me._data.length);
         me._index = i;
         me.animate(dura);
         me.ctrlPan.children().removeClass("cur").eq(i).addClass("cur");

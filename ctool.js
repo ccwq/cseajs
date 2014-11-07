@@ -82,10 +82,36 @@ define(function (require) {
          * 使ie支持css3 媒体查询
          * todo 在ie7上，可能会使某些元素，奇怪的小消失
          */
-        ctool.mediaQueryIE = function(){
-            if(bro("ie6,ie7,ie8")){
-                require.async("css3-mediaqueries");
+        ctool.mediaQueryIE = function(bro_v_str, callback){
+            bro_v_str = bro_v_str || "ie6,ie7,ie8";
+            callback = callback || ctool.noop;
+            ctool.log("该插件可能在ie上可能会引起一些bug，比如元素消失什么的，请谨慎使用");
+            if(bro(bro_v_str)){
+                require.async("css3-mediaqueries",function(){
+                    callback.call();
+                });
             }
+        }
+
+
+        /**
+         * 调用selectivizr
+         * 使ie支持[attr] [attr=] [attr~=][attr|=] :nth-child :not等 css高级选择器
+         * */
+        ctool.boostIESelector = function(){
+            if(bro("ie6,ie7,ie8,ie9"))
+                require.async("$/selectivizr");
+        }
+
+        /**
+         * 增加浏览器标示符到html的class
+         */
+        ctool.add_bro_sign = function(){
+            var ht = document.getElementsByTagName("html")[0];
+            var attrName = bro("ie6,ie7,ie8,ie9")?"className":"class";
+            var org_cls = ht.getAttribute(attrName);
+            if(org_cls) org_cls=org_cls + " ";
+            ht.setAttribute(attrName,  org_cls + bro._);
         }
 
 

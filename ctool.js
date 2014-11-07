@@ -550,6 +550,11 @@ define(function (require) {
 
     ctool.modp = modp;
 
+    //数字的原型增加mod
+    Number.prototype.mod = function(val){
+        return modp(this,val);
+    }
+
 
 
     /**

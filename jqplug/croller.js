@@ -12,9 +12,10 @@ define(function(require){
         height:undefined,
         item_size:undefined,
         index:0,
-        calc_edge_alw:12,               //计算边界元素的容差
+        calc_edge_alw:12,                   //计算边界元素的容差
         dura:360,
-        controlCont:undefined           //控制选择器或者$el <div id=ctrlCont><a class=next>下一张</a><a class=prev>上一张</a></div>
+        controlCont:undefined,              //控制选择器或者$el <div id=ctrlCont><a class=next>下一张</a><a class=prev>上一张</a></div>,
+        autoPlay:0                          //为0获取null，undefined等的时候，表示不会自动播放
     };
 
     var Croller = function($el, config){
@@ -49,12 +50,24 @@ define(function(require){
         //初始化
         me.index(sett.index);
 
+        //控制元素设置
         if(sett.controlCont){
             $(sett.controlCont).delegate(".prev,.next","click",function(e){
                 e.preventDefault();
                 var ti = $(this);
                 if(ti.is(".prev")) me.prev();
                 if(ti.is(".next")) me.next();
+            });
+        }
+
+        if(sett.autoPlay){
+            require.async("ctimer",function(Ctimer){
+                me.timer = new Ctimer({
+                    delay:sett.autoPlay,
+                    callback:function(){
+                        me.next()
+                    }
+                });
             });
         }
     }
@@ -74,11 +87,13 @@ define(function(require){
         next:function(){
             var me=this;
             me.index(me.index()+1);
+            me.timer && me.timer.reCount();
             return me;
         },
         prev:function(){
             var me=this;
             me.index(me.index()-1);
+            me.timer && me.timer.reCount();
             return me;
         },
 

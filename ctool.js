@@ -99,7 +99,7 @@ define(function (require) {
          * 使ie支持[attr] [attr=] [attr~=][attr|=] :nth-child :not等 css高级选择器
          * */
         ctool.boostIESelector = function(){
-            if(bro("ie6,ie7,ie8,ie9"))
+            if(bro("ie6,ie7,ie8"))
                 require.async("$/selectivizr");
         }
 

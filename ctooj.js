@@ -101,11 +101,11 @@ define(function (require) {
         };
         /*--阻塞图片加载*/
 
-		
-		
+
+
         /*一些自定义alert tip msg confirm*/
-		
-		var jboxPath = "jBox/jqplug/j";
+
+        var jboxPath = "jBox/jqplug/j";
         ctooj.jalert = function(msg,title,type,config){
             require.async(jboxPath,function(){
                 $.jBox.prompt(msg, title, type, config);
@@ -159,8 +159,8 @@ define(function (require) {
 
 
         /**
-        * 获取图片原始尺寸$jq
-        * */
+         * 获取图片原始尺寸$jq
+         * */
         $.fn.get_imgOrg_size = function(callback){
             return this.each(function(){
                 var ti = $(this);
@@ -334,7 +334,7 @@ define(function (require) {
                 size:{w:0,h:0},                          //直接设定显示尺寸 最优先
                 autoFresh:false,                        //在窗口尺寸改变时自动刷新
                 calls:"",callsParam:{},                  //方法调用
-                                                            //目前支持$el.maxOn({calls:"EV_fresh"})  （执行次函授以当父容器尺寸改变时候）重新计算一次尺寸
+                //目前支持$el.maxOn({calls:"EV_fresh"})  （执行次函授以当父容器尺寸改变时候）重新计算一次尺寸
                 msRadio:1,                               //鼠标移动上去之后图片缩放
                 msToggleSetting:{},
                 callback:function($this,cssObject,is_first_callback){}
@@ -555,8 +555,8 @@ define(function (require) {
             },
 
             /*
-            * callbackObject: { scrollTop:500, callback:gowhere.init}
-            * */
+             * callbackObject: { scrollTop:500, callback:gowhere.init}
+             * */
             add:function(callbackObject){
                 var me=this;
                 if(callbackObject.scrollTop === undefined){
@@ -602,8 +602,8 @@ define(function (require) {
         var kissPath = "//g.tbcdn.cn/kissy/k/1.4.1/seed-min.js?t=20140212";
 
         /**
-        * 从tbcdn获取KISSY资源
-        * */
+         * 从tbcdn获取KISSY资源
+         * */
         ctooj.getKissy = function getKissy(callback,config){
             if(kissy){
                 kissy.config($.extend(true,cfg,config));
@@ -702,9 +702,9 @@ define(function (require) {
             });
         }
     }();//多参数请求end
-	
-	
-	//根据 html或者body的某种选择器，来执行相应的函数
+
+
+    //根据 html或者body的某种选择器，来执行相应的函数
     !function(){
         var $root = $("html");
 
@@ -759,6 +759,7 @@ define(function (require) {
     /**
      * 获取css规则某属性的值（只适用于简单规则如#a{},.bb{}）
      *  fn("#abc","fontSize")
+     *  fn($el,"fontSize")
      *  fn("fontSize")               //取#bridge fontSize的值
      *
      * @param selector 任意有效选择器
@@ -793,18 +794,16 @@ define(function (require) {
 
     /**
      * 获取并解析font配置中的信息。
-     * @param id_or_class 柜子名称，id或者class
-     *
+     * @param id_or_class_$dom 柜子名称，id或者class也可以是某jquery对象
      *
      * #bridge{
      *      font-family: "hh:@{header_h},h:'9555ss',song:'8855px', cc:4545px";
      * }
      * 结果:Object  {hh: 112, h: "9555ss", song: "8855px", cc: 4545}
-     *
      */
-    ctooj.getCJObj = function(id_or_class){
-        id_or_class = id_or_class || "#bridge"
-        var ffs = ctooj.getCssRuleVal(id_or_class,"fontFamily", true);
+    ctooj.getCJObj = function(id_or_class_$dom){
+        id_or_class_$dom = id_or_class_$dom || "#bridge"
+        var ffs = ctooj.getCssRuleVal(id_or_class_$dom,"fontFamily", true);
         var ffs = $.trim(ffs).replace(/^"|'/,"({").replace(/"|'$/,"})");
 
         //去除单位
@@ -814,11 +813,11 @@ define(function (require) {
         ffs = ffs.replace(/\\('|")/g,"\"");
 
         var obj;
-		try{
-			obj = eval(ffs);
-		}catch(e){
-			throw "未找到" + id_or_class +"对应的css配置，或者配置非法:" + ffs;
-		}
+        try{
+            obj = eval(ffs);
+        }catch(e){
+            throw "未找到" + id_or_class_$dom +"对应的css配置，或者配置非法:" + ffs;
+        }
 
         return obj;
     }
@@ -840,6 +839,8 @@ define(function (require) {
 
             ,splitTag:">>"
             ,emptyCont:true
+            ,src:""
+            ,selector:""
         };
 
 
@@ -851,11 +852,11 @@ define(function (require) {
             var sett = $.extend({},def,cfg);
             return this.each(function(i){
                 var me = $(this);
-                var src = me.attr("src");
+                var src = sett.src || me.attr("src");
                 if(!src) return;
                 var arr = src.split(sett.splitTag);
                 src = arr[0];
-                var seletor = arr[1]||me.attr("selector");
+                var seletor = sett.selector || arr[1] || me.attr("selector");
                 $.get(src)
                     .done(function(data){
                         var data = sett.ondata(data)|| data;
@@ -903,12 +904,12 @@ define(function (require) {
             try{
                 reobj = $.parseJSON(string_objcet);
             }catch(e){
-				try{
-					reobj = eval("(" + string_objcet + ")")
-				}catch(e){
-					cl.log("传入tojson字符串非法:" + string_objcet);
+                try{
+                    reobj = eval("(" + string_objcet + ")")
+                }catch(e){
+                    cl.log("传入tojson字符串非法:" + string_objcet);
                     if(errFunc) errFunc.call(null);
-				}
+                }
             }
         }else{
             reobj = string_objcet;

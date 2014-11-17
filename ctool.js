@@ -585,6 +585,38 @@ define(function (require) {
     ctool.round_subtract = round_subtract;
 
 
+
+    /**
+     * obj key转换
+     * @param object 接收数组或者object。如果是数组，则遍历数组每个元素，来转换key
+     * @param transmap
+     */
+    var trans_obj_key = function(object,transmap){
+        //数组自动遍历
+        if(object instanceof Array){
+            for(var i = 0; i<object.length; i++){
+                transkey(object[i], transmap);
+            }
+        }else{
+            for(var ke1 in object){
+                var el1 = object[ke1];
+                for(var ke2 in transmap){
+                    var el2 = transmap[ke2];
+                    if(ke1 == ke2){
+                        object[el2] = object[ke2];
+                        delete object[ke2];
+                    }
+                }
+            };
+        }
+
+
+        return object;
+    }
+
+    ctool.trans_obj_key = trans_obj_key;
+
+
     return ctool;
 });
 

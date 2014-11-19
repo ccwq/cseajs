@@ -514,14 +514,17 @@ define(function (require) {
     ctool.getPageVars = function(mateId){
         mateId = mateId || "pagevars";
         var mat = document.getElementById(mateId);
-        if(!mat) throw "未找到#"+mateId+"，参数对象";
+        var obj = {};
 
+        if(!mat){
+            ctool.log("未找到#"+mateId+"，参数对象");
+            return obj;
+        }
         var str = mat.getAttribute("content");
-        var obj;
         try{
             obj = eval("({"+str+"})");
         }catch(e){
-            throw "页面变量格式有误!";
+            ctool.log("页面变量格式错误，将返回空对象");
         }
         return obj;
     };

@@ -603,8 +603,9 @@ define(function (require) {
                 for(var ke2 in transmap){
                     var el2 = transmap[ke2];
                     if(ke1 == ke2){
-                        object[el2] = object[ke2];
+                        object[el2] = el1;
                         delete object[ke2];
+                        continue;
                     }
                 }
             };

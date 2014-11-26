@@ -246,25 +246,41 @@ define(function (require) {
     /*表单元素美化插件 span实现*/
     (function(){
         require.async("ctool.css");
+        var def = {
+            useParent:false
+        };
         $.fn.extend({
             inputsee:function(config_method,para){
+                var method;
+                if(typeof config_method == "string"){
+                    method = config_method;
+                }else{
+                    para = config_method;
+                }
+
+                var sett = $.extend({},def,para);
+
                 return this.each(function(i){
                     var me=$(this), d=me.data();
-                    if(typeof config_method == "string"){
-                        if(!inputsee_method[config_method]) throw "您调用的方法不存在！";
-                        inputsee_method[config_method].call(me,para);
+                    if(method){
+                        if(!inputsee_method[method]) throw "您调用的方法不存在！";
+                        inputsee_method[method].call(me,para);
                     }
                     if(me.parent().is(".inputsee")) return;
-                    var span = $("<span class='inputsee'></span>").addClass("inputsee" + bro_str);
-                    me.after(span).appendTo(span);
+                    var span;
+                    if(sett.useParent){
+                        span = me.parent();
+                    }else{
+                        span = $("<span class='inputsee'></span>");
+                        me.after(span).appendTo(span);
+                    }
+                    span.addClass("inputsee inputsee" + bro_str);
+
                     if(me.is("textarea")){
                         span.addClass("textarea");
                     }
 
                     span.addClass(me.attr("inputsee_class")); //外套设置class
-
-                    //debugger;
-                    //span.css({lineHeight:span.height() + "px"});
 
                     var blt = me.attr("blank_text") || me.attr("placeholder");
                     me.attr("placeholder") && me.removeAttr("placeholder");
@@ -915,6 +931,18 @@ define(function (require) {
             reobj = string_objcet;
         }
         return reobj;
+    }
+
+
+
+    var base = "";
+    ctooj.getbase = function(){
+        if(!base){
+            var aa = $("<a href='./'></a>").appendTo("body");
+            base = aa.prop("href").replace("#","");
+            aa.remove();
+        }
+        return base;
     }
 
 

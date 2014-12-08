@@ -943,7 +943,21 @@ define(function (require) {
             aa.remove();
         }
         return base;
-    }
+    };
+
+
+    /**
+     * 扩展[]: 用法，例：[*:nochild]
+     */
+    $.extend($.expr[':'], {
+        /**
+         * 没有子元素（与:empty的区别是empty认为文本节点也是子元素）
+         */
+        nochild: function(el, i, m)
+        {
+            return !$(el).children().length;
+        }
+    });
 
 
     return ctooj;

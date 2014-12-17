@@ -934,7 +934,10 @@ define(function (require) {
     }
 
 
-
+    /**
+     * 返回当前页面目录的，绝对路径
+     * @type {string}
+     */
     var base = "";
     ctooj.getbase = function(){
         if(!base){
@@ -943,21 +946,17 @@ define(function (require) {
             aa.remove();
         }
         return base;
-    };
-
+    }
 
     /**
-     * 扩展[]: 用法，例：[*:nochild]
+     * 禁止ie下，单击链接时出现border
      */
-    $.extend($.expr[':'], {
-        /**
-         * 没有子元素（与:empty的区别是empty认为文本节点也是子元素）
-         */
-        nochild: function(el, i, m)
-        {
-            return !$(el).children().length;
-        }
-    });
+    ctooj.hide_ie_link_border = function(){
+        $(document).delegate("a","focus click", function(){
+            this.blur();
+        });
+    }
+
 
 
     return ctooj;

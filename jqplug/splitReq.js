@@ -91,11 +91,6 @@ define(function (require, exports, module) {
             var me = this;
             me.initedCb = $.Callbacks("memory");
             var setting = me.setting = me.st = $.extend(true, {}, def, cfg);
-
-            if(typeof setting.container != "string"){
-                throw "config.container必须为选择器字符串";
-            }
-
             var pageCont = me.container = $(setting.container);
             //先去
             setting.rowsMount = setting.rowsMount || pageCont.attr("rowsMount") || constVar.rowsMount;

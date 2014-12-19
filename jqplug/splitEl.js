@@ -6,6 +6,9 @@
  * To change this template use File | Settings | File Templates.
  */
 define(function (require, exports, module) {
+    require("$/simplePagination");
+    var $ = require("jq");
+
     //dom列表分页
     !function(){
         var def ={

@@ -1,6 +1,6 @@
 /*ctool no jquery*/
 define(function (require) {
-    var ctool = {};
+    var ctool = {noop:function(){ }};
 
     //存留一份全局ctool到ctool.ctl
     if(window.ctool){

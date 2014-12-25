@@ -48,6 +48,10 @@ define(function (require, exports, module) {
          */
         onScrollComplete: $.noop,
 
+        //当一个元素被加入显示列表(图片是加载一张，显示一张)
+        //function(index, $dom) this --> me
+        onEleAppend: $.noop,
+
         //dom,selector,htmlstr
         cont:"#CSLid",
 
@@ -228,6 +232,7 @@ define(function (require, exports, module) {
         me._data.push(obj);
         me.freshSize();
         me.ctrlPan.append("<a></a>");
+        me.sett.onEleAppend.call(me,me.scrollEle.children().length,obj.el);
     };
 
     /**

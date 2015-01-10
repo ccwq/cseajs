@@ -37,7 +37,7 @@ define(function (require, exports, module) {
                 var origi_v = el1[vname];
                 var alias_v = pt.valAlias[origi_v]===undefined?origi_v:pt.valAlias[origi_v];
                 var retval = onReplace.call(null,alias_v,vname,origi_v);
-                return retval || alias_v;
+                return retval===undefined?alias_v:retval;
             });
 
             outPut+=("\n"+item);

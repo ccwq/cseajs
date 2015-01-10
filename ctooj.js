@@ -971,6 +971,13 @@ define(function (require) {
         });
     }
 
+    /**
+     * 截取形如<span style="font-size:80px">内容内容内容</span>。为纯文本，并限制长度
+     */
+    ctooj.cutHtml = function(str,strleng){
+        return cutHtmlEle.html(str).text().strleng(strleng);
+    }
+    var cutHtmlEle = $("<div></div>");
 
 
     return ctooj;

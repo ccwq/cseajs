@@ -20,9 +20,27 @@ define(function (require, exports, module) {
      * @param lists 数据，可以是[{},{},{}]，也可以是{}
      * @param tpl 模板,例如<a>{name}</a>
      *              {_index_}:遍历到的索引
+     * @param config
+     *          如果传入一个function，则表示onReplace
+     *          {
+     *              //到遍历到一组数据
+     *              onItem: function(currentData,index){}
+     *              //当执行一次替换
+     *              onReplace: function(value, vname, origi_value){ this-->currentData}
+     *          }
      * @returns {string}
      */
-    function parseTpl(lists,tpl,onReplace){
+    function parseTpl(lists,tpl,config){
+
+        var onReplace = (function(){});
+        var onItem = onReplace;
+        if(typeof  config == "function"){
+            onReplace = config;
+        }else{
+            onReplace = config.onReplace || onReplace;
+            onItem = config.onItem || onItem;
+        }
+
         onReplace = onReplace || (function(){});
         var outPut="",item="";
         if(!isArray(lists))   lists = [lists];
@@ -31,12 +49,14 @@ define(function (require, exports, module) {
         for(var k1 in lists){
             var el1 = lists[k1];
             if(!numRg.test(k1)) continue;           //数字验证。如果字段不是数字，滚。cao fk ie；
+
+            el1 = onItem.call(null,el1, k1) || el1;
             item = tpl.replaceAll("{_index_}",k1);
 
             item = item.replace(rg_tpl,function(a,vname,c){
                 var origi_v = el1[vname];
                 var alias_v = pt.valAlias[origi_v]===undefined?origi_v:pt.valAlias[origi_v];
-                var retval = onReplace.call(null,alias_v,vname,origi_v);
+                var retval = onReplace.call(el1,alias_v,vname,origi_v);
                 return retval===undefined?alias_v:retval;
             });
 

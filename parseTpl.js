@@ -37,6 +37,7 @@ define(function (require, exports, module) {
         if(typeof  config == "function"){
             onReplace = config;
         }else{
+            config = config || {};
             onReplace = config.onReplace || onReplace;
             onItem = config.onItem || onItem;
         }

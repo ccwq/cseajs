@@ -8,7 +8,7 @@
 define(function (require, exports, module) {
     require("$/simplePagination");
     var $ = require("jq");
-
+    var MkListToPage;
     //dom列表分页
     !function(){
         var def ={
@@ -31,6 +31,10 @@ define(function (require, exports, module) {
 
             autoSkipTo:0,
 
+            //当翻页(自动或者手动)时候执行，并返回当前被展示的元素
+            //function($els)
+            onelshow: $.noop,
+
 
             //自定义配置
             onpage: $.noop,
@@ -39,15 +43,24 @@ define(function (require, exports, module) {
             skipFunc:function($list,pageno, row){
                 $list.hide().removeClass("showing");
                 var cur = 0;
+                var willShowEls = $();
                 $list.each(function(i){
                     var t= $(this);
                     var pnofix = pageno - 1;
                     if(i >= pnofix * row && i < (pnofix + 1) * row){
-                        t.find("img[_src]:not(.scrollEle img)").unblockImg();
-                        t.show();
+                        willShowEls[willShowEls.length++] = this;
+
                     }
                     cur ++;
                 });
+
+                willShowEls.show();
+
+                var sett = this.sett;
+                sett.onelshow.call(this,willShowEls);
+
+                //加载图片
+                willShowEls.find("img[_src]:not(.scrollEle img)").unblockImg()
             },
 
             a:"a"
@@ -55,22 +68,15 @@ define(function (require, exports, module) {
 
 
 
-        var MkListToPage = function($list,config){
+        MkListToPage = function($list,config){
             var me = this;
             var sett = me.sett = $.extend({},def,config);
-            if(typeof sett.container != "string"){
-                throw "config.container必须为选择器字符串";
-            }
-
-
             $list.parent().show();
             sett.pages = ~~(($list.length-1)/sett.row) + 1;
-
             sett.onPageClick = function(num,e){
                 sett.skipFunc.call(me,$list , num, sett.row);
                 sett.onpage.call(me,num,e);
             };
-
             var pg = me.page = $(sett.container).pagination(sett);
             pg.call = function(method, para){
                 return pg.pagination(method, para);
@@ -79,12 +85,11 @@ define(function (require, exports, module) {
             if(sett.autoSkipTo > 0){
                 pg.call("selectPage",1);
             }
-
         }
 
         var fn = MkListToPage.prototype;
         window.MkListToPage = MkListToPage;
     }();
-    return MkListToPage;
 
+    return MkListToPage;
 });

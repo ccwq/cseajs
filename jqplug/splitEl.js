@@ -85,4 +85,6 @@ define(function (require, exports, module) {
         var fn = MkListToPage.prototype;
         window.MkListToPage = MkListToPage;
     }();
+    return MkListToPage;
+
 });

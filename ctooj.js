@@ -178,6 +178,10 @@ define(function (require) {
             var config = {
                 pw:undefined,                       //如果此值设置，parent宽度会被此值代替
                 ph:undefined,
+
+                //当图片尺寸被设置完成执行
+                //function($pic){}
+                onsize: $.noop,
                 customLay: $.noop                   //自定义布局
             };
 
@@ -210,9 +214,11 @@ define(function (require) {
                         ti.get_imgOrg_size(function(iw,ih){
                             d.org_size = [iw,ih];
                             fit_out_on.call(ti, d.org_size,[sett.pw || par.width(),sett.ph || par.height()], sett.customLay);
+                            sett.onseize.call(null,ti);
                         });
                     }else{
                         fit_out_on.call(ti, d.org_size,[sett.pw || par.width(), sett.ph || par.height()], sett.customLay);
+                        sett.onseize.call(null,ti);
                     }
                 });
             };
@@ -971,13 +977,6 @@ define(function (require) {
         });
     }
 
-    /**
-     * 截取形如<span style="font-size:80px">内容内容内容</span>。为纯文本，并限制长度
-     */
-    ctooj.htmlCut = function(str,strleng){
-        return htmlCutEl.html(str).text().strleng(strleng);
-    }
-    var htmlCutEl = $("<div></div>");
 
 
     return ctooj;

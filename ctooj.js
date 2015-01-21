@@ -214,11 +214,11 @@ define(function (require) {
                         ti.get_imgOrg_size(function(iw,ih){
                             d.org_size = [iw,ih];
                             fit_out_on.call(ti, d.org_size,[sett.pw || par.width(),sett.ph || par.height()], sett.customLay);
-                            sett.onseize.call(null,ti);
+                            sett.onsize.call(null,ti);
                         });
                     }else{
                         fit_out_on.call(ti, d.org_size,[sett.pw || par.width(), sett.ph || par.height()], sett.customLay);
-                        sett.onseize.call(null,ti);
+                        sett.onsize.call(null,ti);
                     }
                 });
             };

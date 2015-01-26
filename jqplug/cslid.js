@@ -199,6 +199,7 @@ define(function (require, exports, module) {
             var t = $(this);
             var href = t.attr("href");
             e.preventDefault();
+            if(!href)   return;
             t.attr("target")=="_blank"?
                 window.open(href)
                 :

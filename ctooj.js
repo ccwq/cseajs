@@ -978,6 +978,27 @@ define(function (require) {
     }
 
 
+    /**
+     * 状态按钮组
+     * 可作简易导航,单选按钮组。
+     * @param selector
+     */
+    function tog_gp(selector){
+        selector = selector || ".togg[tog_type]>em"
+        $(document).delegate(selector,"click mouseenter",function(e){
+            var cur = $(this);
+            if(cur.is(".cur"))  return;
+            var par = cur.parent();
+            var togg_type = par.attr("tog_type") || "mouseenter";
+            if(e.type != togg_type) return;
+            cur.addClass("cur").siblings().removeClass("cur");
+            par.trigger("change",[par.find("em").index(cur), cur]);
+        });
+    }
+
+    ctooj.tog_gp = $.tog_gp = tog_gp;
+
+
 
     return ctooj;
 });

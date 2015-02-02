@@ -858,6 +858,8 @@ define(function (require) {
              * }
              */
             ,complete: $.noop               //元素加入dom后，触发
+            ,appended: $.noop               //展示以后
+
 
             ,splitTag:">>"
             ,emptyCont:true
@@ -888,6 +890,7 @@ define(function (require) {
                         if(sett.emptyCont){ me.empty(); }
                         dom = sett.complete.call(me,dom) || dom;
                         me.append(dom);
+                        sett.appended.call(me,dom);
                     })
                     .fail(function(){
                         throw "aiframe请求失败:" + src;

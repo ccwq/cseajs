@@ -27,9 +27,14 @@ define(function (require, exports, module) {
 
     var fn = CTimer.prototype;
 
-    fn.start = function(){
+    /**
+     *
+     * @param paraList 在脉冲发生持，派发参数的数组
+     * @returns {exports}
+     */
+    fn.start = function(paraList){
+        this.paraList = paraList;
         this.status = CTimer.statusPlaying;
-
         this.itv = this._getItv();
         return this;
     }
@@ -46,7 +51,7 @@ define(function (require, exports, module) {
         return m;
     }
 
-    fn.reCount = function(){
+    fn.recount = fn.reCount = function(){
         //如果不是播放状态，reCount无效
         if(this.status !== CTimer.statusPlaying) return;
         this.stop().start();
@@ -56,7 +61,7 @@ define(function (require, exports, module) {
         var m = this;
         if(m.itv) clearInterval(m.itv)
         return setInterval(function(){
-            m.sett.callback.call(m);
+            m.sett.callback.apply(m, m.paraList);
         },m.sett.delay);
     }
 

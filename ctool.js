@@ -621,6 +621,59 @@ define(function (require) {
     ctool.trans_obj_key = trans_obj_key;
 
 
+    /**
+     * 调用函数的delayCall方法，可以使函数在规定时间后执行。并且支持改变scope和参数。
+     * @param delay 延迟调用的间隔
+     * @param scope 改变this。如果传入数组，则表示parselist的内容
+     * @param paralist
+     * @returns {*}
+     */
+    Function.prototype.delayCall = function(delay,scope,paralist){
+        var m = this;
+        if(!m.__delay_timeout_list){
+            m.__delay_timeout_list = [];
+        }
+
+        //简单判断是否是数组
+        //参数校正
+        if(scope.length && scope.sort){
+            paralist = scope;
+            scope = null;
+        }
+
+        delay = delay || 500;
+
+        var stimeout_obj;
+        m.__delay_timeout_list.push(
+            stimeout_obj = setTimeout(function(){
+                m.apply(scope,paralist);
+            },delay)
+        );
+        return stimeout_obj;
+    }
+
+    /**
+     *
+     * @param stimeout_obj 如果为空，则清除该函数发起的所有所有延时执行，否则清除特定的延时执行
+     */
+    Function.prototype.killDelayCall = function(stimeout_obj){
+        var m = this;
+
+        //清除特定的delayCall
+        if(stimeout_obj){
+            clearTimeout(stimeout_obj);
+            return;
+        }
+
+        if(!m.__delay_timeout_list || !m.__delay_timeout_list.length)   return;
+
+        var dtl = m.__delay_timeout_list;
+        for(var i=0; i< dtl.length; i++){
+            window.clearTimeout(dtl[i]);
+        }
+    }
+
+
     return ctool;
 });
 

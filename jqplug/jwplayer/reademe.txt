@@ -1,0 +1,9 @@
+JWPlayer("ID")
+    .setup({
+        flashplayer:JWPlayer.fppath,
+        file:cur.video.fixroot(),
+        width:660,
+        height:450
+    })
+    .play()
+;

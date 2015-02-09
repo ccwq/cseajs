@@ -982,6 +982,28 @@ define(function (require) {
 
 
     /**
+     * 使用页内锚点跳转变平滑
+     */
+    ctooj.anchor_jump_smooth = function(){
+        //页内跳转，平滑
+        $(document).delegate("a[href^=#]","click",function(e){
+            var idstr = this.getAttribute("href");
+            var idel = $(idstr);
+            if(!idel.length){
+                return;
+            }else{
+                e.preventDefault();
+                $("body,html").animate({
+                    scrollTop:idel.offset().top - 12
+                },500);
+            }
+        });
+    }
+
+
+
+
+    /**
      * 状态按钮组
      * 可作简易导航,单选按钮组。
      * @param selector

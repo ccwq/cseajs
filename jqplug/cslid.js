@@ -449,7 +449,7 @@ define(function (require, exports, module) {
     };
     var eleTpl =
             "<div class='csele'>" +
-            "<div class='mainCont'><img _src='{src}' preSrc=''/></div>" +
+            "<div class='mainCont' style='position: absolute;'><img _src='{src}' preSrc=''/></div>" +
             "<div class='subCont'></div>" +
             "</div>"
         ;
@@ -474,6 +474,11 @@ define(function (require, exports, module) {
         }else if(el.nodeType){
             el = $(el);//转交给jquery
         }
+
+        //ie对样式识别错误的bug
+        el.find(".mainCont").css({position:"absolute"});
+
+
 
         //是jquery对象
         if(el.constructor == $){

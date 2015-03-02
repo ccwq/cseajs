@@ -994,7 +994,7 @@ define(function (require) {
             }else{
                 e.preventDefault();
                 $("body,html").animate({
-                    scrollTop:idel.offset().top - 12
+                    scrollTop:idel.offset().top - (offset || 0)
                 },500);
             }
         });
@@ -1022,7 +1022,6 @@ define(function (require) {
     }
 
     ctooj.tog_gp = $.tog_gp = tog_gp;
-
 
 
     return ctooj;

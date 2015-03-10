@@ -233,7 +233,7 @@ define(function (require, exports, module) {
         me._data.push(obj);
         me.freshSize();
         me.ctrlPan.append("<a></a>");
-        me.sett.onEleAppend.call(me,me.scrollEle.children().length,obj.el);
+        me.sett.onEleAppend.call(me,me.scrollEle.children().length-1,obj.el);
     };
 
     /**

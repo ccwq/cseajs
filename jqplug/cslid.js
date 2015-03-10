@@ -42,7 +42,7 @@ define(function (require, exports, module) {
 
         //滚动完成后执行
         /**
-         * function onScrollComplete(cur_index){
+         * function onScrollComplete(cur_index, isLastOne){
          *      this //cur $le
          * }
          */
@@ -338,7 +338,11 @@ define(function (require, exports, module) {
                     curEle.el.stop(true).fadeTo(me.sett.fadeDura,1)
                 }
 
-                me.sett.onScrollComplete.call(curEle,me._index);
+                me.sett.onScrollComplete.call(
+                    curEle,
+                    me._index,
+                    me._index == me._dataCache.length           //是否最后一个
+                );
             }
         );
     }

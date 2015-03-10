@@ -338,11 +338,18 @@ define(function (require, exports, module) {
                     curEle.el.stop(true).fadeTo(me.sett.fadeDura,1)
                 }
 
-                me.sett.onScrollComplete.call(
-                    curEle,
-                    me._index,
-                    me._index == me._dataCache.length           //是否最后一个
-                );
+                //如果是0仅仅是为了调整布局，不能算为滑动完成
+                if(dura!=0){
+                    me.sett.onScrollComplete.call(
+                        curEle,
+                        me._index,
+                        me._index == me._dataCache.length           //是否最后一个
+                    );
+                    debugger;
+                }
+
+
+
             }
         );
     }

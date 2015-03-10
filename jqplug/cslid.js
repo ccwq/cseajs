@@ -345,11 +345,7 @@ define(function (require, exports, module) {
                         me._index,
                         me._index == me._dataCache.length           //是否最后一个
                     );
-                    debugger;
                 }
-
-
-
             }
         );
     }

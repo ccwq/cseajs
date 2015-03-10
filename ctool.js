@@ -636,7 +636,7 @@ define(function (require) {
 
         //简单判断是否是数组
         //参数校正
-        if(scope.length && scope.sort){
+        if(scope && scope.length && scope.sort){
             paralist = scope;
             scope = null;
         }

@@ -43,13 +43,13 @@ define(function (require, exports, module) {
         //滚动完成后执行
         /**
          * function onScrollComplete(cur_index, isLastOne){
-         *      this //cur $le
+         *      this //-->me
          * }
          */
         onScrollComplete: $.noop,
 
         //当一个元素被加入显示列表(图片是加载一张，显示一张)
-        //function(index, $dom) this --> me
+        //function(index, isLast) this --> me
         onEleAppend: $.noop,
 
         //dom,selector,htmlstr
@@ -233,7 +233,11 @@ define(function (require, exports, module) {
         me._data.push(obj);
         me.freshSize();
         me.ctrlPan.append("<a></a>");
-        me.sett.onEleAppend.call(me,me.scrollEle.children().length-1,obj.el);
+        me.sett.onEleAppend.call(
+            me,
+            me._index,
+            me._index == me.length() - 1
+        );
     };
 
     /**
@@ -341,7 +345,7 @@ define(function (require, exports, module) {
                 //如果是0仅仅是为了调整布局，不能算为滑动完成
                 if(dura!=0){
                     me.sett.onScrollComplete.call(
-                        curEle,
+                        me,
                         me._index,
                         me._index == me.length() - 1           //是否最后一个
                     );

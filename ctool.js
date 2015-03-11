@@ -645,9 +645,12 @@ define(function (require) {
 
         var stimeout_obj;
         m.__delay_timeout_list.push(
-            stimeout_obj = setTimeout(function(){
-                m.apply(scope,paralist);
-            },delay)
+            {
+                ti_id:stimeout_obj = setTimeout(function () {
+                    m.apply(scope, paralist);
+                }, delay),
+                win:window
+            }
         );
         return stimeout_obj;
     }
@@ -669,7 +672,7 @@ define(function (require) {
 
         var dtl = m.__delay_timeout_list;
         for(var i=0; i< dtl.length; i++){
-            window.clearTimeout(dtl[i]);
+            dtl[i].win.clearTimeout(dtl[i].ti_id);
         }
     }
 

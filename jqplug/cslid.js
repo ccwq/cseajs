@@ -233,10 +233,11 @@ define(function (require, exports, module) {
         me._data.push(obj);
         me.freshSize();
         me.ctrlPan.append("<a></a>");
+        var cur_index = me.scrollEle.children().length-1;
         me.sett.onEleAppend.call(
             me,
-            me._index,
-            me._index == me.length() - 1
+            cur_index,
+            cur_index == me.length() - 1
         );
     };
 

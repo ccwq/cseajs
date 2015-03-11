@@ -343,7 +343,7 @@ define(function (require, exports, module) {
                     me.sett.onScrollComplete.call(
                         curEle,
                         me._index,
-                        me._index == me._dataCache.length           //是否最后一个
+                        me._index == me.length() - 1           //是否最后一个
                     );
                 }
             }
@@ -370,6 +370,14 @@ define(function (require, exports, module) {
 
         me._setSize(w,h)
     };
+
+    /**
+     * 获取所有图片的数量 包括已加载未加载(展示)的
+     */
+    fn.length = function(){
+        var me = this;
+        return me._dataCache.length + me._data.length;
+    }
 
 
     //内部方法 只接受数字

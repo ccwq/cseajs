@@ -677,6 +677,26 @@ define(function (require) {
     }
 
 
+    /**
+     * 数字前自动填充0
+     * @param num
+     * @param size
+     * @returns {string}
+     */
+    function zfill(num, size) {
+        //很长不需要填充
+        if((num+"").length > size) return num;
+        //补0并剪裁
+        var s = "000000000000" + num;
+        return s.substr(Math.max(0, s.length - size));
+    }
+
+    Number.prototype.zfill = function(size){ return zfill(this,size); }
+    ctool.zfill = zfill;
+
+
+
+
     return ctool;
 });
 

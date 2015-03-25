@@ -165,9 +165,8 @@ define(function (require) {
             return this.each(function(){
                 var ti = $(this);
                 if(!ti.is("img"))   throw "元素必须是图片";
-
-                getImageOrigSize(ti.attr("src") || ti.attr("_src"),function(iw,ih){
-                    if(callback) callback.call(ti,iw,ih);
+                cl.imgready(ti.attr("src") || ti.attr("_src"),function(){
+                    if(callback) callback.call(ti,this.width,this.height);
                 });
             });
         };
@@ -211,7 +210,7 @@ define(function (require) {
                     }
 
                     if(!d.org_size){
-                        ti.get_imgOrg_size(function(iw,ih){
+                        cl.get_imgOrg_size(function(iw,ih){
                             d.org_size = [iw,ih];
                             fit_out_on.call(ti, d.org_size,[sett.pw || par.width(),sett.ph || par.height()], sett.customLay);
                             sett.onsize.call(null,ti);

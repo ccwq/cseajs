@@ -811,7 +811,7 @@ define(function (require) {
 
 
     //css单位
-    var rg_css_unit = /(:\s?\d+)(ms|px|s|em)/g;
+    var rg_css_unit = /(:\s*\d+\.?\d*)(ms|px|s|em)/g;
 
     /**
      * 获取并解析font配置中的信息。

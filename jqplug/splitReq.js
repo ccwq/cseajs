@@ -136,6 +136,8 @@ define(function (require, exports, module) {
             var me = this,sett = me.setting;
             cj.reqPlus(me.parseReqPath(para),para)
                 .done(function(data){
+                    data = sett.onData.call(me,data) || data;
+
                     if(sett.dataType=="html"){
                         //暂时无操作
                     }else if(sett.dataType=="json"){
@@ -144,7 +146,6 @@ define(function (require, exports, module) {
                         throw "dataType字段不合法"
                     }
                     if(!sett.hidePageNav) me.setPageInfo(data);
-                    sett.onData.call(me,data);
                 })
                 .fail(function(){
                     throw "网络连接失败！检查后台服务是否开启，是否报错，是否请求跨域！";

@@ -139,18 +139,12 @@ define(function (require, exports, module) {
                     if(sett.dataType=="html"){
                         //暂时无操作
                     }else if(sett.dataType=="json"){
-                        if(typeof data == "string"){
-                            try{ data = $.parseJSON(data); }
-                            catch (e) {
-                                throw "json解析失败，请检查dataType属性，或者服务器返数据格式";
-                            }
-                        }
+                        data = cj.tojson(data);
                     }else{
                         throw "dataType字段不合法"
                     }
                     if(!sett.hidePageNav) me.setPageInfo(data);
                     sett.onData.call(me,data);
-
                 })
                 .fail(function(){
                     throw "网络连接失败！检查后台服务是否开启，是否报错，是否请求跨域！";

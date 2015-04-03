@@ -1023,5 +1023,66 @@ define(function (require) {
     ctooj.tog_gp = $.tog_gp = tog_gp;
 
 
+    /**
+     * 当内部图片加载完成后，执行回掉
+     * config.allready(error,)
+     * config.oneready(error)
+     */
+    $.fn.imgReady = function(config){
+        config = config || {};
+        if(typeof config == "function"){
+            config = {allready:config}
+        }
+
+        config.allready = config.allready || $.noop;
+        config.oneready = config.oneready || $.noop;
+
+
+        this.each(function(){
+            var ti = $(this);
+            var pool = [];
+            var url_img_dic ={}
+            if(ti.is("img")){
+                var url = ti.attr("_src") || ti.attr("src");
+                pool.push(url);
+                url_img_dic[url] = ti;
+            }else{
+                ti.find("img").each(function(){
+                    var tt = $(this);
+                    var url = tt.attr("_src") || tt.attr("src");
+                    url_img_dic[url] = tt;
+                    pool.push(url);
+                })
+            }
+
+            $.each(pool,function(k,el){
+                cl.imgready(
+                    el,
+                    function(){
+                        judge.call(this)
+                    },
+                    null,
+                    function(){
+                        judge.call(this,true)
+                    }
+                )
+            });
+
+            /**
+             * 判断
+             */
+            function judge(iserror){
+                pool.pop();
+                var islast = !pool.length;
+
+                var ti = url_img_dic[this.getAttribute("src")];
+                config.oneready.call(ti, iserror, ti, this, islast);
+
+                if(islast) config.allready.call(ti);
+            }
+        });
+    }
+
+
     return ctooj;
 });

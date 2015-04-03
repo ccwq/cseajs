@@ -60,6 +60,8 @@ define(function (require, exports, module) {
             reqPara:{rows:5},               	//请求所带参数。默认传rows:5，表示每页显示5条
             dataType:"json",                    //类型可以"json"或者"html","null"
             //当类型为null的时候仅仅保留分页功能,不会发起数据请求
+            //当接受到远程数据的时候，在对数据进行json解析之前调用。返回值可改变data
+            onRece:nullFunc,
             onData: nullFunc,                   //当数据返回时 参数为所请求到的原始字符串
             onReq:nullFunc,                     //当请求时候执行
                                                 /*
@@ -136,8 +138,7 @@ define(function (require, exports, module) {
             var me = this,sett = me.setting;
             cj.reqPlus(me.parseReqPath(para),para)
                 .done(function(data){
-                    data = sett.onData.call(me,data) || data;
-
+                    data = sett.onRece.call(me,data) || data;
                     if(sett.dataType=="html"){
                         //暂时无操作
                     }else if(sett.dataType=="json"){
@@ -146,6 +147,7 @@ define(function (require, exports, module) {
                         throw "dataType字段不合法"
                     }
                     if(!sett.hidePageNav) me.setPageInfo(data);
+                    data = sett.onData.call(me,data) || data;
                 })
                 .fail(function(){
                     throw "网络连接失败！检查后台服务是否开启，是否报错，是否请求跨域！";

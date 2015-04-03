@@ -210,7 +210,7 @@ define(function (require) {
                     }
 
                     if(!d.org_size){
-                        cl.get_imgOrg_size(function(iw,ih){
+                        ti.get_imgOrg_size(function(iw,ih){
                             d.org_size = [iw,ih];
                             fit_out_on.call(ti, d.org_size,[sett.pw || par.width(),sett.ph || par.height()], sett.customLay);
                             sett.onsize.call(null,ti);

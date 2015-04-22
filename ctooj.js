@@ -102,34 +102,6 @@ define(function (require) {
         /*--阻塞图片加载*/
 
 
-
-        /*一些自定义alert tip msg confirm*/
-
-        var jboxPath = "jBox/jqplug/j";
-        ctooj.jalert = function(msg,title,type,config){
-            require.async(jboxPath,function(){
-                $.jBox.prompt(msg, title, type, config);
-            });
-        };
-
-        ctooj.jtip = function(msg,type,config){
-            require.async(jboxPath,function(){
-                $.jBox.tip(msg || '正在优化', type || 'loading', $.extend({opacity:0.72},config));
-            });
-        };
-
-        ctooj.jmsg = function(msg,tit,config){
-            require.async(jboxPath,function(){
-                $.jBox.messager(msg || "温馨提示", tit||"温馨提示！", null, config);
-            });
-        };
-
-        ctooj.jconfirm = function(msg,tit,callback,config){
-            require.async(jboxPath,function(){
-                $.jBox.confirm(msg ||"确定？", tit||"请选择：", callback, config);
-            });
-        };
-
         /*
          * 尺寸为0的容器,用于存放特殊dom对象
          * */

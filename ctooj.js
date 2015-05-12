@@ -1056,5 +1056,37 @@ define(function (require) {
     }
 
 
+    /**
+     * 当某元素滑动到底部的时候
+     * @returns {*}
+     */
+    $.fn.scrollBott = function(config,callback){
+        if(typeof config == "function"){
+            callback = config;
+            config = {};
+        }
+        var sett = $.extend({}, $.fn.scrollBott.def,config);
+
+        return this.each(function(i){
+            var me=$(this);
+
+            var view_h = me.height();
+            me.scroll(function(){
+                var nContentHeight = me.prop("scrollHeight");           //滚动距离总长(注意不是滚动条的长度)
+                var nScrollTop = me.prop("scrollTop");                  //滚动到的当前位置
+                if(nScrollTop + view_h >= nContentHeight - sett.offset_y){
+                    callback.call(me,nScrollTop,nContentHeight);
+                }
+            });
+        });
+    }
+
+
+    //默认配置
+    $.fn.scrollBott.def = {
+        //偏移
+        offset_y:6
+    }
+
     return ctooj;
 });

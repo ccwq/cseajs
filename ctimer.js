@@ -61,7 +61,14 @@ define(function (require, exports, module) {
         var m = this;
         if(m.itv) clearInterval(m.itv)
         return setInterval(function(){
-            m.sett.callback.apply(m, m.paraList);
+            if(!Function.prototype.apply){
+                require.async("ctool",function(){
+                    m.sett.callback.apply(m, m.paraList || []);
+                })
+            }else{
+                m.sett.callback.apply(m, m.paraList || []);
+            }
+
         },m.sett.delay);
     }
 

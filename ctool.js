@@ -791,7 +791,7 @@ define(function (require) {
     /**
      * 对layer进行封装
      */
-    ctooj.layer = function(callback){
+    ctool.layer = function(callback){
         require.async("$/layer",function(l){
             l.ready(function(){
                 callback && callback.callback(l);

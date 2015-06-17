@@ -800,6 +800,66 @@ define(function (require) {
     }
 
 
+    /**
+     * dom ready类似
+     */
+    !function(){
+        var isTop,testDiv,scrollIntervalId,isBrowser=typeof window!=="undefined"&&window.document,isPageLoaded=!isBrowser,doc=isBrowser?document:null,readyCalls=[];function runCallbacks(callbacks){var i;for(i=0;i<callbacks.length;i+=1){callbacks[i](doc)}}function callReady(){var callbacks=readyCalls;if(isPageLoaded){if(callbacks.length){readyCalls=[];runCallbacks(callbacks)}}}function pageLoaded(){if(!isPageLoaded){isPageLoaded=true;if(scrollIntervalId){clearInterval(scrollIntervalId)}callReady()}}if(isBrowser){if(document.addEventListener){document.addEventListener("DOMContentLoaded",pageLoaded,false);window.addEventListener("load",pageLoaded,false)}else{if(window.attachEvent){window.attachEvent("onload",pageLoaded);testDiv=document.createElement("div");try{isTop=window.frameElement===null}catch(e){}if(testDiv.doScroll&&isTop&&window.external){scrollIntervalId=setInterval(function(){try{testDiv.doScroll();pageLoaded()}catch(e){}},30)}}}if(document.readyState==="complete"){pageLoaded()}}function domReady(callback){if(isPageLoaded){callback(doc)}else{readyCalls.push(callback)}return domReady}domReady.version="2.0.1";domReady.load=function(name,req,onLoad,config){if(config.isBuild){onLoad(null)}else{domReady(onLoad)}};
+        ctool.domReady = domReady;
+    }();
+
+
+
+
+    //根据 html或者body的某种选择器，来执行相应的函数
+    !function(){
+        var html_el = document.getElementsByTagName("html")[0];
+
+        /**
+         * 传入一个map，根据map的值，决定是否要执行該值对应的func
+         *    html:
+         *    <html class="foo">
+         *    {
+         *          ".foo":function(){},//执行
+         *          "@/.foo":function(){},         //documeng ready执行
+         *          "!/.foo":function(){},          //非 .foo执行
+         *          "@!/.foo":function(){}
+         *    }
+         * @param funcMap
+         */
+        function rootCondiFunc(funcMap){
+            $.each(funcMap, function(k, el){
+                var isDomReady = false;         //dom构成后执行
+                var isrevert = false;           //条件不符合执行
+                var sel = k;
+                if(/^([!@]{1,2})\/(.+)/.test(k)){
+                    var flags = RegExp["$1"];
+
+                    isDomReady = flags.indexOf("@")!=-1;
+                    isrevert = flags.indexOf("!")!=-1;
+                    sel = RegExp["$2"];
+                    if(!sel) throw "传入选择器非法或者空";
+                }
+
+
+                var sel_class_name = sel.substr(1);
+                var html_el_class_str = html_el.getAttribute("class");
+
+
+
+                var isvalid = html_el_class_str.indexOf(sel_class_name) + 1;
+                if(isrevert) isvalid = !isvalid;
+
+                if(isvalid){
+                    isDomReady?ctool.domReady(el):el();
+                }
+            });
+        }
+
+        ctool.rootCondiFunc = rootCondiFunc;
+    }();
+
+
     return ctool;
 });
 

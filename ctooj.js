@@ -698,47 +698,7 @@ define(function (require) {
 
 
     //根据 html或者body的某种选择器，来执行相应的函数
-    !function(){
-        var $root = $("html");
-
-        /**
-         * 传入一个map，根据map的值，决定是否要执行該值对应的func
-         *    html:
-         *    <html class="foo">
-         *    {
-         *          ".foo":function(){},//执行
-         *          "@/.foo":function(){},         //documeng ready执行
-         *          "!/.foo":function(){},          //非 .foo执行
-         *          "@!/.foo":function(){}
-         *    }
-         * @param funcMap
-         */
-        function rootCondiFunc(funcMap){
-            $.each(funcMap, function(k, el){
-                if(!$.isFunction(el)) return;   //仅仅支持函数
-                var isDomReady = false;         //dom构成后执行
-                var isrevert = false;           //条件不符合执行
-                var sel = k;
-                if(/^([!@]{1,2})\/(.+)/.test(k)){
-                    var flags = RegExp["$1"];
-
-                    isDomReady = flags.indexOf("@")!=-1;
-                    isrevert = flags.indexOf("!")!=-1;
-                    sel = RegExp["$2"];
-                    if(!sel) throw "传入选择器非法或者空";
-                }
-
-                var isvalid = $root.is(sel);
-                if(isrevert) isvalid = !isvalid;
-
-                if(isvalid){
-                    isDomReady?$(el):el();
-                }
-            });
-        }
-
-        ctooj.rootCondiFunc = rootCondiFunc;
-    }();
+    ctooj.rootCondiFunc = ctool.rootCondiFunc;
 
     /**
      * 获取$元素css的值（剔除单位）

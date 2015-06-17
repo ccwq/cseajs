@@ -828,7 +828,9 @@ define(function (require) {
          * @param funcMap
          */
         function rootCondiFunc(funcMap){
-            $.each(funcMap, function(k, el){
+            for(k in funcMap){
+                var el = funcMap[k];
+                //$.each(funcMap, function(k, el){
                 var isDomReady = false;         //dom构成后执行
                 var isrevert = false;           //条件不符合执行
                 var sel = k;
@@ -840,20 +842,15 @@ define(function (require) {
                     sel = RegExp["$2"];
                     if(!sel) throw "传入选择器非法或者空";
                 }
-
-
                 var sel_class_name = sel.substr(1);
-                var html_el_class_str = html_el.getAttribute("class");
-
-
-
-                var isvalid = html_el_class_str.indexOf(sel_class_name) + 1;
+                var html_el_class_str = " " + html_el.getAttribute("class") + " ";
+                var isvalid = getRegexp(" "+sel_class_name+" ").test(html_el_class_str);
                 if(isrevert) isvalid = !isvalid;
 
                 if(isvalid){
                     isDomReady?ctool.domReady(el):el();
                 }
-            });
+            };
         }
 
         ctool.rootCondiFunc = rootCondiFunc;

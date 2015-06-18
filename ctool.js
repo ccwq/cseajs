@@ -802,10 +802,11 @@ define(function (require) {
 
     /**
      * dom ready类似
+     * 针对已引用jquery的处理
      */
     !function(){
         var isTop,testDiv,scrollIntervalId,isBrowser=typeof window!=="undefined"&&window.document,isPageLoaded=!isBrowser,doc=isBrowser?document:null,readyCalls=[];function runCallbacks(callbacks){var i;for(i=0;i<callbacks.length;i+=1){callbacks[i](doc)}}function callReady(){var callbacks=readyCalls;if(isPageLoaded){if(callbacks.length){readyCalls=[];runCallbacks(callbacks)}}}function pageLoaded(){if(!isPageLoaded){isPageLoaded=true;if(scrollIntervalId){clearInterval(scrollIntervalId)}callReady()}}if(isBrowser){if(document.addEventListener){document.addEventListener("DOMContentLoaded",pageLoaded,false);window.addEventListener("load",pageLoaded,false)}else{if(window.attachEvent){window.attachEvent("onload",pageLoaded);testDiv=document.createElement("div");try{isTop=window.frameElement===null}catch(e){}if(testDiv.doScroll&&isTop&&window.external){scrollIntervalId=setInterval(function(){try{testDiv.doScroll();pageLoaded()}catch(e){}},30)}}}if(document.readyState==="complete"){pageLoaded()}}function domReady(callback){if(isPageLoaded){callback(doc)}else{readyCalls.push(callback)}return domReady}domReady.version="2.0.1";domReady.load=function(name,req,onLoad,config){if(config.isBuild){onLoad(null)}else{domReady(onLoad)}};
-        ctool.domReady = domReady;
+        ctool.domReady = (typeof jQuery != "undefined")?jQuery:domReady;
     }();
 
 
@@ -830,23 +831,20 @@ define(function (require) {
         function rootCondiFunc(funcMap){
             for(k in funcMap){
                 var el = funcMap[k];
-                //$.each(funcMap, function(k, el){
                 var isDomReady = false;         //dom构成后执行
                 var isrevert = false;           //条件不符合执行
                 var sel = k;
                 if(/^([!@]{1,2})\/(.+)/.test(k)){
                     var flags = RegExp["$1"];
-
                     isDomReady = flags.indexOf("@")!=-1;
                     isrevert = flags.indexOf("!")!=-1;
                     sel = RegExp["$2"];
                     if(!sel) throw "传入选择器非法或者空";
                 }
-                var sel_class_name = sel.substr(1);
-                var html_el_class_str = " " + html_el.getAttribute("class") + " ";
+                var sel_class_name = sel.substr(1);                             //↓ie7特殊
+                var html_el_class_str = " " + (html_el.getAttribute("class")||html_el.className) + " ";
                 var isvalid = getRegexp(" "+sel_class_name+" ").test(html_el_class_str);
                 if(isrevert) isvalid = !isvalid;
-
                 if(isvalid){
                     isDomReady?ctool.domReady(el):el();
                 }
@@ -855,8 +853,6 @@ define(function (require) {
 
         ctool.rootCondiFunc = rootCondiFunc;
     }();
-
-
     return ctool;
 });
 

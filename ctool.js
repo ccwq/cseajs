@@ -802,7 +802,7 @@ define(function (require) {
 
     /**
      * dom ready类似
-     * 针对已引用jquery的处理
+     * 针对ie6 7特殊处理， 针对已引用jquery的处理
      */
     !function(){
         var isTop,testDiv,scrollIntervalId,isBrowser=typeof window!=="undefined"&&window.document,isPageLoaded=!isBrowser,doc=isBrowser?document:null,readyCalls=[];function runCallbacks(callbacks){var i;for(i=0;i<callbacks.length;i+=1){callbacks[i](doc)}}function callReady(){var callbacks=readyCalls;if(isPageLoaded){if(callbacks.length){readyCalls=[];runCallbacks(callbacks)}}}function pageLoaded(){if(!isPageLoaded){isPageLoaded=true;if(scrollIntervalId){clearInterval(scrollIntervalId)}callReady()}}if(isBrowser){if(document.addEventListener){document.addEventListener("DOMContentLoaded",pageLoaded,false);window.addEventListener("load",pageLoaded,false)}else{if(window.attachEvent){window.attachEvent("onload",pageLoaded);testDiv=document.createElement("div");try{isTop=window.frameElement===null}catch(e){}if(testDiv.doScroll&&isTop&&window.external){scrollIntervalId=setInterval(function(){try{testDiv.doScroll();pageLoaded()}catch(e){}},30)}}}if(document.readyState==="complete"){pageLoaded()}}function domReady(callback){if(isPageLoaded){callback(doc)}else{readyCalls.push(callback)}return domReady}domReady.version="2.0.1";domReady.load=function(name,req,onLoad,config){if(config.isBuild){onLoad(null)}else{domReady(onLoad)}};
@@ -843,7 +843,7 @@ define(function (require) {
                 }
                 var sel_class_name = sel.substr(1);                             //↓ie7特殊
                 var html_el_class_str = " " + (html_el.getAttribute("class")||html_el.className) + " ";
-                var isvalid = getRegexp(" "+sel_class_name+" ").test(html_el_class_str);
+                var isvalid = (sel=="*") || getRegexp(" "+sel_class_name+" ").test(html_el_class_str);
                 if(isrevert) isvalid = !isvalid;
                 if(isvalid){
                     isDomReady?ctool.domReady(el):el();

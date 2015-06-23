@@ -1,0 +1,19 @@
+html body .layplayer{
+	.layui-layer-setwin{}
+	.layui-layer-close{
+		@size:45px;
+		@offset:10px;
+		border: none;
+		border-radius: 0;
+		background: #888 url("x.png") no-repeat 50% 50%;
+		width: @size;
+		height: @size;
+		top: -@offset;
+		right: -@size - @offset;
+		&:hover{
+			background: #888 url("x.png") no-repeat 50% 50%;
+			opacity: .8;
+		}
+
+	}
+}

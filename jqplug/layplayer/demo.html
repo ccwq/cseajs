@@ -1,0 +1,22 @@
+<!doctype html><html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="renderer" content="webkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    <title>网站标题</title>
+    <script src="../../csea$.js" id="seajsnode"></script>
+    <script>
+        seajs.use("./layplayer",function(){
+            $("#player").layplayer();
+            $("#player2").layplayer({custom_play_page:true});
+        });
+    </script>
+</head>
+<body>
+    <div id="player" src="//baidu.com">点这里</div>
+    <div id="player2" src="//player.youku.com/player.php/sid/XMTI1MjAyMjEwOA==/v.swf">点这里</div>
+</body>
+</html>

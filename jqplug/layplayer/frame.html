@@ -1,0 +1,47 @@
+<!doctype html><html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="renderer" content="webkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    <title>网站标题</title>
+    <style type="text/css">
+        html,body{
+            overflow: hidden;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        #player{
+            height: 100%;
+        }
+    </style>
+    <script src="../../csea$.js" id="seajsnode"></script>
+    <script>
+        var src;
+        if(/src=([^&]+)/.test(location.href)){
+            src = RegExp["$1"];
+        }
+        if(!src){
+            alert("没有指定播放文件");
+        }
+
+        seajs.use("$/jwplayer",function(jwplayer){
+            jwplayer("player")
+                .setup({
+                    flashplayer:jwplayer.fppath,
+                    file:src,
+                    width:"100%",
+                    height:"100%",
+                    autostart:true
+                })
+            ;
+        })
+    </script>
+</head>
+<body>
+    <div id="player"></div>
+</body>
+</html>

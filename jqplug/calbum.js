@@ -66,6 +66,10 @@ define(function (require) {
         photoMarginOffset:{left:0,top:-24},
         onChange: $.noop,
         onImage: $.noop,
+        //json中获取图片地址的字段
+        src_field:"src",
+        //指定获取name的字段
+        name_filed:"name",
         no:null
     };
     var setting = {};
@@ -291,9 +295,9 @@ define(function (require) {
             arrow_right.addClass("disable");
         }
         me.index = i;
-        me.showElementByUrl(me.jsonData[i].src);
+        me.showElementByUrl(me.jsonData[i][setting.src_field]);
         posiLabel.text(i+1+"/"+me.leng());
-        name.text(me.jsonData[i].name || "");
+        name.text(me.jsonData[i][setting.name_filed] || "");
     };
 
     fn.nextPhoto=function(){

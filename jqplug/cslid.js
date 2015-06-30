@@ -64,9 +64,10 @@ define(function (require, exports, module) {
         autoPlay:true,
 
         //使用淡入淡出模式切换
-        fadeMode:false,
-        //淡入淡出的间隔
-        fadeDura:510,
+        fademode:false,
+
+        //动画持续默认时间
+        anim_dura:510,
 
         /**
          * 分4种情况,
@@ -132,6 +133,9 @@ define(function (require, exports, module) {
         //主体元素
         me.el = $(sett.cont);
 
+        //z值一直在递增
+        me.z_counter = 0;
+
         //尺寸信息来源于css时执行
         if(sett.sizeFromCss){
             sett.size = {
@@ -141,6 +145,11 @@ define(function (require, exports, module) {
         }
 
         me.el.addClass("cslid");
+
+        if(me.sett.fademode){
+            me.el.addClass("fademode");
+        }
+
         if(!me.el.length) throw "请传入有效的选择器";
 
         //滚动元素
@@ -234,11 +243,13 @@ define(function (require, exports, module) {
         me.freshSize();
         me.ctrlPan.append("<a></a>");
         var cur_index = me.scrollEle.children().length-1;
-        me.sett.onEleAppend.call(
-            me,
-            cur_index,
-            cur_index == me.length() - 1
-        );
+
+        me.sett.onEleAppend.call(me, cur_index, cur_index == me.length() - 1);
+
+        //默认打开第一副
+        if(cur_index == 0){
+            me.index(0);
+        }
     };
 
     /**
@@ -325,34 +336,38 @@ define(function (require, exports, module) {
      */
     fn.animate = function(dura){
         var me = this;
+        var sett = me.sett;
         var curEle = me._data[me._index];
-        dura===undefined?300:dura;
-        if(me.sett.fadeMode){
-            curEle.el.fadeTo(0,0);
-            dura = 0;
-        }
+        dura===undefined?sett.anim_dura:dura;
         me.animating = true;
-        me.scrollEle.stop(true).animate(
-            {
-                left:-curEle.el.position().left
-            },
-            dura,
-            function(){
-                me.animating = false;
-                if(me.sett.fadeMode){
-                    curEle.el.stop(true).fadeTo(me.sett.fadeDura,1)
-                }
 
-                //如果是0仅仅是为了调整布局，不能算为滑动完成
-                if(dura!=0){
-                    me.sett.onScrollComplete.call(
-                        me,
-                        me._index,
-                        me._index == me.length() - 1           //是否最后一个
-                    );
-                }
+        me.z_counter++;
+
+        if(sett.fademode){
+            curEle.el
+                .fadeTo(0,0)
+                .css({zIndex:me.length() + me.z_counter})
+                .fadeTo(dura,1,animate_complete)
+            ;
+        }else{
+            me.scrollEle
+                .stop(true)
+                .animate({left: -curEle.el.position().left}, dura, animate_complete)
+            ;
+        }
+
+
+        function animate_complete(){
+            me.animating = false;
+            //如果是0仅仅是为了调整布局，不能算为滑动完成
+            if(dura!=0){
+                me.sett.onScrollComplete.call(
+                    me,
+                    me._index,
+                    me._index == me.length() - 1           //是否最后一个
+                );
             }
-        );
+        }
     }
 
     /**
@@ -400,6 +415,8 @@ define(function (require, exports, module) {
      */
     fn.freshSize = function(){
         var me = this;
+        var sett = me.sett;
+        var fademode = sett.fademode;
         me.el.css({
             width:me.autoWidth?"auto":me.width,
             height:me.height
@@ -409,20 +426,16 @@ define(function (require, exports, module) {
         $.each(me._data,function(k,el){
             el.resize(me.width,me.height);
             el.setPos(lw);
-            lw+=me.width;
+            if(!fademode) lw += me.width;
         });
 
-        me.scrollEle.css({
-            height:me.height,
-            width:lw
-        });
+        me.scrollEle.css({ height: me.height, width: fademode?me.width:lw});
 
-        if(me.animating){
+        //动画过程中改变尺寸，动画快进到完成（fade模式下无效）
+        if(me.animating && !fademode){
             me.scrollEle.stop(true);
+            if(me._data.length) me.index(me.index(),0);
         }
-
-        if(me._data.length)
-            me.index(me.index(),0);
 
     }
 
@@ -597,21 +610,10 @@ define(function (require, exports, module) {
 
 
     /**
-     * 设置序号
-     * @param i
-     */
-    fn.setIndex = function(i,pwidth){
-        var me = this;
-
-    };
-
-    /**
      * 设置位置
      */
     fn.setPos = function(left){
-        this.el.css({
-            left:left
-        });
+        this.el.css({ left: left});
     }
 
 
@@ -651,24 +653,18 @@ define(function (require, exports, module) {
         if(dfc[src])  return dfc[src];
         var df = $.Deferred();
         dfc[src] = df;
+        cl.imgready(src,success,success,fail);
+        function success(){
+            df.resolve(this,true);
+        }
 
-        var img = new Image();
-        img.onload = function () {
-            df.resolve(img,true);
-        };
-        img.onerror = function () {
-            df.reject(img,false);
-        };
-        img.src = src;
-        if (img.complete && src) {
-            img.onload();
+        function fail(){
+            df.reject(this,false);
         }
 
         if(!src){
-            img.onerror();
             cl.log("未传入图片地址");
         }
-
         return df;
     }
 

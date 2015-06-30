@@ -42,11 +42,12 @@ define(function (require, exports, module) {
 
         //滚动完成后执行
         /**
-         * function onScrollComplete(cur_index, isLastOne){
-         *      this //-->me
-         * }
+         * function onScrollComplete(cur_index, isLastOne){ this //-->me }
          */
         onScrollComplete: $.noop,
+
+        //参数同上
+        onScrollStart: $.noop,
 
         //当一个元素被加入显示列表(图片是加载一张，显示一张)
         //function(index, isLast) this --> me
@@ -356,17 +357,11 @@ define(function (require, exports, module) {
             ;
         }
 
-
+        dura!==0 && me.sett.onScrollStart.call(me, me._index, me._index == me.length() - 1);
         function animate_complete(){
             me.animating = false;
-            //如果是0仅仅是为了调整布局，不能算为滑动完成
-            if(dura!=0){
-                me.sett.onScrollComplete.call(
-                    me,
-                    me._index,
-                    me._index == me.length() - 1           //是否最后一个
-                );
-            }
+            //如果是0仅仅是为了调整布局，不能算为滑动完成            是否是最后一个
+            dura!==0 && me.sett.onScrollComplete.call(me, me._index, me._index == me.length() - 1 );
         }
     }
 

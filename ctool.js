@@ -853,6 +853,15 @@ define(function (require) {
 
         ctool.rootCondiFunc = rootCondiFunc;
     }();
+
+    /**
+     * 判断是数组类型
+     * @param object
+     * @returns {*|boolean}
+     */
+    ctool.isArray = function(object){
+        return object && typeof object==='object' && Array == object.constructor;
+    }
     return ctool;
 });
 

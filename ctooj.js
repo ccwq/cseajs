@@ -1021,6 +1021,15 @@ define(function (require) {
      * @returns {*}
      */
     $.fn.scrollBott = function(config,callback){
+        var sf = arguments.callee;
+        if(!sf.def){
+            //默认配置
+            sf.def = {
+                offset_y:6
+            }
+        }
+
+
         if(typeof config == "function"){
             callback = config;
             config = {};
@@ -1035,17 +1044,13 @@ define(function (require) {
                 var nContentHeight = me.prop("scrollHeight");           //滚动距离总长(注意不是滚动条的长度)
                 var nScrollTop = me.prop("scrollTop");                  //滚动到的当前位置
                 if(nScrollTop + view_h >= nContentHeight - sett.offset_y){
+                    if(view_h>=nContentHeight){
+                        return;
+                    }
                     callback.call(me,nScrollTop,nContentHeight);
                 }
             });
         });
-    }
-
-
-    //默认配置
-    $.fn.scrollBott.def = {
-        //偏移
-        offset_y:6
     }
 
     return ctooj;

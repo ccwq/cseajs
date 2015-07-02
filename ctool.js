@@ -636,7 +636,7 @@ define(function (require) {
 
         //简单判断是否是数组
         //参数校正
-        if(scope && scope.length && scope.sort){
+        if(ctool.isArray(scope)){
             paralist = scope;
             scope = null;
         }
@@ -647,7 +647,7 @@ define(function (require) {
         m.__delay_timeout_list.push(
             {
                 ti_id:stimeout_obj = setTimeout(function () {
-                    m.apply(scope, paralist);
+                    m.apply(scope, paralist || []);
                 }, delay),
                 win:window
             }

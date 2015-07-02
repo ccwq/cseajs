@@ -811,7 +811,6 @@ define(function (require) {
 
 
 
-
     //根据 html或者body的某种选择器，来执行相应的函数
     !function(){
         var html_el = document.getElementsByTagName("html")[0];
@@ -861,6 +860,40 @@ define(function (require) {
      */
     ctool.isArray = function(object){
         return object && typeof object==='object' && Array == object.constructor;
+    }
+
+
+    /**
+     * 计算object属性的个数
+     * @param object
+     * @returns {number}
+     */
+    ctool.obj_leng = function(object){
+        var n = 0;
+        for(var k in object){ n++; }
+        return n;
+    }
+
+
+    /**
+     * 逆序数组
+     * @returns {Array}
+     */
+    Array.prototype.revert = function(){
+        var a = [];
+        var el;
+        while(el = this.pop()){a.push(el)}
+        return a;
+    }
+
+    /**
+     * 打乱数组
+     * @returns {Array.<T>}
+     */
+    Array.prototype.random = function(){
+        return this.sort(function(a,b){
+            return Math.random()?-1:1;
+        });
     }
     return ctool;
 });

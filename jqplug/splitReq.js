@@ -92,6 +92,12 @@ define(function (require, exports, module) {
             var me = this;
             me.initedCb = $.Callbacks("memory");
             var setting = me.setting = me.st = $.extend(true, {}, def, cfg);
+
+            //如果没有container创建空的
+            if(!setting.container){
+                setting.container = $("<div style='display: none;' class='splitReq_shadow_el'></div>").appendTo("body");
+            }
+
             var pageCont = me.container = $(setting.container);
             //先去
             setting.rows = setting.rows || pageCont.attr("rows") || constVar.rows;
@@ -110,7 +116,7 @@ define(function (require, exports, module) {
                 }
                 var para = setting.reqPara;
                 para[setting.pagenoFieldName] = num;
-                para[setting.rowsFiledName] = me.st.rowsMount;                     //一次请求多少条
+                para[setting.rowsFiledName] = me.st.rows;                     //一次请求多少条
                 var back = setting.onReq.call(me,para);
                 if(back) para = back;
                 me.req(para);
@@ -249,7 +255,7 @@ define(function (require, exports, module) {
             if(pageInfo.totalPage){
                 totalPage=pageInfo.totalPage;
             }else if(pageInfo.totalCount){
-                pageInfo.totalPage = totalPage = ~~((pageInfo.totalCount-1)/me.st.rowsMount) + 1;
+                pageInfo.totalPage = totalPage = ~~((pageInfo.totalCount-1)/me.st.rows) + 1;
             }
             me.setTotalPangeNum(totalPage);
             me.pageInfo = pageInfo;

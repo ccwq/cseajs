@@ -794,7 +794,7 @@ define(function (require) {
     ctool.layer = function(callback){
         require.async("$/layer",function(l){
             l.ready(function(){
-                callback && callback.callback(l);
+                callback && callback.call(l,l);
             });
         })
     }

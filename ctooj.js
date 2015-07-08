@@ -181,7 +181,7 @@ define(function (require) {
                         d.org_size = [s[0]*1,s[1]*1];
                     }
 
-                    if(!d.org_size){
+                    if(!d.org_size || (d.org_size[0]+d.org_size[1]==0)){
                         ti.get_imgOrg_size(function(iw,ih){
                             d.org_size = [iw,ih];
                             fit_out_on.call(ti, d.org_size,[sett.pw || par.width(),sett.ph || par.height()], sett.customLay);

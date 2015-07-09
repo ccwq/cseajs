@@ -648,7 +648,7 @@ define(function (require, exports, module) {
         if(dfc[src])  return dfc[src];
         var df = $.Deferred();
         dfc[src] = df;
-        cl.imgready(src,success,success,fail);
+        cl.imgready(src, $.noop,success,fail);
         function success(){
             df.resolve(this,true);
         }

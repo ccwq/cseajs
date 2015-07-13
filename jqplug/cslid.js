@@ -696,4 +696,22 @@ define(function (require, exports, module) {
 
         return new CSlid(config);
     }
+
+
+    //封装jquery
+    $.fn.cslid = function(cfg){
+        return this.each(function(){
+            var _self = $(this);
+            var ins;
+            cfg.cont = _self;
+
+            if($(">img",_self).length){
+                ins = CSlid.fromPlaneList(cfg);
+            }else{
+                ins = new CSlid(cfg);
+            }
+
+            _self.data().cslid_ins = ins;
+        });
+    }
 });

@@ -184,7 +184,7 @@ define(function (require, exports, module) {
         //计时器
         me.tock = new CTimer({
             delay:sett.delay,
-            autoStart:sett.autoPlay,
+            //autoStart:sett.autoPlay,
             callback:function(){
                 me.index(me.index() + 1);
             }
@@ -250,6 +250,7 @@ define(function (require, exports, module) {
         //默认打开第一副
         if(cur_index == 0){
             me.index(0);
+            me.sett.autoPlay && me.play();
         }
     };
 

@@ -688,7 +688,7 @@ define(function (require, exports, module) {
      */
     CSlid.fromPlaneList = function($el,config){
         $el = $($el);
-        config.cont = config.cont || $el.selector;
+        config.cont = config.cont || $($el);
         $el.find(">img").each(function(){
             var im = $(this);
             im.wrap("<div class='csele'><div class='mainCont'></div></div>");
@@ -701,17 +701,18 @@ define(function (require, exports, module) {
 
     //封装jquery
     $.fn.cslid = function(cfg){
-        return this.each(function(){
+        var m = this;
+        return m.each(function(){
             var _self = $(this);
             var ins;
             cfg.cont = _self;
 
             if($(">img",_self).length){
-                ins = CSlid.fromPlaneList(cfg);
+                ins = CSlid.fromPlaneList(_self,cfg);
             }else{
                 ins = new CSlid(cfg);
             }
-
+            m.ins = ins;
             _self.data().cslid_ins = ins;
         });
     }

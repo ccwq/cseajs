@@ -729,9 +729,7 @@ define(function (require) {
         ;
 
         return function (url, ready, load, error) {
-            var onready, width, height,
-                newWidth, newHeight, img = new Image()
-            ;
+            var onready, width, height, newWidth, newHeight, img = new Image();
             img.src = url;
 
             // 如果图片被缓存，则直接返回缓存数据
@@ -755,10 +753,8 @@ define(function (require) {
             onready = function () {
                 newWidth = img.width;
                 newHeight = img.height;
-                if (newWidth !== width || newHeight !== height ||
-                        // 如果图片已经在其他地方加载可使用面积检测
-                    newWidth * newHeight > 1024
-                ) {
+                                                                // 如果图片已经在其他地方加载可使用面积检测
+                if (newWidth !== width || newHeight !== height || newWidth * newHeight > 1024) {
                     ready.call(img);
                     onready.end = true;
                 };

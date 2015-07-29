@@ -340,6 +340,19 @@ define(function (require, exports, module) {
         var me = this;
         var sett = me.sett;
         var curEle = me._data[me._index];
+
+        //防止在index调用过早，导致的控件停止运行的bug
+        if(!curEle){
+            var _dura = dura;
+            var itv = setInterval(function(){
+                if(me._data[me._index]){
+                    clearIntervals(itv);
+                    me.animate(_dura);
+                }
+            },90);
+            return;
+        }
+
         dura===undefined?sett.anim_dura:dura;
         me.animating = true;
 

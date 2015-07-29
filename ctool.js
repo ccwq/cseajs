@@ -732,6 +732,12 @@ define(function (require) {
             var onready, width, height, newWidth, newHeight, img = new Image();
             img.src = url;
 
+            //传入url为空的情况，直接跳入错误处理
+            if(!url){
+                error && error.call(img);
+                return;
+            }
+
             // 如果图片被缓存，则直接返回缓存数据
             if (img.complete) {
                 ready.call(img);

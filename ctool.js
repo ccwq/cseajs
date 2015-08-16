@@ -789,6 +789,20 @@ define(function (require) {
     })();
 
     ctool.imgready = imgready;
+    
+    
+    
+    
+    /**
+     * 对layer进行封装
+     */
+    ctooj.layer = function(callback){
+        require.async("$/layer",function(l){
+            l.ready(function(){
+                callback && callback.callback(l);
+            });
+        })
+    }
 
     /**
      * 对layer进行封装

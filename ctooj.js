@@ -1096,7 +1096,9 @@ define(function (require) {
      */
     $.fn.c_cloading_enable = function(){
         return this.each(function(k,el){
-            $(this).addClass("c_loading c_loading_disable");
+            var ti = $(this);
+            ti.removeClass("c_loading_disable");
+            ti.addClass("c_loading");
         });
     }
 
@@ -1104,7 +1106,7 @@ define(function (require) {
      * c_loading全局停止控制
      * @type {{disable_all: Function, enable_all: Function}}
      */
-    $.fn.c_loading = {
+    ctooj.c_loading = $.fn.c_loading = {
         disable_all:function(){
             $(".c_loading").c_loading_disable();
         },

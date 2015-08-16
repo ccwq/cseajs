@@ -1066,5 +1066,52 @@ define(function (require) {
         });
     }
 
+
+    /**
+     * c_loading开关切换
+     * @returns {*}
+     */
+    $.fn.c_loading_toggle = function(){
+        return this.each(function(k,el){
+            var ti = $(this).toggleClass("c_loading_disable");
+            if(!ti.is(".c_loading")){
+                ti.addClass("c_loading");
+            }
+        });
+    }
+
+    /**
+     * 关闭c_loading
+     * @returns {*}
+     */
+    $.fn.c_loading_disable = function(){
+        return this.each(function(k,el){
+            $(this).addClass("c_loading_disable");
+        });
+    }
+
+    /**
+     * 开启c_loading
+     * @returns {*}
+     */
+    $.fn.c_cloading_enable = function(){
+        return this.each(function(k,el){
+            $(this).addClass("c_loading c_loading_disable");
+        });
+    }
+
+    /**
+     * c_loading全局停止控制
+     * @type {{disable_all: Function, enable_all: Function}}
+     */
+    $.fn.c_loading = {
+        disable_all:function(){
+            $(".c_loading").c_loading_disable();
+        },
+        enable_all :function(){
+            $(".c_loading").c_cloading_enable();
+        }
+    };
+
     return ctooj;
 });

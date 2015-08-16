@@ -94,3 +94,21 @@ define("seajq",function(){
 });
 
 seajs.use("jq");
+
+
+//增加初始样式
+!function(){
+    var seajs_dir = seajs.data.dir;
+    var res = seajs_dir + "res/";
+    var res_img = res + "img/";
+    var loading_img_path = res_img + "loading_a.gif";
+
+
+    var style_html = "<style>" +
+        "   .c_loading{background-image:url("+ loading_img_path +"); background-repeat:no-repeat; background-position:50% 50%}" +
+        "   .c_loading.c_loading_disable{background-image:none;}" +
+        "</style>"
+    ;
+
+    document.write(style_html);
+}();

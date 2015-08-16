@@ -1,0 +1,26 @@
+<!doctype html><html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="renderer" content="webkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    <title></title>
+    <script src="../csea$.js" id="seajsnode"></script>
+</head>
+<body>
+    <span class="c_loading c_loading_demo"></span>
+    <span class="c_loading c_loading_demo c_loading_disable"></span>
+    <a onclick="seajs.use('ctooj',function(cj){cj.c_loading.disable_all()})">关闭loading</a>
+    <a onclick="seajs.use('ctooj',function(cj){cj.c_loading.enable_all()})">重新开启loading</a>
+    <style type="text/css">
+        .c_loading_demo{
+            display: inline-block;
+            width: 90px;
+            height: 90px;
+            background-color: #0088cc;
+        }
+    </style>
+</body>
+</html>

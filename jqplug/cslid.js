@@ -284,7 +284,17 @@ define(function (require, exports, module) {
      * 开始播放
      */
     fn.play = function(){
-        this.tock.start();
+        var me = this;
+        if(!me.tock){
+            !function(){
+                if(me.tock){
+                    arguments.callee.killDelayCall();
+                    me.tock.start();
+                }
+            }.delayCall(66);
+        }else{
+            me.tock.start();
+        }
     };
 
     /**

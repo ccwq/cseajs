@@ -61,11 +61,11 @@ define(function(require){
         me.el.marquee($.extend({},me.sett,{auto:false}));
 
         if(me.sett.autoPause){
-            me.el.mouseEnter(function(){
+            me.el.mouseenter(function(){
                 me.pause();
             });
 
-            me.el.mouseOut(function(){
+            me.el.mouseleave(function(){
                 me.resume();
             });
         }

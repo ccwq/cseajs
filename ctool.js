@@ -345,10 +345,10 @@ define(function (require) {
 
                 if(val===undefined)
                     return (
-                    window.pageYOffset                   || //用于FF
-                    document.documentElement.scrollTop   ||
-                    document.body.scrollTop              ||
-                    0
+                        window.pageYOffset                   || //用于FF
+                        document.documentElement.scrollTop   ||
+                        document.body.scrollTop              ||
+                        0
                     );
                 window.scrollTo(scrollX(), val);
             }
@@ -356,10 +356,10 @@ define(function (require) {
             function scrollX(val){
                 if(val===undefined)
                     return (
-                    window.pageXOffset                   || //用于FF
-                    document.documentElement.scrollLeft   ||
-                    document.body.scrollLeft              ||
-                    0
+                        window.pageXOffset                   || //用于FF
+                        document.documentElement.scrollLeft   ||
+                        document.body.scrollLeft              ||
+                        0
                     );
                 window.scrollTo(val, scrollY());
             }
@@ -712,7 +712,7 @@ define(function (require) {
             list = [],
             intervalId = null,
 
-            // 用来执行队列
+        // 用来执行队列
             tick = function () {
                 var i = 0;
                 for (; i < list.length; i++) {
@@ -721,12 +721,12 @@ define(function (require) {
                 !list.length && stop();
             },
 
-            // 停止所有定时器队列
+        // 停止所有定时器队列
             stop = function () {
                 clearInterval(intervalId);
                 intervalId = null;
             }
-        ;
+            ;
 
         return function (url, ready, load, error) {
             var onready, width, height, newWidth, newHeight, img = new Image();
@@ -759,7 +759,7 @@ define(function (require) {
             onready = function () {
                 newWidth = img.width;
                 newHeight = img.height;
-                                                                // 如果图片已经在其他地方加载可使用面积检测
+                // 如果图片已经在其他地方加载可使用面积检测
                 if (newWidth !== width || newHeight !== height || newWidth * newHeight > 1024) {
                     ready.call(img);
                     onready.end = true;
@@ -789,20 +789,6 @@ define(function (require) {
     })();
 
     ctool.imgready = imgready;
-    
-    
-    
-    
-    /**
-     * 对layer进行封装
-     */
-    ctooj.layer = function(callback){
-        require.async("$/layer",function(l){
-            l.ready(function(){
-                callback && callback.callback(l);
-            });
-        })
-    }
 
     /**
      * 对layer进行封装
@@ -831,6 +817,7 @@ define(function (require) {
     !function(){
         var html_el = document.getElementsByTagName("html")[0];
 
+
         /**
          * 传入一个map，根据map的值，决定是否要执行該值对应的func
          *    html:
@@ -843,7 +830,12 @@ define(function (require) {
          *    }
          * @param funcMap
          */
-        function rootCondiFunc(funcMap){
+        function rootCondiFunc(bodymode,funcMap){
+            if(bodymode === true){
+                html_el = document.getElementsByTagName("body")[0]
+            }else{
+                funcMap = bodymode;
+            }
             for(k in funcMap){
                 var el = funcMap[k];
                 var isDomReady = false;         //dom构成后执行

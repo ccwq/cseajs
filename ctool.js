@@ -792,9 +792,19 @@ define(function (require) {
 
     /**
      * 对layer进行封装
+     * @param is_load_ext 是否加载扩展
+     * @param callback 完成的回调
      */
-    ctool.layer = function(callback){
+    ctool.layer = function(is_load_ext,callback){
         require.async("$/layer",function(l){
+            if(typeof is_load_ext=="function"){
+                callback = is_load_ext;
+                is_load_ext = false;
+            }
+
+            is_load_ext && l.config({
+                extend: 'extend/layer.ext.js'
+            });
             l.ready(function(){
                 callback && callback.call(l,l);
             });

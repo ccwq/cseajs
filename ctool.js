@@ -913,6 +913,27 @@ define(function (require) {
             return Math.random()?-1:1;
         });
     }
+
+
+    /**
+     * 重复执行某函数，知道该函数返回值为true，或者其他非 false的返回值
+     * @param interval 重复执行setp的间隔，默认90ms
+     * @param step 被重复执行的函数，如果该函数返回true停止重复
+     */
+    ctool.run_until = function(interval,step){
+
+        if(typeof interval == "function") {
+            step = interval;
+            interval = 90;
+        }
+
+        var interval = setInterval(function () {
+            if(step()){
+                clearInterval(interval);
+            }
+        }, interval);
+    }
+
     return ctool;
 });
 

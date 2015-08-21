@@ -840,9 +840,18 @@ define(function (require) {
          *    }
          * @param funcMap
          */
-        function rootCondiFunc(bodymode,funcMap){
+        function rootCondiFunc(bodymode,funcMap,is_dom_ready){
             if(bodymode === true){
-                html_el = document.getElementsByTagName("body")[0]
+                if(!is_dom_ready){
+                    ctool.domReady(function(){
+                        rootCondiFunc(bodymode, funcMap,true);
+                    });
+                    return;
+                }
+                html_el = document.getElementsByTagName("body")[0];
+                if(!html_el){
+                    alert(888);
+                }
             }else{
                 funcMap = bodymode;
             }

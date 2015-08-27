@@ -943,6 +943,34 @@ define(function (require) {
         }, interval);
     }
 
+
+    /**
+     * 获取元素的位置矩形
+     * @param element dom元素或者jquery元素
+     * @returns {{top: number, bottom: number, left: number, right: number}}
+     * @constructor
+     */
+    ctool.getRect = function(element) {
+        var rect ;
+        //简单检测是否为jquery对象
+        if(element.prop){
+            if(!element.length){
+                throw "jquery对象dom对象长度为空";
+            }
+            rect = element[0].getBoundingClientRect();
+        }else{
+            rect = element.getBoundingClientRect();
+        }
+        var top = document.documentElement.clientTop;
+        var left= document.documentElement.clientLeft;
+        return{
+            top    :   rect.top - top,   //如果是IE7以下那么 结果为 ‘2 - 2’。 不是为IE的话 结果是 ‘ 0 - 0 ’；  不管哪种方式，结果最终就是0
+            bottom :   rect.bottom - top,
+            left   :   rect.left - left,
+            right  :   rect.right - left
+        }
+    }
+
     return ctool;
 });
 

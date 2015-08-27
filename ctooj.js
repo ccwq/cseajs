@@ -9,8 +9,8 @@ define(function (require) {
         var wi = $(window),sw = 0, sh=0, resiFunc;
         var cb = $.Callbacks();
         wi.resize(resiFunc = function(){
-            sw = wi.width();
-            sh = wi.height();
+            sw = document.body.clientWidth;
+            sh = document.body.clientHeight;
             if(sw==0 || sh==0)  return;
             cb.fire(sw,sh,wi);
         });
@@ -24,6 +24,7 @@ define(function (require) {
          */
         function winResize(throttleDelay,callback){
             var delay = 0;
+            var _callback = callback;
 
             if($.isFunction(throttleDelay))
                 callback = throttleDelay;
@@ -35,9 +36,31 @@ define(function (require) {
                 cb.add(callback);
             }else{
                 cb.add(cl.throttle(delay,callback));
+                cb.add(cl.debounce(delay,callback));
             }
-            //立即执行一次
-            callback(wi.width(),wi.height(),wi);
+
+            //没有找到body时
+            if(!document.body){
+                cl.run_until(function(){
+                    if(document.body){
+                        winResize(throttleDelay,callback);
+                    }
+                });
+                return wi;
+            }
+
+            /*立即执行一次*/
+            function docallback(){
+                callback.call(
+                    wi,
+                    document.body.clientWidth,
+                    document.body.clientHeight,
+                    wi
+                );
+            }
+
+            docallback();
+            docallback.delayCall(delay/3);
             return wi;
         }
         ctooj.winResize = winResize;

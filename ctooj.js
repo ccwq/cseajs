@@ -110,15 +110,43 @@ define(function (require) {
         /**
          * 在子类或自身开始加载图片
          * */
-        $.fn.unblockImg = function(custom_key,delay){
+        $.fn.unblockImg = function(custom_key,callback){
+            if(typeof  custom_key == "function"){
+                callback = custom_key;
+                custom_key = null;
+            }
             custom_key = (custom_key || "_src");
             return this.each(function(){
                 var me=$(this);
-                me.find("img["+custom_key+"]").add(me).each(function(){
+                var img_list = me.find("img["+custom_key+"]").add(me).filter("img["+custom_key+"]");
+                var counter = img_list.length;
+
+                if(counter == 0 && callback){
+                    callback.call(me, {error: "没有找到有效图片"}, null, null, img_list.length, counter == 0);
+                }
+
+                img_list.each(function(){
                     var ti = $(this);
-                    if(!ti.is("img"))   return;
                     var src = ti.attr(custom_key);
+                    if(!src)    return;
+
+                    if(callback){
+                        cl.imgready(
+                            src,
+                            function(){
+                                counter--;
+                                callback.call(ti,null,this.width,this.height,img_list.length,counter == 0)
+                            },
+                            null,
+                            function(){
+                                counter--;
+                                callback.call(ti,{error:"图片加载失败"},null,null,img_list.length,counter == 0)
+                            }
+                        );
+                    }
+
                     ti.removeAttr(custom_key).attr({ src: src });
+
                 });
 
             });

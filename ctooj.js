@@ -9,13 +9,13 @@ define(function (require) {
         var wi = $(window),sw = 0, sh=0, resiFunc;
         var cb = $.Callbacks();
         wi.resize(resiFunc = function(){
-            sw = document.body.clientWidth;
-            sh = document.body.clientHeight;
+            sw = wi.width();
+            sh = wi.height();
             if(sw==0 || sh==0)  return;
             cb.fire(sw,sh,wi);
         });
-        resiFunc();
-        if(sw==0 || sh==0)  $(resiFunc);
+        //resiFunc();
+        $(resiFunc);
 
         /**
          * @param throttleDelay 节流阀延时，如果为0,或者为true，表示不适用节流阀
@@ -44,6 +44,7 @@ define(function (require) {
                 cl.run_until(function(){
                     if(document.body){
                         winResize(throttleDelay,callback);
+                        return true;
                     }
                 });
                 return wi;
@@ -53,8 +54,8 @@ define(function (require) {
             function docallback(){
                 callback.call(
                     wi,
-                    document.body.clientWidth,
-                    document.body.clientHeight,
+                    wi.width(),
+                    wi.height(),
                     wi
                 );
             }

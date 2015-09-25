@@ -971,6 +971,23 @@ define(function (require) {
         }
     }
 
+
+
+    /**
+     * 获取当前页面所属的目录
+     * @returns {*|string|string|dir|Function|string}
+     */
+    ctool.getPageDir = function(){
+        var ac = arguments.callee;
+        if(!ac.dir){
+            var div = document.createElement('div');
+            div.innerHTML = '<a href="./"></a>';
+            ac.dir = div.firstChild.href;
+            div = null;
+        }
+        return ac.dir;
+    }
+
     return ctool;
 });
 

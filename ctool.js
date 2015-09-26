@@ -728,12 +728,23 @@ define(function (require) {
             }
             ;
 
-        return function (url, ready, load, error) {
+        /**
+         * url_data只是两种形式
+         * 1，字符串。直接会赋值为图片地址
+         * 2，对象，其src属性会被识别为图片地址，本身会被img的data属性所携带，用来携带参数到图片加载成功或者失败的句柄中处理
+         */
+        return function (url_data, ready, load, error) {
             var onready, width, height, newWidth, newHeight, img = new Image();
-            img.src = url;
+            if(typeof url_data == "string"){
+                img.src = url_data;
+            }else{
+                img.data = url_data;
+                img.src = url_data.src;
+            }
+
 
             //传入url为空的情况，直接跳入错误处理
-            if(!url){
+            if(!url_data){
                 error && error.call(img);
                 return;
             }
@@ -973,8 +984,9 @@ define(function (require) {
 
 
 
+
     /**
-     * 获取当前页面所属的目录
+     * 获取
      * @returns {*|string|string|dir|Function|string}
      */
     ctool.getPageDir = function(){
@@ -987,6 +999,7 @@ define(function (require) {
         }
         return ac.dir;
     }
+
 
     return ctool;
 });

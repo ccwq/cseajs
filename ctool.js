@@ -938,20 +938,54 @@ define(function (require) {
     /**
      * 重复执行某函数，知道该函数返回值为true，或者其他非 false的返回值
      * @param interval 重复执行setp的间隔，默认90ms
+     * @param times 重复执行最大次数的定义，避免一直重复下去
+     *        times>0,表示重复执行多久时间。单位毫秒
+     *        times<0,表示重复执最大多少次，单位 次
      * @param step 被重复执行的函数，如果该函数返回true停止重复
+     *        function(flag){} //flag如果flag为true，表示为重复执行时间已经到，或者重复执行的次数已到
      */
-    ctool.run_until = function(interval,step){
-
+    ctool.run_until = function(interval,times,step){
+        var time_mode = false;
         if(typeof interval == "function") {
+            times = 0;
             step = interval;
             interval = 90;
+        }else if(typeof interval == "number" && typeof times == "function"){
+            step = times;
+            times = 0;
         }
 
+
+
         var interval = setInterval(function () {
+
             if(step()){
                 clearInterval(interval);
             }
+
+            if(judge()){
+                clearInterval(interval);
+                step(true);
+            }
         }, interval);
+
+
+
+
+        var now = new Date().getTime();
+        function judge(){
+            if(times<0){
+                times ++ ;
+                if(times === 0){
+                    return true;
+                }
+            }else if(times>0){
+                if(new Date().getTime() - now > times ){
+                    return true;
+                }
+            }
+        }
+
     }
 
 

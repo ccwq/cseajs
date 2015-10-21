@@ -82,6 +82,8 @@ define(function (require, exports, module) {
             hidePageNav:false,                 //当此项为true时候，隐藏分页按钮（用来发起自定义请求，实现如 换一批等功能）
 
             cssStyle: 'lite-theme',
+
+            reqType:"GET:json",
             a:0
         };
         /**
@@ -142,7 +144,7 @@ define(function (require, exports, module) {
          * */
         fn.req = function(para){
             var me = this,sett = me.setting;
-            cj.reqPlus(me.parseReqPath(para),para)
+            cj.reqPlus(me.parseReqPath(para),para,me.st.reqType)
                 .done(function(data){
                     data = sett.onRece.call(me,data) || data;
                     if(sett.dataType=="html"){

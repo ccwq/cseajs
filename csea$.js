@@ -47,6 +47,7 @@
         paths:{
             _               :       par.replace(/\/$/,""),                 //seajs父级目录
             rt              :       root.replace(/\/$/,""),                 //网站根目录（相对于js）
+            __              :       root.replace(/\/$/,""),
             "$"             :       base + "jqplug"
         },
         alias:{

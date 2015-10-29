@@ -161,7 +161,6 @@ define(function (require, exports, module) {
             if(!m.__req){
                 m.__req = cl.throttle(m.setting.reqThrottle,function(){
                     m._req(para);
-                    console.log(8);
                 })
             }
 

@@ -58,6 +58,7 @@ define(function (require, exports, module) {
                                                 //目前支持 {pageno}(当前页码)，
                                                 //可以写在分页div上 例： <div class="pageSize" data_reqPath="{_}zxhdManage/getActivityPageListZxhdManage.tg"></div>
             reqPara:{rows:5},               	//请求所带参数。默认传rows:5，表示每页显示5条
+            reqType:"GET",
             dataType:"json",                    //类型可以"json"或者"html","null"
             //当类型为null的时候仅仅保留分页功能,不会发起数据请求
             //当接受到远程数据的时候，在对数据进行json解析之前调用。返回值可改变data
@@ -83,7 +84,8 @@ define(function (require, exports, module) {
 
             cssStyle: 'lite-theme',
 
-            reqType:"GET:json",
+            //避免短时间内的多次请求
+            reqThrottle:1000,
             a:0
         };
         /**
@@ -92,6 +94,13 @@ define(function (require, exports, module) {
          * */
         module.exports = function(cfg){
             var me = this;
+
+            /**
+             * free表示闲置，busy表示正在进行网络请求
+             * free|busy
+             */
+            me._status = "free";
+
             me.initedCb = $.Callbacks("memory");
             var setting = me.setting = me.st = $.extend(true, {}, def, cfg);
 
@@ -143,8 +152,32 @@ define(function (require, exports, module) {
          * 根据某参数请求
          * */
         fn.req = function(para){
+            var m = this;
+            if(m._status!="free"){
+                m.req_para_cache = para;
+                return;
+            }
+
+            if(!m.__req){
+                m.__req = cl.throttle(m.setting.reqThrottle,function(){
+                    m._req(para);
+                    console.log(8);
+                })
+            }
+
+            m.__req();
+        };
+
+        /**
+         * 执行请求
+         * @param para
+         * @private
+         */
+        fn._req = function(para){
             var me = this,sett = me.setting;
-            cj.reqPlus(me.parseReqPath(para),para,me.st.reqType)
+            me.req_para_cache = null;
+            me._status_change("busy");
+            cj.reqPlus(me.parseReqPath(para),para,sett.reqType)
                 .done(function(data){
                     data = sett.onRece.call(me,data) || data;
                     if(sett.dataType=="html"){
@@ -156,12 +189,28 @@ define(function (require, exports, module) {
                     }
                     if(!sett.hidePageNav) me.setPageInfo(data);
                     data = sett.onData.call(me,data) || data;
+                    me._status_change("free");
+
                 })
                 .fail(function(){
+                    me._status_change("free");
                     throw "网络连接失败！检查后台服务是否开启，是否报错，是否请求跨域！";
                 })
             ;
-        };
+        }
+
+        /**
+         *
+         * @param flag 枚举busy|free
+         * @private
+         */
+        fn._status_change = function(flag){
+            var m = this;
+            m._status = flag;
+            if(flag == "free" && m.req_para_cache){
+                m._req(m.req_para_cache);
+            }
+        }
 
         /**
          * 跳转到第n页

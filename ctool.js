@@ -934,6 +934,26 @@ define(function (require) {
         });
     }
 
+    /**
+     * 使数组的所有元素，向前或者向后移动，边沿重复
+     * @param n
+     */
+    Array.prototype.drift = function(n){
+        var ar = this;
+        var le = ar.length;
+        n  = modp(n,le);
+        if(n == 0)  return this;
+        if(n>0){
+            var tmp = ar.splice(le-n,n);
+            Array.prototype.splice.apply(ar,[0,0].concat(tmp));
+        }else if(n<0){
+            n = -n;
+            var tmp = ar.splice(0,n);
+            Array.prototype.splice.apply(ar,[le-1,0].concat(tmp));
+        }
+        return this;
+    }
+
 
     /**
      * 重复执行某函数，知道该函数返回值为true，或者其他非 false的返回值

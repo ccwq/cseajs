@@ -1082,16 +1082,25 @@ define(function (require) {
 
 
     /**
-     * 当某元素滑动到底部的时候
+     * 当某元素滑动到顶部或者底部的时候
+     * callback function(state){}
+     *      state可能的值 -1 0 1
+     *          -1表示在顶端
+     *          0两种情况，容器内容不足以存在滚动条|滚动到中间
+     *          1滚动到底部
      * @returns {*}
      */
-    $.fn.scrollBott = function(config,callback){
+    $.fn.scrollToEdge = function(config,callback){
         var sf = arguments.callee;
         if(!sf.def){
             //默认配置
             sf.def = {
-                offset_y:6
-            }
+                throttle: 333,
+                offset_y: 6,
+                triggerOnInit: true,
+                onTopClassName: "__top",
+                onBottomClassName: "__bot"
+            };
         }
 
 
@@ -1099,22 +1108,85 @@ define(function (require) {
             callback = config;
             config = {};
         }
-        var sett = $.extend({}, $.fn.scrollBott.def,config);
+        var sett = $.extend({}, sf.def,config);
 
         return this.each(function(i){
             var me=$(this);
 
-            var view_h = me.height();
-            me.scroll(function(){
-                var nContentHeight = me.prop("scrollHeight");           //滚动距离总长(注意不是滚动条的长度)
-                var nScrollTop = me.prop("scrollTop");                  //滚动到的当前位置
-                if(nScrollTop + view_h >= nContentHeight - sett.offset_y){
-                    if(view_h>=nContentHeight){
-                        return;
-                    }
-                    callback.call(me,nScrollTop,nContentHeight);
+            var state = undefined;
+            var old_state = undefined;
+
+
+            var scrollHandler1 = cl.throttle(sett.throttle,function(flag){
+                //不足以存在滚动条
+                if(body.prop("scrollHeight") <= wi.height()){
+                    old_state = state;
+                    state = 0;
+                    //顶部
+                }else if(cl.scrollY()<sett.offset_y){
+                    old_state = state;
+                    state = -1;
+                    //底部
+                }else if(cl.scrollY() > body.prop("scrollHeight") - sett.offset_y - wi.height()){
+                    old_state = state;
+                    state = 1;
+                    //中间
+                }else{
+                    old_state = state;
+                    state = 0;
                 }
-            });
+
+                setfunc();
+            })
+
+            var scrollHandler2 = cl.throttle(sett.throttle,function(flag){
+                var view_h = me.height();
+                var cont_h = me.prop("scrollHeight");           //滚动距离总长(注意不是滚动条的长度)
+                var nScrollTop = me.prop("scrollTop");                  //滚动到的当前位置
+
+                //不足以撑起
+                if(view_h >= cont_h){
+                    old_state = state;
+                    state = 0;
+                }else if(nScrollTop<sett.offset_y){
+                    old_state = state;
+                    state = -1;
+                }else if(nScrollTop + view_h >= cont_h - sett.offset_y){
+                    old_state = state;
+                    state = 1;
+                }else{
+                    old_state = state;
+                    state = 0;
+                }
+                setfunc();
+
+            })
+
+
+            var  setfunc = function(){
+                if(state !== old_state){
+                    me.removeClass(sett.onBottomClassName+" "+sett.onTopClassName);
+                    if(state == 1){
+                        me.addClass(sett.onBottomClassName);
+                    }else if(state==-1){
+                        me.addClass(sett.onTopClassName);
+                    }
+                    callback.call(me,state);
+                }
+            }
+
+
+            //对body document window html单独处理
+            if(me[0] === window || me[0] === document || me.is("body") || me.is("html")){
+                var body = $("body");
+                var wi = $(window);
+                sett.triggerOnInit && scrollHandler1(1);
+                $(window).scroll(scrollHandler1);
+            }else{
+                //其他元素的处理
+                sett.triggerOnInit && scrollHandler2(1);
+                me.scroll(scrollHandler2);
+            }
         });
     }
 

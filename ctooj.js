@@ -1108,6 +1108,9 @@ define(function (require) {
             callback = config;
             config = {};
         }
+
+        callback = callback || $.noop;
+
         var sett = $.extend({}, sf.def,config);
 
         return this.each(function(i){

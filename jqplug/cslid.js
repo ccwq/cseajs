@@ -91,7 +91,9 @@ define(function (require, exports, module) {
         noCtrlpan:false,
 
         //控制选择器或者$el <div id=ctrlCont><a class=next>下一张</a><a class=prev>上一张</a></div>
-        controlCont:undefined
+        controlCont:undefined,
+        nextEl:"",
+        prevEl:""
     };
 
     /**
@@ -225,6 +227,17 @@ define(function (require, exports, module) {
                 var ti = $(this);
                 if(ti.is(".prev")) me.prev();
                 if(ti.is(".next")) me.next();
+            });
+        }
+
+        if(sett.nextEl){
+            $(sett.nextEl).click(function(){
+                me.next();
+            });
+        }
+        if(sett.prevEl){
+            $(sett.prevEl).click(function(){
+                me.prev();
             });
         }
     };

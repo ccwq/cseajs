@@ -1110,10 +1110,10 @@ define(function (require) {
         }
 
         callback = callback || $.noop;
-
         var sett = $.extend({}, sf.def,config);
 
-        return this.each(function(i){
+        var els = this;
+        return els.each(function(i){
             var me=$(this);
 
             var state = undefined;
@@ -1178,6 +1178,7 @@ define(function (require) {
                 }
             }
 
+            var type;
 
             //对body document window html单独处理
             if(me[0] === window || me[0] === document || me.is("body") || me.is("html")){
@@ -1185,11 +1186,24 @@ define(function (require) {
                 var wi = $(window);
                 sett.triggerOnInit && scrollHandler1(1);
                 $(window).scroll(scrollHandler1);
+                type = 0;
             }else{
                 //其他元素的处理
                 sett.triggerOnInit && scrollHandler2(1);
                 me.scroll(scrollHandler2);
+                type = 1;
             }
+
+
+            //刷新
+            els.fresh = function(){
+                if(type == 0){
+                    scrollHandler1();
+                }else{
+                    scrollHandler2();
+                }
+            }
+
         });
     }
 

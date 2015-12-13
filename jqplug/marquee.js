@@ -40,7 +40,242 @@ define(function(require){
 
     var Timer = require("ctimer");
     var jQuery = require("jq");
-    !function(a){var b;b=function(){function b(b,c){this.elements={wrap:b,ul:b.children(),li:b.children().children()},this.settings=a.extend({},a.fn.marquee.defaults,c),this.cache={allowMarquee:!0}}return b.prototype.init=function(){this.setStyle(),this.move(),this.bind()},b.prototype.setStyle=function(){var a,b,c,d,e,f,g,h;switch(d=this.elements.li.outerWidth(!0),c=this.elements.li.outerHeight(!0),b=Math.max(parseInt(this.elements.li.css("margin-top"),10),parseInt(this.elements.li.css("margin-bottom"),10)),this.settings.type){case"horizontal":h=this.settings.showNum*d,g=c,f=9999,e="auto",a="left",this.cache.stepW=this.settings.stepLen*d,this.cache.prevAnimateObj={left:-this.cache.stepW},this.cache.nextAnimateObj={left:0},this.cache.leftOrTop="left";break;case"vertical":h=d,g=this.settings.showNum*c-b,f="auto",e=9999,a="none",this.cache.stepW=this.settings.stepLen*c-b,this.cache.prevAnimateObj={top:-this.cache.stepW},this.cache.nextAnimateObj={top:0},this.cache.leftOrTop="top"}this.elements.wrap.css({position:"relative",width:h,height:g,overflow:"hidden"}),this.elements.ul.css({position:"relative",width:f,height:e}),this.elements.li.css({"float":a})},b.prototype.bind=function(){var a,b,c,d,e,f;f=this,null!=(a=this.settings.prevElement)&&a.click(function(a){a.preventDefault(),f.prev()}),null!=(b=this.settings.nextElement)&&b.click(function(a){a.preventDefault(),f.next()}),null!=(c=this.settings.pauseElement)&&c.click(function(a){a.preventDefault(),f.pause()}),null!=(d=this.settings.resumeElement)&&d.click(function(a){a.preventDefault(),f.resume()}),null!=(e=this.elements.wrap)&&e.hover(function(){f.pause()},function(){f.resume()})},b.prototype.move=function(){var a,b,c;if(c=this,this.settings.auto){switch(this.settings.direction){case"forward":b=c.prev;break;case"backward":b=c.next}a=c.settings.interval,setTimeout(function(){b.call(c),setTimeout(arguments.callee,a)},a),this.cache.moveBefore=this.cache.moveAfter=function(){return null}}else this.cache.moveBefore=function(){return c.cache.allowMarquee=!1},this.cache.moveAfter=function(){return c.cache.allowMarquee=!0}},b.prototype.prev=function(){var a,b,c;c=this,this.cache.allowMarquee&&(this.cache.moveBefore.call(this),this.settings.prevBefore.call(this),b=this.elements.ul,a=b.children().slice(0,this.settings.stepLen),a.clone().appendTo(b),b.animate(this.cache.prevAnimateObj,this.settings.speed,function(){b.css(c.cache.leftOrTop,0),a.remove(),c.cache.moveAfter.call(c),c.settings.prevAfter.call(c)}))},b.prototype.next=function(){var a,b,c;c=this,this.cache.allowMarquee&&(this.cache.moveBefore.call(this),this.settings.nextBefore.call(this),b=this.elements.ul,a=b.children().slice(-this.settings.stepLen),a.clone().prependTo(b),b.css(c.cache.leftOrTop,-this.cache.stepW).animate(this.cache.nextAnimateObj,this.settings.speed,function(){a.remove(),c.cache.moveAfter.call(c),c.settings.nextAfter.call(c)}))},b.prototype.pause=function(){this.settings.pauseBefore.call(this),this.cache.allowMarquee=!1,this.settings.pauseAfter.call(this)},b.prototype.resume=function(){this.settings.resumeBefore.call(this),this.cache.allowMarquee=!0,this.settings.resumeAfter.call(this)},b}(),a.fn.marquee=function(c){this.each(function(){var d;d=new b(a(this),c),d.init()})},a.fn.marquee.defaults={auto:!0,interval:3e3,direction:"forward",speed:500,showNum:1,stepLen:1,type:"horizontal",prevElement:null,prevBefore:function(){},prevAfter:function(){},nextElement:null,nextBefore:function(){},nextAfter:function(){},pauseElement:null,pauseBefore:function(){},pauseAfter:function(){},resumeElement:null,resumeBefore:function(){},resumeAfter:function(){}}}(jQuery);
+
+
+
+
+    (function($) {
+        var Marquee;
+
+        Marquee = (function() {
+            function Marquee(element, options) {
+                this.elements = {
+                    wrap: element,
+                    ul: element.children(),
+                    li: element.children().children()
+                };
+                this.settings = $.extend({}, $.fn.marquee.defaults, options);
+                this.cache = {
+                    allowMarquee: true
+                };
+                return;
+            }
+
+            Marquee.prototype.init = function() {
+                this.setStyle();
+                this.move();
+                this.bind();
+            };
+
+            Marquee.prototype.setStyle = function() {
+                var floatStyle, liMargin, liOuterH, liOuterW, ulH, ulW, wrapH, wrapW;
+
+                liOuterW = this.elements.li.outerWidth(true);
+                liOuterH = this.elements.li.outerHeight(true);
+                liMargin = Math.max(parseInt(this.elements.li.css('margin-top'), 10), parseInt(this.elements.li.css('margin-bottom'), 10));
+                switch (this.settings.type) {
+                    case 'horizontal':
+                        wrapW = this.settings.showNum * liOuterW;
+                        wrapH = liOuterH;
+                        ulW = 9999;
+                        ulH = 'auto';
+                        floatStyle = 'left';
+                        this.cache.stepW = this.settings.stepLen * liOuterW;
+                        this.cache.prevAnimateObj = {
+                            left: -this.cache.stepW
+                        };
+                        this.cache.nextAnimateObj = {
+                            left: 0
+                        };
+                        this.cache.leftOrTop = 'left';
+                        break;
+                    case 'vertical':
+                        wrapW = liOuterW;
+                        wrapH = this.settings.showNum * liOuterH - liMargin;
+                        ulW = 'auto';
+                        ulH = 9999;
+                        floatStyle = 'none';
+                        this.cache.stepW = this.settings.stepLen * liOuterH - liMargin;
+                        this.cache.prevAnimateObj = {
+                            top: -this.cache.stepW
+                        };
+                        this.cache.nextAnimateObj = {
+                            top: 0
+                        };
+                        this.cache.leftOrTop = 'top';
+                }
+                this.elements.wrap.css({
+                    position: 'static' ? 'relative' : this.elements.wrap.css('position'),
+                    width: wrapW,
+                    height: wrapH,
+                    overflow: 'hidden'
+                });
+                this.elements.ul.css({
+                    position: 'relative',
+                    width: ulW,
+                    height: ulH
+                });
+                this.elements.li.css({
+                    float: floatStyle
+                });
+            };
+
+            Marquee.prototype.bind = function() {
+                var _ref, _ref1, _ref2, _ref3, _ref4, _this;
+
+                _this = this;
+                if ((_ref = this.settings.prevElement) != null) {
+                    _ref.click(function(ev) {
+                        ev.preventDefault();
+                        _this.prev();
+                    });
+                }
+                if ((_ref1 = this.settings.nextElement) != null) {
+                    _ref1.click(function(ev) {
+                        ev.preventDefault();
+                        _this.next();
+                    });
+                }
+                if ((_ref2 = this.settings.pauseElement) != null) {
+                    _ref2.click(function(ev) {
+                        ev.preventDefault();
+                        _this.pause();
+                    });
+                }
+                if ((_ref3 = this.settings.resumeElement) != null) {
+                    _ref3.click(function(ev) {
+                        ev.preventDefault();
+                        _this.resume();
+                    });
+                }
+                if ((_ref4 = this.elements.wrap) != null) {
+                    _ref4.hover(function() {
+                        _this.pause();
+                    }, function() {
+                        _this.resume();
+                    });
+                }
+            };
+
+            Marquee.prototype.move = function() {
+                var interval, moveEvent, _this;
+
+                _this = this;
+                if (this.settings.auto) {
+                    switch (this.settings.direction) {
+                        case 'forward':
+                            moveEvent = _this.prev;
+                            break;
+                        case 'backward':
+                            moveEvent = _this.next;
+                    }
+                    interval = _this.settings.interval;
+                    setTimeout(function() {
+                        moveEvent.call(_this);
+                        setTimeout(arguments.callee, interval);
+                    }, interval);
+                    this.cache.moveBefore = this.cache.moveAfter = function() {
+                        return null;
+                    };
+                } else {
+                    this.cache.moveBefore = function() {
+                        return _this.cache.allowMarquee = false;
+                    };
+                    this.cache.moveAfter = function() {
+                        return _this.cache.allowMarquee = true;
+                    };
+                }
+            };
+
+            Marquee.prototype.prev = function() {
+                var preEls, ul, _this;
+
+                _this = this;
+                if (this.cache.allowMarquee) {
+                    this.cache.moveBefore.call(this);
+                    this.settings.prevBefore.call(this);
+                    ul = this.elements.ul;
+                    preEls = ul.children().slice(0, this.settings.stepLen);
+                    preEls.clone().appendTo(ul);
+                    ul.animate(this.cache.prevAnimateObj, this.settings.speed, function() {
+                        ul.css(_this.cache.leftOrTop, 0);
+                        preEls.remove();
+                        _this.cache.moveAfter.call(_this);
+                        _this.settings.prevAfter.call(_this);
+                    });
+                }
+            };
+
+            Marquee.prototype.next = function() {
+                var sufEls, ul, _this;
+
+                _this = this;
+                if (this.cache.allowMarquee) {
+                    this.cache.moveBefore.call(this);
+                    this.settings.nextBefore.call(this);
+                    ul = this.elements.ul;
+                    sufEls = ul.children().slice(-this.settings.stepLen);
+                    sufEls.clone().prependTo(ul);
+                    ul.css(_this.cache.leftOrTop, -this.cache.stepW).animate(this.cache.nextAnimateObj, this.settings.speed, function() {
+                        sufEls.remove();
+                        _this.cache.moveAfter.call(_this);
+                        _this.settings.nextAfter.call(_this);
+                    });
+                }
+            };
+
+            Marquee.prototype.pause = function() {
+                this.settings.pauseBefore.call(this);
+                this.cache.allowMarquee = false;
+                this.settings.pauseAfter.call(this);
+            };
+
+            Marquee.prototype.resume = function() {
+                this.settings.resumeBefore.call(this);
+                this.cache.allowMarquee = true;
+                this.settings.resumeAfter.call(this);
+            };
+
+            return Marquee;
+
+        })();
+        $.fn.marquee = function(options) {
+            this.each(function(key, value) {
+                var m = $(this);
+                var marquee;
+
+                marquee = new Marquee(m, options);
+                marquee.init();
+
+                m.data().marquee_ins = marquee;
+            });
+        };
+        $.fn.marquee.defaults = {
+            auto: true,
+            interval: 3000,
+            direction: 'forward',
+            speed: 500,
+            showNum: 1,
+            stepLen: 1,
+            type: 'horizontal',
+            prevElement: null,
+            prevBefore: function() {},
+            prevAfter: function() {},
+            nextElement: null,
+            nextBefore: function() {},
+            nextAfter: function() {},
+            pauseElement: null,
+            pauseBefore: function() {},
+            pauseAfter: function() {},
+            resumeElement: null,
+            resumeBefore: function() {},
+            resumeAfter: function() {}
+        };
+    })($);
+
+
+
+
 
     var Marquee = function(el,config){
         var me = this;
@@ -49,6 +284,12 @@ define(function(require){
         me.proxy_btn_next = $("<i></i>");
         me.proxy_btn_pause = $("<i></i>");
         me.proxy_btn_resume = $("<i></i>");
+
+
+        //连续运动数量方向的缓存
+        me._series_move_count = 0;
+
+        me._disable = false;
 
         me.sett = $.extend({}, def, config, {
             pauseElement:me.proxy_btn_pause,
@@ -89,6 +330,8 @@ define(function(require){
 
         me.el.marquee($.extend({},me.sett,{auto:false}));
 
+        me.ins = me.el.data().marquee_ins;
+
         if(me.sett.autoPause){
             me.el.mouseenter(function(){
                 me.pause();
@@ -111,16 +354,52 @@ define(function(require){
     };
 
     $.extend(Marquee.prototype, {
-        next:function(){
+        next:function(n){
             var me = this;
-            me.proxy_btn_next.click();
-            me.tock.recount();
-        },
-        prev:function(){
-            var me = this;
-            me.proxy_btn_prev.click();
+
+            if(me._disable) return;
+
+            if(n!==undefined){
+                me._series_move_count = n;
+            }
+
+            if(me._series_move_count > 1){
+                me._series_move_count --;
+                me.next.delayCall(me.ins.settings.speed + 10,me);
+            }
+
+            me.ins.cache.allowMarquee = true;
+            me.ins.next();
             me.tock.recount();
 
+            me.disable(true);
+            me.disable.delayCall(me.ins.settings.speed,me,false);
+        },
+
+        disable:function(flag){
+            var me = this;
+            me._disable = flag
+        },
+        prev:function(n){
+            var me = this;
+            if(me._disable) return;
+
+            if(n!==undefined){
+                me._series_move_count = n;
+            }
+
+            if(me._series_move_count > 1){
+                me._series_move_count --;
+                me.prev.delayCall(me.ins.settings.speed + 10,me);
+            }
+
+            //me.proxy_btn_prev.click();
+            me.ins.cache.allowMarquee = true;
+            me.ins.prev();
+            me.tock.recount();
+
+            me.disable(true);
+            me.disable.delayCall(me.ins.settings.speed,me,false);
         },
         pause:function(){
             var me = this;
@@ -132,7 +411,6 @@ define(function(require){
             me.proxy_btn_resume.click();
             me.tock.recount();
         }
-
     });
 
     return Marquee;

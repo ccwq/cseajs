@@ -172,6 +172,15 @@ define(function (require, exports, module) {
         if(sett.noCtrlpan){
             me.ctrlPan.hide();
         }
+        
+        //计时器
+        me.tock = new CTimer({
+            delay:sett.delay,
+            autoStart:false,
+            callback:function(){
+                me.index(me.index() + 1);
+            }
+        });
 
         //处理自带的内置元素
         var orgEles = me.scrollEle.children(".csele");
@@ -183,14 +192,7 @@ define(function (require, exports, module) {
         //初始尺寸
         me.setSize(sett.size.w,sett.size.h);
 
-        //计时器
-        me.tock = new CTimer({
-            delay:sett.delay,
-            autoStart:false,
-            callback:function(){
-                me.index(me.index() + 1);
-            }
-        });
+        
 
         //自动播
         //sett.autoPlay && me.play();

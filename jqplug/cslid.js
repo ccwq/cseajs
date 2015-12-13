@@ -94,6 +94,7 @@ define(function (require, exports, module) {
         controlCont:undefined,
         nextEl:"",
         prevEl:""
+
     };
 
     /**
@@ -172,7 +173,7 @@ define(function (require, exports, module) {
         if(sett.noCtrlpan){
             me.ctrlPan.hide();
         }
-        
+
         //计时器
         me.tock = new CTimer({
             delay:sett.delay,
@@ -192,7 +193,7 @@ define(function (require, exports, module) {
         //初始尺寸
         me.setSize(sett.size.w,sett.size.h);
 
-        
+
 
         //自动播
         //sett.autoPlay && me.play();
@@ -299,17 +300,7 @@ define(function (require, exports, module) {
      * 开始播放
      */
     fn.play = function(){
-        var me = this;
-        if(!me.tock){
-            !function(){
-                if(me.tock){
-                    arguments.callee.killDelayCall();
-                    me.tock.start();
-                }
-            }.delayCall(66);
-        }else{
-            me.tock.start();
-        }
+        this.tock.start();
     };
 
     /**
@@ -582,7 +573,7 @@ define(function (require, exports, module) {
                     me.pic.attr("psize",size.w + "," + size.h);
                     me.resize();
                 }
-                me.el.find("img").unblockImg();
+                me.el.find("img:not(.force_block img)").unblockImg();
                 sett.preLoad.call(me,size);
             },
             function(size){

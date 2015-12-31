@@ -1037,6 +1037,53 @@ define(function (require) {
     }
 
 
+    /**
+     * 获取一个元素相对于另外一个元素的位置
+     * @param element               要获取位置的元素
+     * @param relativeElement       相对元素，如果忽略改参数。该方法等同于ctool.getRect
+     * @returns {{left: number, top: number}}
+     */
+    ctool.getOffset = function(element,relativeElement){
+        var os = {left:0,top:0};
+        var rec_el = ctool.getRect(element);
+        if(!relativeElement){
+            return rec_el;
+        }
+
+        var rec_rel = ctool.getRect(relativeElement);
+        os.left = rec_el.left - rec_rel.left;
+        os.top = rec_el.top - rec_rel.top;
+        return os;
+    }
+
+
+    /**
+     * 判断浏览器是否支持某一个CSS3属性
+     * @param {String} 属性名称
+     * @return {Boolean} true/false
+     * @version 1.0
+     * @author ydr.me
+     * 2014年4月4日14:47:19
+     */
+    function supportCss3(style) {
+        var prefix = ['webkit', 'Moz', 'ms', 'o'],
+            i,
+            humpString = [],
+            htmlStyle = document.documentElement.style,
+            _toHumb = function (string) {
+                return string.replace(/-(\w)/g, function ($0, $1) {
+                    return $1.toUpperCase();
+                });
+            }
+            ;
+
+        for (i in prefix) humpString.push(_toHumb(prefix[i] + '-' + style));
+        humpString.push(_toHumb(style));
+        for (i in humpString) if (humpString[i] in htmlStyle) return true;
+        return false;
+    }
+
+
 
 
     /**

@@ -11,8 +11,7 @@
 {uri:d};m("fetch",g);var f=g.requestUri||d;!f||H[f]?this.load():G[f]?D[f].push(this):(G[f]=!0,D[f]=[this],m("request",g={uri:d,requestUri:f,onRequest:a,charset:h.charset}),g.requested||(b?b[g.requestUri]=c:c()))};e.prototype.exec=function(){function b(a){return e.get(b.resolve(a)).exec()}if(this.status>=j.EXECUTING)return this.exports;this.status=j.EXECUTING;var c=this.uri;b.resolve=function(a){return e.resolve(a,c)};b.async=function(a,g){e.use(a,g,c+"_async_"+w++);return b};var a=this.factory,a=
     x(a)?a(b,this.exports={},this):a;a===u&&(a=this.exports);null===a&&!O.test(c)&&m("error",this);delete this.factory;this.exports=a;this.status=j.EXECUTED;m("exec",this);return a};e.resolve=function(b,c){var a={id:b,refUri:c};m("resolve",a);return a.uri||K(a.id,c)};e.define=function(b,c,a){var d=arguments.length;1===d?(a=b,b=u):2===d&&(a=c,A(b)?(c=b,b=u):c=u);if(!A(c)&&x(a)){var g=[];a.toString().replace($,"").replace(Z,function(a,b,c){c&&g.push(c)});c=g}d={id:b,uri:e.resolve(b),deps:c,factory:a};if(!d.uri&&
     n.attachEvent){var f=W();f&&(d.uri=f.src)}m("define",d);d.uri?e.save(d.uri,d):C=d};e.save=function(b,c){var a=e.get(b);a.status<j.SAVED&&(a.id=c.id||b,a.dependencies=c.deps||[],a.factory=c.factory,a.status=j.SAVED)};e.get=function(b,c){return r[b]||(r[b]=new e(b,c))};e.use=function(b,c,a){var d=e.get(a,A(b)?b:[b]);d.callback=function(){for(var a=[],b=d.resolve(),e=0,f=b.length;e<f;e++)a[e]=r[b[e]].exec();c&&c.apply(t,a);delete d.callback};d.load()};e.preload=function(b){var c=h.preload,a=c.length;
-    a?e.use(c,function(){c.splice(0,a);e.preload(b)},h.cwd+"_preload_"+w++):b()};f.use=function(b,c){e.preload(function(){e.use(b,c,h.cwd+"_use_"+w++)});return f};e.define.cmd={};t.define=e.define;f.Module=e;h.fetchedList=H;h.cid=Q;f.resolve=K;f.require=function(b){return(r[e.resolve(b)]||{}).exports};h.base=(k.match(/^(.+?\/)(\?\?)?(seajs\/)+/)||["",k])[1];h.dir=k;h.cwd=B;h.charset="utf-8";var B=h,P=[],q=q.search.replace(/(seajs-\w+)(&|$)/g,"$1=1$2"),q=q+(" "+n.cookie);q.replace(/(seajs-\w+)=1/g,function(b,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               c){P.push(c)});B.preload=P;f.config=function(b){for(var c in b){var a=b[c],d=h[c];if(d&&X(d))for(var e in a)d[e]=a[e];else A(d)?a=d.concat(a):"base"===c&&("/"===a.slice(-1)||(a+="/"),a=I(a)),h[c]=a}m("config",b);return f}}})(this);
+    a?e.use(c,function(){c.splice(0,a);e.preload(b)},h.cwd+"_preload_"+w++):b()};f.use=function(b,c){e.preload(function(){e.use(b,c,h.cwd+"_use_"+w++)});return f};e.define.cmd={};t.define=e.define;f.Module=e;h.fetchedList=H;h.cid=Q;f.resolve=K;f.require=function(b){return(r[e.resolve(b)]||{}).exports};h.base=(k.match(/^(.+?\/)(\?\?)?(seajs\/)+/)||["",k])[1];h.dir=k;h.cwd=B;h.charset="utf-8";var B=h,P=[],q=q.search.replace(/(seajs-\w+)(&|$)/g,"$1=1$2"),q=q+(" "+n.cookie);q.replace(/(seajs-\w+)=1/g,function(b,c){P.push(c)});B.preload=P;f.config=function(b){for(var c in b){var a=b[c],d=h[c];if(d&&X(d))for(var e in a)d[e]=a[e];else A(d)?a=d.concat(a):"base"===c&&("/"===a.slice(-1)||(a+="/"),a=I(a)),h[c]=a}m("config",b);return f}}})(this);
 
 
 
@@ -31,6 +30,8 @@
         });
     }
 
+    var rg_cut_last_dir = /\/$/;
+
 
     var ctool = window.ctool || {};
     var cdata = seajs.cdata = {};                   //缓存一些可能用到的数据
@@ -42,20 +43,22 @@
         par = base.replace(/c?seajs\/$/,"");
         root = par.replace(/\w+\/$/,"");
     }
-    seajs.config({
-        base:base,
-        paths:{
-            _               :       par.replace(/\/$/,""),                 //seajs父级目录
-            rt              :       root.replace(/\/$/,""),                 //网站根目录（相对于js）
-            __              :       root.replace(/\/$/,""),
-            "$"             :       base + "jqplug"
-        },
-        alias:{
-            jq              :       "seajq",
-            "seajs-debug"   :       "seajs-debug/src/seajs-debug",
-            seajs_text      :       "seajs_text/seajs-text"
-        }
-    });
+
+    var paths = {}
+    paths.rt        =           root.replace(rg_cut_last_dir,"");
+    paths.$        =            dir + "jqplug/";
+    paths._         =           par.replace(rg_cut_last_dir,"")       /*seajs父级目录*/
+    paths.__        =           paths.rt;
+    paths.___       =           paths.__.replace(rg_cut_last_dir,"");
+    paths.____      =           paths.___.replace(rg_cut_last_dir,"");
+
+    var alias = {
+        jq              :       "seajq",
+        "seajs-debug"   :       "seajs-debug/src/seajs-debug",
+        seajs_text      :       "seajs_text/seajs-text"
+    }
+
+    seajs.config({ base: base, paths: paths, alias: alias});
 
     //"...../js/custom/xxx.js" //放当前项目相关模块
     if(location.href.indexOf("seajs-debug") + 1)  seajs.use("seajs-debug");
@@ -99,17 +102,15 @@ seajs.use("jq");
 
 //增加初始样式
 !function(){
-    var seajs_dir = seajs.data.dir;
-    var res = seajs_dir + "res/";
-    var res_img = res + "img/";
-    var loading_img_path = res_img + "loading_a.gif";
+    var base = seajs.data.dir;
 
-
-    var style_html = "<style>" +
-        "   .c_loading{background-image:url("+ loading_img_path +"); background-repeat:no-repeat; background-position:50% 50%}" +
-        "   .c_loading.c_loading_disable{background-image:none;}" +
-        "</style>"
+    var css =
+        "<style>" +
+        '.cl_loading{position:absolute;background:url('+base+'img/loading.gif) 50% 50% no-repeat #fff;z-index:9999;top:0;left:0;right:0;bottom:0} ' +
+        '.cl_loading.page{position:fixed}' +
+        '.no_cl_loading .cl_loading{display:none}'+
+        "<\/style>"
     ;
 
-    document.write(style_html);
+    document.write(css);
 }();

@@ -8,8 +8,9 @@
 define(function (require, exports, module) {
     var numRg = /\d+/;
 
+    var rg_tpl = /\{([^{}]+)\}/g;
 
-    var rg_tpl = /\{(\w+)\}/g;
+    var rg_split_field = /./
 
 
     /**
@@ -55,7 +56,7 @@ define(function (require, exports, module) {
             item = tpl.replaceAll("{_index_}",k1);
 
             item = item.replace(rg_tpl,function(a,vname,c){
-                var origi_v = el1[vname];
+                var origi_v = getDeepValue(el1,vname);
                 var alias_v = pt.valAlias[origi_v]===undefined?origi_v:pt.valAlias[origi_v];
                 var retval = onReplace.call(el1,alias_v,vname,origi_v);
                 return retval===undefined?alias_v:retval;
@@ -133,5 +134,23 @@ define(function (require, exports, module) {
     //判断是不是数组
     function isArray(o) {
         return Object.prototype.toString.call(o) ==="[object Array]";
+    }
+
+    /**
+     * 获取某个对象，深层的值
+     * @param object
+     * @param mix_fields
+     */
+    function getDeepValue(object,mix_fields){
+        var el = object;
+        var fa = mix_fields.split(/\./);
+
+        for(var i = 0; i<fa.length; i++){
+            if(!el){
+                el ={};
+            }
+            el = el[fa[i]];
+        }
+        return el;
     }
 });

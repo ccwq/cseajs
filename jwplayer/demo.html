@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>jwplayer-cmd_demo</title>
+</head>
+<body>
+    <div id="v" style="width: 600px; height: 450px;"></div>
+    <script src="../csea$.js" id="seajsonde"></script>
+    <script>
+        seajs.use("jwplayer",function(J){
+            var v = J.get("v",{
+                file:"http://www-file.huawei.com/~/media/CORPORATE/Video/home/better-connected-world-cn.mp4",
+                autostart: false,
+                image:"http://www-file.huawei.com/~/media/CORPORATE/Video/Images/home/15-12-2-banner_cn.jpg",
+                primary: "html5"
+            })
+        })
+    </script>
+</body>
+</html>

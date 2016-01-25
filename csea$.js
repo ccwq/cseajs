@@ -99,6 +99,8 @@ define("seajq",function(){
 
 seajs.use("jq");
 
+var use = seajs.use;
+
 
 //增加初始样式
 !function(){

@@ -469,10 +469,17 @@ define(function (require) {
          * @returns {*}
          */
         function getFileName(path){
-            if(fileNameRg.test(path || location.href)){
+            path = path || location.href;
+
+            if(fileNameRg.test(path)){
                 return RegExp["$1"];
             }
-            return false;
+
+            /*path = path.replace(/[#\?].+$/,"");
+            if(/\/$/.test(path)){
+                return path;
+            }*/
+            return "";
         }
         getWinCtool().getFileName = ctool.getFileName = getFileName;
     }();

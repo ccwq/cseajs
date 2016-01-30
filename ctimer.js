@@ -39,6 +39,20 @@ define(function (require, exports, module) {
         return this;
     }
 
+    /**
+     * 开始，并在开始时，立即调用回调
+     * @param paraList
+     * @returns {fn}
+     */
+    fn.start_immediate = function(paraList){
+        this.paraList = paraList;
+        this.status = CTimer.statusPlaying;
+        this.itv = this._getItv(true);
+        return this;
+    }
+
+
+
     fn.pause = function(){
         this.status = CTimer.statusPausing;
         return this.stop();
@@ -57,10 +71,11 @@ define(function (require, exports, module) {
         this.stop().start();
     }
 
-    fn._getItv = function(){
+    fn._getItv = function(immediate){
         var m = this;
-        if(m.itv) clearInterval(m.itv)
-        return setInterval(function(){
+        if(m.itv) clearInterval(m.itv);
+
+        function __(){
             if(!Function.prototype.apply){
                 require.async("ctool",function(){
                     m.sett.callback.apply(m, m.paraList || []);
@@ -68,8 +83,13 @@ define(function (require, exports, module) {
             }else{
                 m.sett.callback.apply(m, m.paraList || []);
             }
+        }
 
-        },m.sett.delay);
+        if(immediate){
+            __();
+        }
+
+        return setInterval(__,m.sett.delay);
     }
 
     function extend(){

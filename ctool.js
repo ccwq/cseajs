@@ -482,6 +482,33 @@ define(function (require) {
             return "";
         }
         getWinCtool().getFileName = ctool.getFileName = getFileName;
+
+
+        /**
+         * 获取当前文件的路径
+         * @param href
+         * @returns {*}
+         */
+        ctool.getDir = function(href){
+            var ac = arguments.callee;
+            if(!ac.cache){
+                ac.cache = {};
+            }
+            if(!href){
+                href = location.href;
+            }
+
+            if(ac.cache[href]){
+                return ac.cache[href];
+            }
+
+            var path = href.split(/\/\//).join("").replace(/[^\/]+/,"");
+
+            ac.cache[href] = path;
+
+            return path;
+        }
+
     }();
 
 

@@ -30,7 +30,7 @@
         });
     }
 
-    var rg_cut_last_dir = /\/$/;
+    var rg_cut_last_dir = /[^\/]+\/?$/;
 
 
     var ctool = window.ctool || {};
@@ -45,10 +45,10 @@
     }
 
     var paths = {}
-    paths.rt        =           root.replace(rg_cut_last_dir,"");
+    paths.rt        =           root;
     paths.$        =            dir + "jqplug/";
-    paths._         =           par.replace(rg_cut_last_dir,"")       /*seajs父级目录*/
-    paths.__        =           paths.rt;
+    paths._         =           par;                /*seajs父级目录*/
+    paths.__        =           paths._.replace(rg_cut_last_dir,"");
     paths.___       =           paths.__.replace(rg_cut_last_dir,"");
     paths.____      =           paths.___.replace(rg_cut_last_dir,"");
 

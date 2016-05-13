@@ -710,6 +710,17 @@ define(function (require) {
         }
     }
 
+    /**
+     * 懒执行
+     * 某时间内，多次执行，只有最后一个生效
+     * 可以用 killDelayCall 解除
+     */
+    Function.prototype.lazyCall = function(dura,scope,para_array){
+        var f = this;
+        f.killDelayCall();
+        f.delayCall(dura,scope,para_array);
+    }
+
 
     /**
      * 数字前自动填充0

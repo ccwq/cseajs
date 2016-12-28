@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="../../csea$.js"></script>
+</head>
+<body>
+    <div id="pa"></div>
+    <script>
+        use("$/splitReq",function(SR){
+            var sr = new SR({
+                container:"#pa",
+                reqPath:"data.json",
+                skip_show:true,
+                total_show:-1,
+                first_last_show:1,
+
+                onData:function(data){
+//                    debugger;
+                }
+            });
+        })
+    </script>
+</body>
+</html>

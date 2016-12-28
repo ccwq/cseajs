@@ -264,6 +264,8 @@ define(function (require, exports, module) {
                 if (o.nextText && !o.nextAtFront) {
                     methods._appendItem.call(this, !o.invertPageOrder ? o.currentPage + 1 : o.currentPage - 1, {text: o.nextText, classes: 'next'});
                 }
+
+                if(o.after_redraw) { o.after_redraw($panel,o); }
             },
 
             _getPages: function(o) {
@@ -302,7 +304,8 @@ define(function (require, exports, module) {
                     }
                     $link = $('<span class="current">' + (options.text) + '</span>');
                 } else {
-                    $link = $('<a href="' + o.hrefTextPrefix + (pageIndex + 1) + o.hrefTextSuffix + '" class="page-link">' + (options.text) + '</a>');
+                    //$link = $('<a href="' + o.hrefTextPrefix + (pageIndex + 1) + o.hrefTextSuffix + '" class="page-link">' + (options.text) + '</a>');
+                    $link = $('<a href="#" class="page-link">' + (options.text) + '</a>');
                     $link.click(function(event){
                         return methods._selectPage.call(self, pageIndex, event);
                     });

@@ -25,6 +25,30 @@
 		margin: 0;
 		float: left;
 	}
+
+	.jumpto{
+		font-size: 0;
+		span{
+			font-size: 12px;
+			border: 1px solid #e0e0e0;
+			display: inline-block;
+			font-weight: 100;
+			cursor: default;
+			&:hover {
+				background-color: #e0e0e0;
+			}
+		}
+
+		input{
+			font-size: 12px;
+			line-height: 1em;
+			width: 3em;
+			text-align: center;
+			outline: none;
+			position: relative;
+			top: -2px;
+		}
+	}
 }
 
 
@@ -222,5 +246,16 @@
 
 	.ellipse {
 		background-color: transparent;
+	}
+
+	.jumpto{
+		input{
+			@h:1em;
+			line-height:@h;
+			height:@h;
+			padding: 0;
+			position: relative;
+			top: -3px;
+		}
 	}
 }

@@ -45,8 +45,11 @@ define(function (require, exports, module) {
             last_show: true,
             edge_page: 2,
             skip_show: false,                       //显示跳转到
-            total_show:false,                    //是否总页数
-            total_text:"共{totalPage}页",         //总页数文案
+            skip_html:"<li class='jumpto'><span>跳转</span> <input type='text'/></li>",
+
+            total_show:0,                    //总计文案，-1显示在前面，1显示在后面 0或者false不显示
+            total_text:"共{items}条 {currentPage}/{pages}",         //总页数文案
+            first_last_show:false,                  //是否显示首页和末页
             first_text:"首页",                    //各种文案
             last_text:"末页",
             preview_text:"上一页",
@@ -110,6 +113,8 @@ define(function (require, exports, module) {
             }
 
             var pageCont = me.container = $(setting.container);
+
+            me.el = me.container;
             //先去
             setting.rows = setting.rows || pageCont.attr("rows") || constVar.rows;
 
@@ -131,10 +136,120 @@ define(function (require, exports, module) {
                 var back = setting.onReq.call(me,para);
                 if(back) para = back;
                 me.req(para);
+
+
             };
 
 
+            var total_info_tpl = "<li><span>" + me.st.total_text + "</span></li>";
+            var first_last_tpl = "<li><{tag}>label</{tag}></li>";
+            var tag_rg = /\{tag\}/g;
+
+            setting.after_redraw = function(ul,setting){
+
+                var total_items = 0;
+                if(me.pageInfo && me.pageInfo.totalCount) {
+                    total_items = me.pageInfo.totalCount;
+                }
+
+                if(me.st.total_show) {
+
+                    ul[me.st.total_show===-1?"prepend":"append"](
+                        total_info_tpl
+                            .replace(/\{pages\}/g,setting.pages)
+                            .replace(/\{items\}/g,total_items || setting.items)
+                            .replace(/\{currentPage\}/g,setting.currentPage+1)
+                    );
+                }
+
+                if(me.st.first_last_show) {
+                    var prev = ul.find("li:has(.prev)");
+                    var next = ul.find("li:has(.next)");
+
+                    var p_tag = "a",n_tag = "a";
+                    var p_tpl,n_tpl;
+
+                    if(prev.is(".active")) {
+                        p_tag = "span";
+                    }
+
+                    if(next.is(".active")) {
+                        n_tag = "span";
+                    }
+
+                    p_tpl = $(first_last_tpl.replace(tag_rg,p_tag).replace(/label/g,me.st.first_text)).addClass("first_last_link first-link");
+                    n_tpl = $(first_last_tpl.replace(tag_rg,n_tag).replace(/label/g,me.st.last_text)).addClass("first_last_link last-link");
+
+                    if(prev.is(".active")) {
+                        p_tpl.addClass("active").find("span").addClass("current");
+                    }else{
+                        p_tpl.find("a").attr({href:"#"}).addClass("page-link")
+                    }
+
+                    if(next.is(".active")) {
+                        n_tpl.addClass("active").find("span").addClass("current");
+                    }else{
+                        n_tpl.find("a").attr({href:"#"}).addClass("page-link");
+                    }
+
+                    prev.before(p_tpl);
+                    next.after(n_tpl);
+                }
+
+                if(me.st.skip_show) {
+                    ul.append(me.st.skip_html);
+                }
+            };
+
+
+
+
+
+
             var pg = me.page = $(setting.container).pagination(setting);
+
+
+            pg.delegate(".first_last_link","click",function(e){
+                var li = $(this);
+                if(li.is(".first-link")) {
+                    me.skip(1);
+                }else{
+                    me.skip(me.pageInfo.totalPage);
+                }
+            });
+
+
+            pg.delegate(".jumpto>span","click",function(){
+                var input = $(this).next("input");
+                var val = input.val();
+                val = $.trim(val);
+                val = parseInt(val);
+
+                if(isNaN(val)) {
+                    input.val("");
+                    me.skip(1);
+                    return;
+                }
+
+                if(val<1) {
+                    val = 1;
+                }
+
+                if(val>me.pageInfo.totalPage) {
+                    val = me.pageInfo.totalPag;
+                }
+
+                me.skip(val);
+
+            });
+
+
+            pg.delegate(".jumpto>input","keydown",function(e){
+                if(e.keyCode == 13) {
+                    $(this).prev().click();
+                }
+            });
+
             pg.call = function(method, para){
                 return pg.pagination(method, para);
             }
@@ -144,6 +259,7 @@ define(function (require, exports, module) {
             me.st.onInit.call(me,pg);
             me.initedCb.fire();
 
+            //me.page.pagination();
         };
 
         var fn = module.exports.prototype;
@@ -220,7 +336,7 @@ define(function (require, exports, module) {
 
             //如果已经初始化过,直接跳页
             if(me.initedCb.fired()){
-                doskip.call(me,pageno)
+                doskip.call(me,pageno);
                 return;
             }
 
@@ -307,8 +423,8 @@ define(function (require, exports, module) {
             }else if(pageInfo.totalCount){
                 pageInfo.totalPage = totalPage = ~~((pageInfo.totalCount-1)/me.st.rows) + 1;
             }
-            me.setTotalPangeNum(totalPage);
             me.pageInfo = pageInfo;
+            me.setTotalPangeNum(totalPage);
         }
     }();
 });
